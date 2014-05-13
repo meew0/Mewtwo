@@ -1,0 +1,24 @@
+# IDEA stuff
+
+/*.iml
+/*.ipr
+/*.iws
+/.idea/
+
+# Eclipse stuff
+
+/.classpath
+/.project
+/.settings/
+
+# Project stuff
+
+/lib/
+/bin/
+
+# Mewtwo stuff
+
+/cfg/
+*.cfg
+
+/.git/
