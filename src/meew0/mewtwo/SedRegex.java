@@ -27,8 +27,6 @@ public class SedRegex {
 	public String replace(String s) {
 		if(doSa) {
 			for(int i = 0; i < 26; i++) {
-				System.out.println(i);
-				System.out.println(String.valueOf((char) (i + 97)));
 				s = s.replaceAll(firstRegex.replace("%%%", "[" + String.valueOf((char) (i + 65)) + String.valueOf((char) (i + 97) + "]")), secondRegex.replace("%%%", String.valueOf((char) (i + 97))));
 			}
 			return s;
@@ -40,7 +38,6 @@ public class SedRegex {
 		SedRegex r = new SedRegex();
 		boolean sa = false;
 		if (s.startsWith("s/") || (sa = s.startsWith("sa/"))) {
-			System.out.println("true");
 
 			int slashes = 0;
 			int[] slashLocs = new int[3];
@@ -54,8 +51,7 @@ public class SedRegex {
 				}
 			}
 			
-			
-			System.out.println(slashes);
+
 			if(slashes == 3) {
 				r.valid = true;
 				r.firstRegex = s.substring(slashLocs[0] + 1, slashLocs[1]);

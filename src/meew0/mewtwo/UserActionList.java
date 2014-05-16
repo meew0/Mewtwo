@@ -20,7 +20,7 @@ public class UserActionList {
 			try {
 				file.createNewFile();
 			} catch (IOException e) {
-				System.out.println("WARNING: Could not create user action file "
+				MewtwoMain.mewtwoLogger.error("WARNING: Could not create user action file "
 						+ file.getName() + "!");
 			}
 		}
@@ -67,7 +67,7 @@ public class UserActionList {
 			
 			br.close();
 		} catch (Exception e) {
-			System.out.println("WARNING: Could not read user action file "
+            MewtwoMain.mewtwoLogger.error("WARNING: Could not read user action file "
 					+ file.getName() + "!");
 		}
 	}
@@ -83,7 +83,7 @@ public class UserActionList {
 			
 			bw.close();
 		} catch (Exception e) {
-			System.out.println("WARNING: Could not read user action file "
+            MewtwoMain.mewtwoLogger.error("WARNING: Could not read user action file "
 					+ file.getName() + "!");
 		}
 	}

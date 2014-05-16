@@ -15,7 +15,12 @@ public class CommandRegistry {
 	}
 	
 	public void addCommand(ICommand command) {
-		commands.add(command);
+        if(MewtwoMain.config.getBoolean("enable" + command.getCommandName(), true)) {
+            MewtwoMain.mewtwoLogger.info("Command " + command.getCommandName() + " enabled, adding command");
+            commands.add(command);
+        } else {
+            MewtwoMain.mewtwoLogger.info("Command " + command.getCommandName() + " not enabled");
+        }
 	}
 	
 	public void execute(String name, String[] args, MessageEvent<PircBotX> event) {
