@@ -10,11 +10,6 @@ import org.pircbotx.hooks.events.MessageEvent;
 public abstract class UserActionCommand implements ICommand {
 
 	@Override
-	public String getAlias() {
-		return getCommandName();
-	}
-
-	@Override
 	public void onExecution(String[] args, MessageEvent<PircBotX> event) {
 		if (event.getChannel().isOp(event.getUser()) || event.getUser().getNick().equals("meew0")) {
 			if (event.getChannel().isOp(event.getBot().getUserBot())) {
@@ -24,8 +19,8 @@ public abstract class UserActionCommand implements ICommand {
 				}
 				if(u != null) {
 					doAction(u, event.getChannel(), event.getBot());
-					MewtwoListener.doUserActions(u,
-							event.getChannel());
+					//MewtwoListener.doUserActions(u,
+					//		event.getChannel());
 				} else {
 					event.respond("User not found");
 				}

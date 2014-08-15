@@ -14,11 +14,6 @@ public class CommandDeVoice extends UserActionCommand {
 	}
 
 	@Override
-	public String getHelpEntry() {
-		return "devoice <user>: Takes voice from a user.";
-	}
-
-	@Override
 	public void doAction(User u, Channel c, PircBotX bot) {
 		MewtwoListener.voiceList.remove(u, c);
 		c.send().deVoice(u);

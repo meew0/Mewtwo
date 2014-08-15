@@ -14,11 +14,6 @@ public class CommandDeKick extends UserActionCommand {
 	}
 
 	@Override
-	public String getHelpEntry() {
-		return "dekick <user>: Removes a user from the kick list.";
-	}
-
-	@Override
 	public void doAction(User u, Channel c, PircBotX bot) {
 		MewtwoListener.kickList.remove(u, c);
 	}

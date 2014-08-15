@@ -16,9 +16,29 @@
 /lib/
 /bin/
 
+
+/.gitignore
+
 # Mewtwo stuff
 
+/*~
+
 /cfg/
-*.cfg
+/logs/*
+/commands/cake.rb
+/commands/cfgtest.rb
+/commands/correct.rb
+/commands/error.rb
+/commands/executetest.rb
+/commands/fallacies.rb
+/commands/gafom.rb
+/commands/leno.rb
+/commands/magic.rb
+/commands/nate.rb
+/commands/nscp.rb
+/commands/privilege.rb
+/commands/provac.rb
+/commands/score.rb
+/commands/stacktrace.rb
 
 /.git/

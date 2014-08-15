@@ -14,11 +14,6 @@ public class CommandOp extends UserActionCommand {
 	}
 
 	@Override
-	public String getHelpEntry() {
-		return "op <user>: Ops a specific user.";
-	}
-
-	@Override
 	public void doAction(User u, Channel c, PircBotX bot) {
 		MewtwoListener.opList.add(u, c);
 	}

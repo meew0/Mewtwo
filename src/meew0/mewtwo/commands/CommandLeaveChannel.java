@@ -7,22 +7,12 @@ public class CommandLeaveChannel implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "leave";
-	}
-
-	@Override
-	public String getHelpEntry() {
-		return "leave #<channel>: Leaves a channel, NYI";
+		return "admin/leave";
 	}
 
 	@Override
 	public void onExecution(String[] args, MessageEvent<PircBotX> event) {
-		event.getChannel().send().message("/leave " + args[0]); // hacky hacky
-	}
-
-	@Override
-	public String getAlias() {
-		return "leave";
+        event.getChannel().send().part("NOOOOOOOOooooooooooo.....");
 	}
 
 }

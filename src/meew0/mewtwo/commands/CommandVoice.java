@@ -14,11 +14,6 @@ public class CommandVoice extends UserActionCommand {
 	}
 
 	@Override
-	public String getHelpEntry() {
-		return "voice <user>: Gives voice to a user.";
-	}
-
-	@Override
 	public void doAction(User u, Channel c, PircBotX bot) {
 		MewtwoListener.voiceList.add(u, c);
 	}

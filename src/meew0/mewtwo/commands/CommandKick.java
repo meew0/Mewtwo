@@ -14,11 +14,6 @@ public class CommandKick extends UserActionCommand {
 	}
 
 	@Override
-	public String getHelpEntry() {
-		return "kick <user>: Adds a user to the kick list (kicking them on join == banning them)";
-	}
-
-	@Override
 	public void doAction(User u, Channel c, PircBotX bot) {
 		MewtwoListener.kickList.add(u, c);
 	}

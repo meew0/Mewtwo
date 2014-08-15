@@ -1,9 +1,6 @@
 package meew0.mewtwo;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationBuilder;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.*;
 import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +18,17 @@ public class MewtwoMain {
 	public static void main(String[] args) throws ConfigurationException {
         mewtwoLogger = LoggerFactory.getLogger("Mewtwo");
 
-        config = new PropertiesConfiguration("mewtwo.cfg");
+        config = new HierarchicalINIConfiguration("mewtwo.cfg");
 
         mewtwoLogger.info("Loaded config");
 
-        nick = config.getString("nick", "TheMewtwo");
-        server = config.getString("server", "chat.freenode.net");
+        nick = config.getString("nick", "Mewtwo");
+        server = config.getString("server",
+                "irc.esper.net");
+                //"chat.freenode.net");
+                //"127.0.0.1");
         login = config.getString("login", "Mewtwo");
-        password = config.getString("password", "fur3x6f3r78hvg645");
+        password = config.getString("password", "");
 
 
 
@@ -38,10 +38,10 @@ public class MewtwoMain {
 		        .setRealName("Mewtwo")
 		        .setAutoNickChange(true)
 		        .setCapEnabled(true)
-		        .addListener(new MewtwoListener())
+		        .addListener(new MewtwoListener(config.getString("prefix", "%")))
 		        .setServerHostname(server);
 
-        if(!password.equals("")) configuration.setNickservPassword(password);
+        //if(!password.equals("")) configuration.setNickservPassword(password);
 		
 		PircBotX mewtwo = new PircBotX(configuration.buildConfiguration());
 

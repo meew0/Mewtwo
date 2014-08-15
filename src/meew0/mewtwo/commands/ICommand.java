@@ -5,7 +5,5 @@ import org.pircbotx.hooks.events.MessageEvent;
 
 public interface ICommand {
 	public String getCommandName();
-	public String getAlias();
 	public void onExecution(String[] args, MessageEvent<PircBotX> event);
-	public String getHelpEntry();
 }

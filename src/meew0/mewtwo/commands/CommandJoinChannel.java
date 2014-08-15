@@ -7,7 +7,7 @@ public class CommandJoinChannel implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "join";
+		return "admin/join";
 	}
 
 	@Override
@@ -15,14 +15,5 @@ public class CommandJoinChannel implements ICommand {
 		event.getBot().sendIRC().joinChannel(args[0]);
 	}
 
-	@Override
-	public String getHelpEntry() {
-		return "join #<name>: Joins a channel. Unlike other commands, this one can also be executed in private chats.";
-	}
-
-	@Override
-	public String getAlias() {
-		return "join";
-	}
 
 }

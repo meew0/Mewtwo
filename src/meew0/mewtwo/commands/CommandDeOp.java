@@ -14,11 +14,6 @@ public class CommandDeOp extends UserActionCommand {
 	}
 
 	@Override
-	public String getHelpEntry() {
-		return "deop <user>: Deops a user";
-	}
-
-	@Override
 	public void doAction(User u, Channel c, PircBotX bot) {
 		MewtwoListener.opList.remove(u, c);
 		c.send().deOp(u);

@@ -1,43 +1,28 @@
 package meew0.mewtwo;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 import java.util.Random;
 
-import meew0.mewtwo.commands.CommandCompliment;
-import meew0.mewtwo.commands.CommandDeKick;
-import meew0.mewtwo.commands.CommandDeOp;
-import meew0.mewtwo.commands.CommandDeVoice;
-import meew0.mewtwo.commands.CommandDrama;
-import meew0.mewtwo.commands.CommandGoogle;
-import meew0.mewtwo.commands.CommandHelp;
-import meew0.mewtwo.commands.CommandInsult;
-import meew0.mewtwo.commands.CommandJoinChannel;
-import meew0.mewtwo.commands.CommandKick;
-import meew0.mewtwo.commands.CommandLMGTFY;
-import meew0.mewtwo.commands.CommandLeaveChannel;
-import meew0.mewtwo.commands.CommandMemo;
-import meew0.mewtwo.commands.CommandOp;
-import meew0.mewtwo.commands.CommandRainbow;
-import meew0.mewtwo.commands.CommandRandomFact;
-import meew0.mewtwo.commands.CommandRandomNumber;
-import meew0.mewtwo.commands.CommandSpam;
-import meew0.mewtwo.commands.CommandUrban;
-import meew0.mewtwo.commands.CommandVoice;
+import meew0.mewtwo.commands.*;
 
+import meew0.mewtwo.ruby.CommandWrapper;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
-import org.pircbotx.hooks.events.JoinEvent;
-import org.pircbotx.hooks.events.MessageEvent;
+import org.pircbotx.hooks.events.*;
 import org.pircbotx.hooks.types.GenericMessageEvent;
 
 import com.google.common.base.Joiner;
 
 public class MewtwoListener extends ListenerAdapter<PircBotX> {
 	public static CommandRegistry registry;
-	public static final String prefix = "`";
+	public static String prefix = "%";
 
 	public static Random rnd = new Random();
 	
@@ -47,52 +32,135 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 	public static UserActionList voiceList = new UserActionList(new File("voice.cfg"));
 	public static UserActionList kickList = new UserActionList(new File("kick.cfg"));
 
-	public MewtwoListener() {
-		registry = new CommandRegistry();
+    public static ArrayList<HighFiveEntry> highFives = new ArrayList<HighFiveEntry>();
+
+    public static HierarchicalINIConfiguration aliases, admins, enable;
+
+    public static ModuleManager moduleManager;
+
+	public MewtwoListener(String prefix) {
+        MewtwoListener.prefix = prefix;
+        try {
+            aliases = new HierarchicalINIConfiguration("aliases.cfg");
+            admins = new HierarchicalINIConfiguration("admins.cfg");
+            enable = new HierarchicalINIConfiguration("enable.cfg");
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        registry = new CommandRegistry();
 
 		registry.addCommand(new CommandJoinChannel());
 		registry.addCommand(new CommandLeaveChannel());
-		registry.addCommand(new CommandHelp());
-		//registry.addCommand(new CommandGoogle());
-		registry.addCommand(new CommandUrban());
-		registry.addCommand(new CommandInsult());
-		registry.addCommand(new CommandCompliment());
-		registry.addCommand(new CommandLMGTFY());
-		//registry.addCommand(new CommandSpam());
-		registry.addCommand(new CommandRainbow());
-		registry.addCommand(new CommandMemo());
-		registry.addCommand(new CommandRandomFact());
-		registry.addCommand(new CommandRandomNumber());
-		registry.addCommand(new CommandDrama());
-		
-		registry.addCommand(new CommandOp());
+
+        registry.addCommand(new CommandScore()); //TODO: migrate to ruby
+
+        registry.addCommand(new CommandQuoteLast());
+        registry.addCommand(new CommandQuoteContains());
+
+        registry.addCommand(new CommandReload());
+
+		/*registry.addCommand(new CommandOp()); //TODO: remove
 		registry.addCommand(new CommandVoice());
 		registry.addCommand(new CommandKick());
 		registry.addCommand(new CommandDeOp());
 		registry.addCommand(new CommandDeVoice());
-		registry.addCommand(new CommandDeKick());
-	}
-	
-	public static void doUserActions(User u, Channel c) {
-		String m = u.getHostmask(), cn = c.getName();
-		for(UserAction mask : opList.users) if(mask.hostMask.equals(m) && mask.channel.equals(cn)) c.send().op(u);
-		for(UserAction mask : voiceList.users) if(mask.hostMask.equals(m) && mask.channel.equals(cn)) c.send().voice(u);
-		for(UserAction mask : kickList.users) if(mask.hostMask.equals(m) && mask.channel.equals(cn)) c.send().kick(u);
+		registry.addCommand(new CommandDeKick());*/
+
+        registry.addCommand(new CommandExecute());
+
+        moduleManager = new ModuleManager();
 	}
 	
 	@Override
 	public void onJoin(JoinEvent<PircBotX> event) throws Exception {
-		CommandMemo.readMemos(event);
-		doUserActions(event.getUser(), event.getChannel());
+        try {
+            String result = moduleManager.executeModules("join", event.getUser().getNick(),
+                    event.getChannel().getName().replace("#", ""), "");
+
+            if(result != "") {
+                for (String s : result.split("\n")) {
+                    event.getChannel().send().message(s);
+                }
+            }
+        } catch(Throwable t) {
+            event.respond("ERROR: An exception has occurred while executing a module! "
+                    + t.getClass().getName() + ": " + t.getMessage());
+            event.respond("See console for details.");
+            t.printStackTrace();
+        }
 	}
 
-	@Override
+    @Override
+    public void onNickChange(NickChangeEvent<PircBotX> event) throws Exception {
+        try {
+            String result = moduleManager.executeModules("nickchange", event.getNewNick(),
+                    event.getOldNick(), "");
+
+            if(result != "") {
+                for (String s : result.split("\n")) {
+                    event.getUser().send().message(s);
+                }
+            }
+        } catch(Throwable t) {
+            event.respond("ERROR: An exception has occurred while executing a module! "
+                    + t.getClass().getName() + ": " + t.getMessage());
+            event.respond("See console for details.");
+            t.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPrivateMessage(PrivateMessageEvent<PircBotX> event) throws Exception {
+        try {
+            String result = moduleManager.executeModules("pm", event.getUser().getNick(),
+                    event.getUser().getNick(), event.getMessage());
+
+            if(result != "") {
+                for (String s : result.split("\n")) {
+                    event.getUser().send().message(s);
+                }
+            }
+        } catch(Throwable t) {
+            event.respond("ERROR: An exception has occurred while executing a module! "
+                    + t.getClass().getName() + ": " + t.getMessage());
+            event.respond("See console for details.");
+            t.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onAction(ActionEvent<PircBotX> event) throws Exception {
+        try {
+            String result = moduleManager.executeModules("action", event.getUser().getNick(),
+                    event.getChannel().getName(), event.getMessage());
+
+            if(result != "") {
+                for (String s : result.split("\n")) {
+                    event.getChannel().send().message(s);
+                }
+            }
+        } catch(Throwable t) {
+            event.respond("ERROR: An exception has occurred while executing a module! "
+                    + t.getClass().getName() + ": " + t.getMessage());
+            event.respond("See console for details.");
+            t.printStackTrace();
+        }
+    }
+
+    @Override
 	public void onGenericMessage(GenericMessageEvent<PircBotX> event)
 			throws Exception {
 		if (event.getMessage().startsWith(prefix + "join")) {
 			event.getBot().sendIRC()
 					.joinChannel(event.getMessage().split(" ")[1]);
 		}
+        if (event.getMessage().startsWith(prefix + "joinall")) {
+            for(String c : event.getMessage().split(" ")) {
+                event.getBot().sendIRC()
+                        .joinChannel(c);
+            }
+        }
 		if (event.getMessage().startsWith(prefix + "say")) {
 			String[] args = event.getMessage().split(" ");
 			for(Channel c : 
@@ -102,17 +170,47 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 		}
 	}
 
+    public boolean isHighFive(String message) {
+        return message.equalsIgnoreCase("o/") || message.equalsIgnoreCase("\\o") || message.equalsIgnoreCase("\\o/") ||
+                message.equalsIgnoreCase("0/") || message.equalsIgnoreCase("\\0") || message.equalsIgnoreCase("\\0/");
+    }
+
 	@Override
 	public void onMessage(MessageEvent<PircBotX> event) throws Exception {
 		try {
 			String msg = event.getMessage();
 
-			log.add(msg);
+            ChatLog.Message msgBefore = null;
+            try {
+                msgBefore = log.messages.getFirst();
+            } catch(NoSuchElementException e) {
+                System.out.println("warning: element not found");
+            }
+
+			log.add(msg, event.getUser().getNick());
+
+            // execute module
+            try {
+                String result = moduleManager.executeModules("message", event.getUser().getNick(),
+                        event.getChannel().getName().replace("#", ""), msg);
+
+                if(!result.equals("")) {
+                    for (String s : result.split("\n")) {
+                        event.getChannel().send().message(s);
+                    }
+                }
+            } catch(Throwable t) {
+                event.respond("ERROR: An exception has occurred while executing a module! "
+                        + t.getClass().getName() + ": " + t.getMessage());
+                event.respond("See console for details.");
+                t.printStackTrace();
+            }
 			
 			SedRegex sr = SedRegex.getSedRegex(msg);
 			if(sr.isValid()) {
 				boolean found = false;
-				for(String m : log.messages) {
+				for(ChatLog.Message m2 : log.messages) {
+                    String m = m2.message;
 					if(sr.matches(m) && !SedRegex.getSedRegex(m).isValid()) { // also make sure the message isn't a regex
 						found = true;
 						event.respond(sr.replace(m));
@@ -123,45 +221,68 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 					event.respond("Could not find a message that matches " + sr.getFirstRegex());
 				}
 			}
-			
 
-			if (msg.equalsIgnoreCase("Who are you, " + event.getBot().getNick()
-					+ "?")
-					|| msg.equalsIgnoreCase("Who are you "
-							+ event.getBot().getNick() + "?")
-					|| msg.equalsIgnoreCase("Who are you, "
-							+ event.getBot().getNick() + "?")
-					|| msg.equalsIgnoreCase("Who are you "
-							+ event.getBot().getNick() + "")
-					|| msg.equalsIgnoreCase("Who is "
-							+ event.getBot().getNick() + "?")
-					|| msg.equalsIgnoreCase("Who is "
-							+ event.getBot().getNick() + "")
-					|| msg.equalsIgnoreCase(event.getBot().getNick()
-							+ ", Who are you?")
-					|| msg.equalsIgnoreCase(event.getBot().getNick()
-							+ ": Who are you?")
-					|| msg.equalsIgnoreCase(event.getBot().getNick()
-							+ ", Who are you")
-					|| msg.equalsIgnoreCase(event.getBot().getNick()
-							+ ": Who are you")) {
-				event.respond("I'm Mewtwo, an IRC bot programmed by meew0. Try "
-						+ prefix + "help for a list of commands");
-			}
+            if(isHighFive(msg)) {
+                if(msgBefore != null) {
+                    if (isHighFive(msgBefore.message)) {
+                        boolean found = false;
+                        for (HighFiveEntry e : highFives) {
+                            if ((e.getNick1().equalsIgnoreCase(event.getUser().getNick()) || e.getNick2().equalsIgnoreCase(event.getUser().getNick())) &&
+                                    (e.getNick1().equalsIgnoreCase(msgBefore.nick) || e.getNick2().equalsIgnoreCase(msgBefore.nick))) {
+                                found = true;
+                                e.setCount(e.getCount() + 1);
+                                event.getChannel().send().message(e.getNick1() + " \\o : o/ " + e.getNick2() + " - " + e.getCount() + ". time");
+                            }
+                        }
+                        if (!found) {
+                            HighFiveEntry e = new HighFiveEntry();
+                            e.setNick1(event.getUser().getNick());
+                            e.setNick2(msgBefore.nick);
+                            e.setCount(1);
+                            event.getChannel().send().message(e.getNick1() + " \\o : o/ " + e.getNick2() + " - " + e.getCount() + ". time");
+                        }
+                    }
+                }
 
-			if (msg.equalsIgnoreCase("I'm better than "
-					+ event.getBot().getNick())
-					|| msg.equalsIgnoreCase("Im better than "
-							+ event.getBot().getNick())) {
-				event.respond("It's good to dream big");
-			}
+            }
+
+            if(!(msg.startsWith(":") || msg.startsWith(";") || msg.endsWith(":") || msg.endsWith(";"))) {
+                float s = 0.f;
+                for (int i = 0; i < msg.length(); i++) {
+                    if (Character.isUpperCase(msg.charAt(i))) s++;
+                }
+
+                if ((s / (float) msg.length()) > 0.75f) {
+                    //event.respond("Please don't talk in more than the necessary amount of caps");
+                }
+            }
 
 			if (msg.startsWith(prefix)) {
-				String[] data = msg.split(" ");
-				String name = data[0].substring(1);
+                if((msg.startsWith(prefix + "admin/") && admins.containsKey(event.getUser().getNick())
+                        && admins.getBoolean(event.getUser().getNick())) || !msg.startsWith(prefix + "admin/")) {
+                    String[] data = msg.split(" ");
+                    String name = data[0].substring(1);
 
-				registry.execute(name,
-						Arrays.copyOfRange(data, 1, data.length), event);
+                    if(enable.containsKey(name) && enable.getBoolean(name)) {
+                        event.respond("This command is disabled");
+                    } else {
+                        if (registry.hasCommand(name)) {
+                            registry.execute(name,
+                                    Arrays.copyOfRange(data, 1, data.length), event);
+                        } else {
+                            if (aliases.containsKey(name)) name = aliases.getString(name);
+                            CommandWrapper cw = new CommandWrapper(name);
+                            String result = cw.execute(event.getUser().getNick(), event.getChannel().getName().replace("#", ""), Joiner.on(" ")
+                                    .join(Arrays.copyOfRange(data, 1, data.length)));
+
+                            for (String s : result.split("\n")) {
+                                event.getChannel().send().message(s);
+                            }
+                        }
+                    }
+                } else {
+                    event.respond("I'm sorry, I can't let you do that.");
+                }
 			}
 		} catch (Exception e) {
 			event.respond("ERROR: An exception has occurred! "

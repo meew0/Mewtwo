@@ -26,7 +26,7 @@ public class CommandRegistry {
 	public void execute(String name, String[] args, MessageEvent<PircBotX> event) {
 		boolean found = false;
 		for(ICommand c : commands) {
-			if(c.getCommandName().equalsIgnoreCase(name) || c.getAlias().equalsIgnoreCase(name)) {
+			if(c.getCommandName().equalsIgnoreCase(name)) {
 				found = true;
 				c.onExecution(args, event);
 			}
@@ -35,4 +35,11 @@ public class CommandRegistry {
 			event.respond("Could not find command " + name + ", try " + MewtwoListener.prefix + "help");
 		}
 	}
+
+    public boolean hasCommand(String name) {
+        for(ICommand c : commands) {
+            if(c.getCommandName().equalsIgnoreCase(name)) return true;
+        }
+        return false;
+    }
 }
