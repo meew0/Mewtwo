@@ -151,23 +151,29 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     @Override
 	public void onGenericMessage(GenericMessageEvent<PircBotX> event)
 			throws Exception {
-		if (event.getMessage().startsWith(prefix + "join")) {
-			event.getBot().sendIRC()
-					.joinChannel(event.getMessage().split(" ")[1]);
-		}
-        if (event.getMessage().startsWith(prefix + "joinall")) {
-            for(String c : event.getMessage().split(" ")) {
+        if(admins.containsKey(event.getUser().getNick())
+                && admins.getBoolean(event.getUser().getNick())) {
+            if (event.getMessage().startsWith(prefix + "join")) {
                 event.getBot().sendIRC()
-                        .joinChannel(c);
+                        .joinChannel(event.getMessage().split(" ")[1]);
             }
+            if (event.getMessage().startsWith(prefix + "joinall")) {
+                for (String c : event.getMessage().split(" ")) {
+                    event.getBot().sendIRC()
+                            .joinChannel(c);
+                }
+            }
+            if (event.getMessage().startsWith(prefix + "say")) {
+                String[] args = event.getMessage().split(" ");
+                for (Channel c :
+                        event.getBot().getUserBot().getChannels()) {
+                    if (c.getName().equals(args[1]))
+                        c.send().message(Joiner.on(" ").join(Arrays.copyOfRange(args, 2, args.length)));
+                }
+            }
+        } else {
+            event.respond("You don't have admin rights!");
         }
-		if (event.getMessage().startsWith(prefix + "say")) {
-			String[] args = event.getMessage().split(" ");
-			for(Channel c : 
-			event.getBot().getUserBot().getChannels()) {
-				if(c.getName().equals(args[1])) c.send().message(Joiner.on(" ").join(Arrays.copyOfRange(args, 2, args.length)));
-			}
-		}
 	}
 
     public boolean isHighFive(String message) {
