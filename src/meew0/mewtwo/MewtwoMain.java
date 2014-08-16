@@ -10,6 +10,7 @@ import java.util.Properties;
 
 public class MewtwoMain {
 	public static String nick, server, login, password;
+    public static int port;
 
     public static Configuration config;
 
@@ -29,6 +30,7 @@ public class MewtwoMain {
                 //"127.0.0.1");
         login = config.getString("login", "Mewtwo");
         password = config.getString("password", "");
+        port = config.getInt("port", 6667);
 
 
 
@@ -39,9 +41,10 @@ public class MewtwoMain {
 		        .setAutoNickChange(true)
 		        .setCapEnabled(true)
 		        .addListener(new MewtwoListener(config.getString("prefix", "%")))
-		        .setServerHostname(server);
+		        .setServerHostname(server)
+                .setServerPort(port);
 
-        //if(!password.equals("")) configuration.setNickservPassword(password);
+        if(!password.equals("")) configuration.setNickservPassword(password);
 		
 		PircBotX mewtwo = new PircBotX(configuration.buildConfiguration());
 

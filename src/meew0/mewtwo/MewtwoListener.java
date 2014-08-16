@@ -21,16 +21,16 @@ import org.pircbotx.hooks.types.GenericMessageEvent;
 import com.google.common.base.Joiner;
 
 public class MewtwoListener extends ListenerAdapter<PircBotX> {
-	public static CommandRegistry registry;
-	public static String prefix = "%";
+    public static CommandRegistry registry;
+    public static String prefix = "%";
 
-	public static Random rnd = new Random();
-	
-	public static ChatLog log = new ChatLog();
-	
-	public static UserActionList opList = new UserActionList(new File("ops.cfg"));
-	public static UserActionList voiceList = new UserActionList(new File("voice.cfg"));
-	public static UserActionList kickList = new UserActionList(new File("kick.cfg"));
+    public static Random rnd = new Random();
+
+    public static ChatLog log = new ChatLog();
+
+    public static UserActionList opList = new UserActionList(new File("ops.cfg"));
+    public static UserActionList voiceList = new UserActionList(new File("voice.cfg"));
+    public static UserActionList kickList = new UserActionList(new File("kick.cfg"));
 
     public static ArrayList<HighFiveEntry> highFives = new ArrayList<HighFiveEntry>();
 
@@ -38,7 +38,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 
     public static ModuleManager moduleManager;
 
-	public MewtwoListener(String prefix) {
+    public MewtwoListener(String prefix) {
         MewtwoListener.prefix = prefix;
         try {
             aliases = new HierarchicalINIConfiguration("aliases.cfg");
@@ -50,8 +50,8 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 
         registry = new CommandRegistry();
 
-		registry.addCommand(new CommandJoinChannel());
-		registry.addCommand(new CommandLeaveChannel());
+        registry.addCommand(new CommandJoinChannel());
+        registry.addCommand(new CommandLeaveChannel());
 
         registry.addCommand(new CommandScore()); //TODO: migrate to ruby
 
@@ -60,36 +60,29 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 
         registry.addCommand(new CommandReload());
 
-		/*registry.addCommand(new CommandOp()); //TODO: remove
-		registry.addCommand(new CommandVoice());
-		registry.addCommand(new CommandKick());
-		registry.addCommand(new CommandDeOp());
-		registry.addCommand(new CommandDeVoice());
-		registry.addCommand(new CommandDeKick());*/
-
         registry.addCommand(new CommandExecute());
 
         moduleManager = new ModuleManager();
-	}
-	
-	@Override
-	public void onJoin(JoinEvent<PircBotX> event) throws Exception {
+    }
+
+    @Override
+    public void onJoin(JoinEvent<PircBotX> event) throws Exception {
         try {
             String result = moduleManager.executeModules("join", event.getUser().getNick(),
                     event.getChannel().getName().replace("#", ""), "");
 
-            if(result != "") {
+            if (result != "") {
                 for (String s : result.split("\n")) {
                     event.getChannel().send().message(s);
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             event.respond("ERROR: An exception has occurred while executing a module! "
                     + t.getClass().getName() + ": " + t.getMessage());
             event.respond("See console for details.");
             t.printStackTrace();
         }
-	}
+    }
 
     @Override
     public void onNickChange(NickChangeEvent<PircBotX> event) throws Exception {
@@ -97,12 +90,12 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
             String result = moduleManager.executeModules("nickchange", event.getNewNick(),
                     event.getOldNick(), "");
 
-            if(result != "") {
+            if (result != "") {
                 for (String s : result.split("\n")) {
                     event.getUser().send().message(s);
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             event.respond("ERROR: An exception has occurred while executing a module! "
                     + t.getClass().getName() + ": " + t.getMessage());
             event.respond("See console for details.");
@@ -116,12 +109,12 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
             String result = moduleManager.executeModules("pm", event.getUser().getNick(),
                     event.getUser().getNick(), event.getMessage());
 
-            if(result != "") {
+            if (result != "") {
                 for (String s : result.split("\n")) {
                     event.getUser().send().message(s);
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             event.respond("ERROR: An exception has occurred while executing a module! "
                     + t.getClass().getName() + ": " + t.getMessage());
             event.respond("See console for details.");
@@ -135,12 +128,12 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
             String result = moduleManager.executeModules("action", event.getUser().getNick(),
                     event.getChannel().getName(), event.getMessage());
 
-            if(result != "") {
+            if (result != "") {
                 for (String s : result.split("\n")) {
                     event.getChannel().send().message(s);
                 }
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             event.respond("ERROR: An exception has occurred while executing a module! "
                     + t.getClass().getName() + ": " + t.getMessage());
             event.respond("See console for details.");
@@ -149,87 +142,97 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
-	public void onGenericMessage(GenericMessageEvent<PircBotX> event)
-			throws Exception {
-        if(admins.containsKey(event.getUser().getNick())
-                && admins.getBoolean(event.getUser().getNick())) {
+    public void onGenericMessage(GenericMessageEvent<PircBotX> event)
+            throws Exception {
             if (event.getMessage().startsWith(prefix + "join")) {
-                event.getBot().sendIRC()
-                        .joinChannel(event.getMessage().split(" ")[1]);
+                if (admins.containsKey(event.getUser().getNick())
+                        && admins.getBoolean(event.getUser().getNick())) {
+                    event.getBot().sendIRC()
+                            .joinChannel(event.getMessage().split(" ")[1]);
+                } else {
+                    event.respond("You don't have admin rights!");
+                }
             }
             if (event.getMessage().startsWith(prefix + "joinall")) {
-                for (String c : event.getMessage().split(" ")) {
-                    event.getBot().sendIRC()
-                            .joinChannel(c);
+                if (admins.containsKey(event.getUser().getNick())
+                        && admins.getBoolean(event.getUser().getNick())) {
+                    for (String c : event.getMessage().split(" ")) {
+                        event.getBot().sendIRC()
+                                .joinChannel(c);
+                    }
+                } else {
+                    event.respond("You don't have admin rights!");
                 }
             }
             if (event.getMessage().startsWith(prefix + "say")) {
-                String[] args = event.getMessage().split(" ");
-                for (Channel c :
-                        event.getBot().getUserBot().getChannels()) {
-                    if (c.getName().equals(args[1]))
-                        c.send().message(Joiner.on(" ").join(Arrays.copyOfRange(args, 2, args.length)));
+                if (admins.containsKey(event.getUser().getNick())
+                        && admins.getBoolean(event.getUser().getNick())) {
+                    String[] args = event.getMessage().split(" ");
+                    for (Channel c :
+                            event.getBot().getUserBot().getChannels()) {
+                        if (c.getName().equals(args[1]))
+                            c.send().message(Joiner.on(" ").join(Arrays.copyOfRange(args, 2, args.length)));
+                    }
+                } else {
+                    event.respond("You don't have admin rights!");
                 }
             }
-        } else {
-            event.respond("You don't have admin rights!");
-        }
-	}
+    }
 
     public boolean isHighFive(String message) {
         return message.equalsIgnoreCase("o/") || message.equalsIgnoreCase("\\o") || message.equalsIgnoreCase("\\o/") ||
                 message.equalsIgnoreCase("0/") || message.equalsIgnoreCase("\\0") || message.equalsIgnoreCase("\\0/");
     }
 
-	@Override
-	public void onMessage(MessageEvent<PircBotX> event) throws Exception {
-		try {
-			String msg = event.getMessage();
+    @Override
+    public void onMessage(MessageEvent<PircBotX> event) throws Exception {
+        try {
+            String msg = event.getMessage();
 
             ChatLog.Message msgBefore = null;
             try {
                 msgBefore = log.messages.getFirst();
-            } catch(NoSuchElementException e) {
+            } catch (NoSuchElementException e) {
                 System.out.println("warning: element not found");
             }
 
-			log.add(msg, event.getUser().getNick());
+            log.add(msg, event.getUser().getNick());
 
             // execute module
             try {
                 String result = moduleManager.executeModules("message", event.getUser().getNick(),
                         event.getChannel().getName().replace("#", ""), msg);
 
-                if(!result.equals("")) {
+                if (!result.equals("")) {
                     for (String s : result.split("\n")) {
                         event.getChannel().send().message(s);
                     }
                 }
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 event.respond("ERROR: An exception has occurred while executing a module! "
                         + t.getClass().getName() + ": " + t.getMessage());
                 event.respond("See console for details.");
                 t.printStackTrace();
             }
-			
-			SedRegex sr = SedRegex.getSedRegex(msg);
-			if(sr.isValid()) {
-				boolean found = false;
-				for(ChatLog.Message m2 : log.messages) {
-                    String m = m2.message;
-					if(sr.matches(m) && !SedRegex.getSedRegex(m).isValid()) { // also make sure the message isn't a regex
-						found = true;
-						event.respond(sr.replace(m));
-						break;
-					}
-				}
-				if(!found) {
-					event.respond("Could not find a message that matches " + sr.getFirstRegex());
-				}
-			}
 
-            if(isHighFive(msg)) {
-                if(msgBefore != null) {
+            SedRegex sr = SedRegex.getSedRegex(msg);
+            if (sr.isValid()) {
+                boolean found = false;
+                for (ChatLog.Message m2 : log.messages) {
+                    String m = m2.message;
+                    if (sr.matches(m) && !SedRegex.getSedRegex(m).isValid()) { // also make sure the message isn't a regex
+                        found = true;
+                        event.respond(sr.replace(m));
+                        break;
+                    }
+                }
+                if (!found) {
+                    event.respond("Could not find a message that matches " + sr.getFirstRegex());
+                }
+            }
+
+            if (isHighFive(msg)) {
+                if (msgBefore != null) {
                     if (isHighFive(msgBefore.message)) {
                         boolean found = false;
                         for (HighFiveEntry e : highFives) {
@@ -252,7 +255,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 
             }
 
-            if(!(msg.startsWith(":") || msg.startsWith(";") || msg.endsWith(":") || msg.endsWith(";"))) {
+            if (!(msg.startsWith(":") || msg.startsWith(";") || msg.endsWith(":") || msg.endsWith(";"))) {
                 float s = 0.f;
                 for (int i = 0; i < msg.length(); i++) {
                     if (Character.isUpperCase(msg.charAt(i))) s++;
@@ -263,13 +266,13 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
                 }
             }
 
-			if (msg.startsWith(prefix)) {
-                if((msg.startsWith(prefix + "admin/") && admins.containsKey(event.getUser().getNick())
+            if (msg.startsWith(prefix)) {
+                if ((msg.startsWith(prefix + "admin/") && admins.containsKey(event.getUser().getNick())
                         && admins.getBoolean(event.getUser().getNick())) || !msg.startsWith(prefix + "admin/")) {
                     String[] data = msg.split(" ");
                     String name = data[0].substring(1);
 
-                    if(enable.containsKey(name) && enable.getBoolean(name)) {
+                    if (enable.containsKey(name) && enable.getBoolean(name)) {
                         event.respond("This command is disabled");
                     } else {
                         if (registry.hasCommand(name)) {
@@ -289,12 +292,12 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
                 } else {
                     event.respond("I'm sorry, I can't let you do that.");
                 }
-			}
-		} catch (Exception e) {
-			event.respond("ERROR: An exception has occurred! "
-					+ e.getClass().getName() + ": " + e.getMessage());
-			event.respond("See console for details.");
-			e.printStackTrace();
-		}
-	}
+            }
+        } catch (Exception e) {
+            event.respond("ERROR: An exception has occurred! "
+                    + e.getClass().getName() + ": " + e.getMessage());
+            event.respond("See console for details.");
+            e.printStackTrace();
+        }
+    }
 }
