@@ -12,7 +12,7 @@ import org.pircbotx.hooks.events.*;
 import java.util.Date;
 
 public class MewtwoListener extends ListenerAdapter<PircBotX> {
-    private static ContextManager ctxMgr = new ContextManager();
+    private static final ContextManager ctxMgr = new ContextManager();
 
     public MewtwoListener() {
     }

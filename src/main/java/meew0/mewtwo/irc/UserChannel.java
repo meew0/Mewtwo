@@ -13,9 +13,11 @@ import org.pircbotx.snapshot.ChannelSnapshot;
  *
  * Class that pretends to be a channel but is actually a user.
  */
+@SuppressWarnings("WeakerAccess")
 public class UserChannel extends Channel {
+    @SuppressWarnings("EmptyMethod")
     public class UserOutputChannel extends OutputChannel {
-        private User user;
+        private final User user;
 
         public UserOutputChannel(User user, Channel channel) {
             super(user.getBot(), channel);
@@ -43,8 +45,10 @@ public class UserChannel extends Channel {
 
         public void invite(Channel otherChannel) {
         }
+        @SuppressWarnings("UnusedParameters")
         public void invite(User user) {
         }
+        @SuppressWarnings("UnusedParameters")
         public void invite(String target) {
         }
         public void ctcpCommand(String command) {
@@ -129,10 +133,10 @@ public class UserChannel extends Channel {
 
         @Override
         public void message(String message) {
-            super.message(message);
+            user.send().message(message);
         }
     }
-    private User user;
+    private final User user;
 
     public UserChannel(User user) {
         super(user.getBot(), user.getBot().getUserChannelDao(), user.getNick());

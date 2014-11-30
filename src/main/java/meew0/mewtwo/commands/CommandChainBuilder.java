@@ -7,7 +7,7 @@ import org.pircbotx.User;
  * Created by miras on 14.11.14.
  */
 public class CommandChainBuilder {
-    private MewtwoContext ctx;
+    private final MewtwoContext ctx;
     private String bareChain;
     public CommandChainBuilder(MewtwoContext ctx, String message) {
         this.ctx = ctx;

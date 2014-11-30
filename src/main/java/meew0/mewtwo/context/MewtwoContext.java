@@ -13,13 +13,13 @@ import java.util.HashMap;
  * Created by miras on 08.11.14.
  */
 public class MewtwoContext {
-    private PircBotX bot;
-    private Channel channel;
-    private User user;
+    private final PircBotX bot;
+    private final Channel channel;
+    private final User user;
     private String id = "", output = "", input = "";
     private long lastBenchmark;
-    private HashMap<String, Long> benchmark;
-    private PermanentContext permanent;
+    private final HashMap<String, Long> benchmark;
+    private final PermanentContext permanent;
 
     /**
      * Get the bot object

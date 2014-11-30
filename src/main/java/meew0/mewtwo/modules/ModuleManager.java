@@ -8,7 +8,6 @@ import org.joni.Option;
 import org.joni.Regex;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class ModuleManager {
         modules = traverseDirectoryForModules(Paths.get(ModuleManager.modulesFolder));
     }
 
-    public String executeModules(String trigger, String message, MewtwoContext ctx) throws IOException {
+    public String executeModules(String trigger, String message, MewtwoContext ctx) {
         String result = "";
         for(Module m : modules) {
             if(m.activatesOn(message, trigger)) result += m.execute(message, ctx);

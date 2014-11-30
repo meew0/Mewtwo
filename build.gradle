@@ -18,6 +18,7 @@ dependencies {
     compile "junit:junit:3.8.1"
 }
 
+//noinspection GroovyAssignabilityCheck
 task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Mewtwo',

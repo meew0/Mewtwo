@@ -11,9 +11,10 @@ public class ChatLog {
     }
 
 	@SuppressWarnings("WeakerAccess")
-    public static int limit = 500;
+    public static final int limit = 500;
 	
-	public LinkedList<Message> messages;
+	@SuppressWarnings("CanBeFinal")
+    public LinkedList<Message> messages;
 
 	
 	public ChatLog() {

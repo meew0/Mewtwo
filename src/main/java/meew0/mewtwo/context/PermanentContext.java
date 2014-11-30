@@ -13,11 +13,11 @@ import java.util.LinkedList;
  * Created by miras on 14.11.14.
  */
 public class PermanentContext {
-    private ChatLog log;
+    private final ChatLog log;
 
-    private HierarchicalINIConfiguration aliases, admins, disable, ignore;
+    private final HierarchicalINIConfiguration aliases, admins, disable, ignore;
 
-    private ModuleManager moduleManager;
+    private final ModuleManager moduleManager;
 
     private boolean slowmodeEnabled = false;
     private int slowmodeTime = 0;

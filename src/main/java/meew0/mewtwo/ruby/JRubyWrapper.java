@@ -18,9 +18,10 @@ import java.util.Map;
 /**
  * Created by miras on 09.11.14.
  */
+@SuppressWarnings("WeakerAccess")
 public class JRubyWrapper {
-    private ScriptingContainer rb;
-    private StringWriter swOut, swErr;
+    private final ScriptingContainer rb;
+    private final StringWriter swOut, swErr;
 
     /**
      * Create a new JRuby wrapper.

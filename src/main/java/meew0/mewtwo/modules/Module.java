@@ -13,9 +13,9 @@ import java.util.List;
  */
 @SuppressWarnings("WeakerAccess")
 public class Module {
-    private String name, filename;
-    private List<String> triggers;
-    private Regex regex;
+    private final String name, filename;
+    private final List<String> triggers;
+    private final Regex regex;
 
     public Module(Regex regex, List<String> trigger, String name, String filename) {
         this.regex = regex;

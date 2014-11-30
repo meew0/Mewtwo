@@ -6,7 +6,7 @@ import meew0.mewtwo.context.MewtwoContext;
  * Created by miras on 15.11.14.
  */
 public class StaticChain implements ICommandChain {
-    private String message;
+    private final String message;
 
     public StaticChain(String message) {
         this.message = message;

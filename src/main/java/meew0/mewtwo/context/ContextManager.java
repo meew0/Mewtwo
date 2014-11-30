@@ -8,7 +8,7 @@ import org.pircbotx.User;
  * Created by miras on 15.11.14.
  */
 public class ContextManager {
-    private PermanentContext permanent;
+    private final PermanentContext permanent;
 
 
     /**

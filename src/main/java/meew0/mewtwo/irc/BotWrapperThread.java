@@ -8,7 +8,7 @@ import org.pircbotx.PircBotX;
  * Created by meew0 on 31.08.14.
  */
 public class BotWrapperThread implements Runnable {
-    private Configuration.Builder<PircBotX> configuration;
+    private final Configuration.Builder<PircBotX> configuration;
 
     public BotWrapperThread(Configuration.Builder<PircBotX> configuration, String nick, String serverHostName, int serverPort) {
         this.configuration = configuration;
