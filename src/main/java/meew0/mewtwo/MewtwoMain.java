@@ -10,6 +10,7 @@ import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
@@ -25,17 +26,32 @@ public class MewtwoMain {
     public static Logger mewtwoLogger;
 
     /**
+     * Returns a config file, creating it if it doesn't exist
+     * @param configName The path to the file
+     * @return a config file
+     */
+    public static HierarchicalINIConfiguration getConfig(String configName) {
+        try {
+            File cfgFile = new File(configName);
+            if (!cfgFile.exists() && !cfgFile.createNewFile())
+                mewtwoLogger.error("Could not create config file " + configName);
+            return new HierarchicalINIConfiguration(configName);
+        } catch(Throwable t) {
+            mewtwoLogger.error("Error while creating config file " + configName + "!", t);
+        }
+
+        return null;
+    }
+
+    /**
      * Main method, shouldn't be called
      * @param args The command line arguments, unused
      * @throws ConfigurationException in case something happens while loading configs
      */
-	public static void main(String[] args) throws ConfigurationException {
+	public static void main(String[] args) throws ConfigurationException, IOException {
         // Make logger
         mewtwoLogger = LoggerFactory.getLogger("Mewtwo");
-
-        // Load config file
-        config = new HierarchicalINIConfiguration("mewtwo.cfg");
-
+        config = getConfig("mewtwo.cfg");
         password = "";
 
         // Load password from file

@@ -26,14 +26,10 @@ public class PermanentContext {
     public PermanentContext() {
         moduleManager = new ModuleManager();
         log = new ChatLog();
-        try {
-            aliases = new HierarchicalINIConfiguration("aliases.cfg");
-            admins = new HierarchicalINIConfiguration("admins.cfg");
-            disable = new HierarchicalINIConfiguration("disable.cfg");
-            ignore = new HierarchicalINIConfiguration("ignore.cfg");
-        } catch (ConfigurationException e) {
-            e.printStackTrace();
-        }
+        aliases = MewtwoMain.getConfig("aliases.cfg");
+        admins = MewtwoMain.getConfig("admins.cfg");
+        disable = MewtwoMain.getConfig("disable.cfg");
+        ignore = MewtwoMain.getConfig("ignore.cfg");
     }
 
     public ModuleManager getModuleManager() {

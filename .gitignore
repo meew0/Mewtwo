@@ -48,6 +48,7 @@
 
 /*.cfg
 !/mewtwo.cfg
+!/admins.cfg
 
 !/README.md
 !/LICENSE
