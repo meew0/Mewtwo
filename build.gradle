@@ -22,7 +22,7 @@ task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Mewtwo',
                 'Implementation-Version': version,
-                'Main-Class': 'meew0.mewtwo.MewtwoMain'
+                'Main-Class': mainClassName
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
@@ -31,6 +31,7 @@ task fatJar(type: Jar) {
 
 task buildGems << {
     def mewtwoGemFile = new File('MewtwoGemfile')
+    //noinspection GroovyMissingReturnStatement
     mewtwoGemFile.eachLine {
         if (!(it.startsWith('#') || it.isEmpty())) {
             downloadOneGem(it)
