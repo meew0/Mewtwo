@@ -41,7 +41,10 @@ public class JRubyWrapper {
 
         ArrayList<String> loadPaths = new ArrayList<String>();
 
-        for(File child : Paths.get("lib/gems").toFile().listFiles()) {
+        File gemsFile = Paths.get("lib/gems").toFile();
+        File[] files = gemsFile.listFiles();
+
+        for(File child : files != null ? files : new File[0]) {
             String subPath = Paths.get(child.getAbsolutePath()).resolve("lib").toString();
             MewtwoMain.mewtwoLogger.info("Adding '" + subPath + "' to loadPaths");
             loadPaths.add(subPath);

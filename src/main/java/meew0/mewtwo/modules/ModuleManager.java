@@ -30,7 +30,8 @@ public class ModuleManager {
 
     private List<Module> traverseDirectoryForModules(Path directory) {
         List<Module> modulesList = new ArrayList<Module>();
-        for(File child : directory.toFile().listFiles()) {
+        File[] files = directory.toFile().listFiles();
+        for(File child : files != null ? files : new File[0]) {
             if(child.isDirectory()) modulesList.addAll(traverseDirectoryForModules(child.toPath()));
             else {
                 if(child.getName().endsWith(".rb")) {
