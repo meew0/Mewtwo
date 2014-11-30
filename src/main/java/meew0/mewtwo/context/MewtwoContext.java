@@ -65,8 +65,8 @@ public class MewtwoContext {
     }
 
     /**
-     *
-     * @return
+     * Clear the result of the previous command and return the pre-cleaned result
+     * @return the result, before it was cleaned
      */
     public String clearResult() {
         String result = output;
@@ -125,7 +125,7 @@ public class MewtwoContext {
      * Benchmark something.
      *
      * Benchmarks provide a quick-and-dirty way to profile stuff.
-     * @param thing
+     * @param thing the thing to benchmark, can be any string
      */
     public void benchmark(String thing) {
         long newTime = System.nanoTime();
@@ -137,11 +137,22 @@ public class MewtwoContext {
         lastBenchmark = newTime;
     }
 
+    /**
+     *
+     * @return this context's permanent context
+     */
     public PermanentContext getPCtx() {
         return permanent;
     }
 
-    public MewtwoContext(PircBotX bot, Channel channel, User user, PermanentContext permanent) {
+    /**
+     * Create a new context, should only be used by ContextManager
+     * @param bot the bot
+     * @param channel the current channel (can be a UserChannel)
+     * @param user the user who executed something
+     * @param permanent the permanent context
+     */
+    MewtwoContext(PircBotX bot, Channel channel, User user, PermanentContext permanent) {
         lastBenchmark = System.nanoTime();
         this.bot = bot;
         this.channel = channel;
