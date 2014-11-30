@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+@SuppressWarnings("WeakerAccess")
 public class MewtwoMain {
 	public static String nick, server, login, password, prefix;
     public static int port, maxChainLength, maxChars, maxLines;

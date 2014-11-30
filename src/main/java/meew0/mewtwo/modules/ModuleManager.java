@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class ModuleManager {
 
-    public List<Module> modules;
+    private List<Module> modules;
 
     public static final String modulesFolder = "modules/";
 

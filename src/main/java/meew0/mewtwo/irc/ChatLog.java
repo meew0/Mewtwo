@@ -10,7 +10,8 @@ public class ChatLog {
         public String nick = "", message = "";
     }
 
-	public static int limit = 500;
+	@SuppressWarnings("WeakerAccess")
+    public static int limit = 500;
 	
 	public LinkedList<Message> messages;
 

@@ -26,7 +26,7 @@ public class CommandChain implements ICommandChain {
      * @param result the string to trim
      * @return the string, trimmed
      */
-    public String specialTrim(String result) {
+    String specialTrim(String result) {
         while(result.startsWith(" ") || result.startsWith("\n")) result = result.substring(1, result.length());
         while(result.endsWith(" ") || result.endsWith("\n")) result = result.substring(0, result.length() - 1);
 
@@ -38,7 +38,7 @@ public class CommandChain implements ICommandChain {
      * @param ctx the currently active context
      * @return the result of the chain
      */
-    public String executeBareChain(MewtwoContext ctx) {
+    String executeBareChain(MewtwoContext ctx) {
         // The index of the start of a subchain
         int bracketStart = -1;
 

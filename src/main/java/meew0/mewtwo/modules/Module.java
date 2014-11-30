@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created by miras on 25.11.14.
  */
+@SuppressWarnings("WeakerAccess")
 public class Module {
     private String name, filename;
     private List<String> triggers;

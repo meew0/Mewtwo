@@ -6,6 +6,7 @@ import meew0.mewtwo.ruby.CommandExecutor;
 /**
  * Created by miras on 30.10.14.
  */
+@SuppressWarnings("ALL")
 public class Command {
     private String commandName;
     private String arguments;

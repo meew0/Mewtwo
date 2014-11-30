@@ -16,10 +16,10 @@ import java.nio.file.Paths;
  */
 public class CommandExecutor {
 
-    public static final String commandFolder = "commands/";
-    public static final JRubyWrapper rb = new JRubyWrapper(false); // don't profile
+    private static final String commandFolder = "commands/";
+    private static final JRubyWrapper rb = new JRubyWrapper(false); // don't profile
 
-    String name;
+    private String name;
 
     public CommandExecutor(String name) {
         File f = new File(commandFolder + name + ".rb");
