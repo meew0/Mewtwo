@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 public class CommandExecutor {
 
     private static final String commandFolder = "commands/";
-    private static final JRubyWrapper rb = new JRubyWrapper(false); // don't profile
+    private static final JRubyWrapper rb = new JRubyWrapper(MewtwoMain.shouldProfile);
 
     private String name;
 

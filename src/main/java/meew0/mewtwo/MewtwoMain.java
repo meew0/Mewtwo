@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 public class MewtwoMain {
 	public static String nick, server, login, password, prefix;
     public static int port, maxChainLength, maxChars, maxLines;
-    public static boolean shouldBenchmark;
+    public static boolean shouldBenchmark, shouldProfile = false;
 
     public static Configuration config;
 
@@ -77,6 +77,7 @@ public class MewtwoMain {
         maxLines = config.getInt("maxLines", 10);
 
         shouldBenchmark = config.getBoolean("shouldBenchmark", false);
+        shouldProfile = config.getBoolean("shouldProfile", false);
 
         // Make configuration
 		configuration = new org.pircbotx.Configuration.Builder<PircBotX>()
