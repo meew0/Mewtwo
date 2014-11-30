@@ -1,3 +1,6 @@
+# Command to set something in a config file
+# Use like "%admin/set path/to/cfgfile.group.key value"
+
 require 'parseconfig'
 
 path = ARGV[2].split('.')

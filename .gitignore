@@ -33,6 +33,7 @@
 /commands/admin/*
 !/commands/hello.rb
 !/commands/interact.rb
+!/commands/admin/eval.rb
 !/commands/admin/join.rb
 !/commands/admin/reload.rb
 !/commands/admin/joinserver.rb
