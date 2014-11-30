@@ -20,6 +20,8 @@ when 'get'
 when 'clear'
   puts "Cleared #{config[ARGV[0]].length} memos"
   config[ARGV[0]].clear
+  config.params.delete(ARGV[0])
+  config.groups.delete(ARGV[0])
 else
   puts "No argument specified, try 'add', 'get' or 'clear'"
 end

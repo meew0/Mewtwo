@@ -40,6 +40,6 @@ cause = ['[player] was squashed by a falling anvil',
 '[player] fell out of the world',
 '[player] fell from a high place and fell out of the world',
 '[player] was knocked into the void by [player2]',
-'[player] withered away'].sample.sub('[player]', ARGV[2]).sub('[player2]', ARGV[0])
+'[player] withered away'].sample.sub('[player]', ARGV[2..-1].join(' ')).sub('[player2]', ARGV[0])
 
 puts cause

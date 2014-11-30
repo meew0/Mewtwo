@@ -1,3 +1,6 @@
+# [^%]{1}.*
+# disabled
+
 i = 0.0
 message = ARGV[2..-1].join(' ')
 

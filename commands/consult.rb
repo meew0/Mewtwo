@@ -1,4 +1,10 @@
 require 'zlib'
+require 'base64'
+
+if ARGV[2..-1].join(' ') == ''
+  puts "#{ARGV[0]}, there's no question there"
+  exit
+end
 
 answers = [
   "Yes!",
@@ -7,6 +13,8 @@ answers = [
   "Yes, I'm sure",
   "Probably yes",
   "Yep.",
+  "Likely",
+  "Absolutely yes.",
   "Most likely",
   "Probably",
   "Maybe",
@@ -30,7 +38,7 @@ answers = [
   "*starts crying*",
   "There's insufficient information to answer that question.",
   "Ask your nearest alien civilization",
-  "This question is so retarded even Shiro could answer it.",
+  "This question is so retarded even Amish's bot could answer it.",
   "Definitely"
 ]
 answer = answers[Zlib.crc32(ARGV[2..ARGV.length] * ' ').abs % answers.length]

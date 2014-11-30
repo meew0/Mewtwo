@@ -1,0 +1,57 @@
+# IDEA stuff
+
+/*.iml
+/*.ipr
+/*.iws
+/.idea/
+
+# Eclipse stuff
+
+/.classpath
+/.project
+/.settings/
+
+# Project stuff
+
+/.gradle/
+/lib/
+/bin/
+/build/
+/target/
+
+# Mewtwo stuff
+
+/*~
+
+/include/*
+!/include/argv.rb
+
+/logs/
+/commands/*
+!/commands/admin/
+/commands/admin/*
+!/commands/hello.rb
+!/commands/interact.rb
+!/commands/admin/join.rb
+!/commands/admin/reload.rb
+!/commands/admin/joinserver.rb
+!/commands/admin/leave.rb
+!/commands/admin/nick.rb
+!/commands/admin/set.rb
+
+/modules/*
+!/modules/talk.rb
+
+/*.cfg
+!/mewtwo.cfg
+
+!/README.md
+!/LICENSE
+
+/*.json
+
+/TODO
+/*.jar
+/*.py
+/.git/
+/profile.txt

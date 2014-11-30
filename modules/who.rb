@@ -1,3 +1,6 @@
+# [Ww]ho (is|are)[ ]?(you)?[,]? Mewtwo[\?]?
+# message,pm
+
 require 'parseconfig'
 
 config = ParseConfig.new('mewtwo.cfg')

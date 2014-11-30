@@ -1,16 +1,24 @@
-File.open("logs/#{ARGV[1]}", 'r') do |f|
-  f.each_line do |l|
-    user = l[/[^>]*/]
-    message = l[user.length+1..-1]
+# ([a-zA-Z0-9\-_]+[,:][ ]?)?s/([^/]*)/([^/]*)(/(g)?)?
+# message
 
-    c = ARGV[2..-1] * ' '
-    first = c[2..-1][/[^\/]+/]
-    second = c[first.length+3..-1][/[^\/]+/]
+str = ARGV[2..-1] * ' '
 
-    if(message =~ Regexp.new(first))
-      result = message.gsub(first, second)
-    end
+/((?<name>[a-zA-Z0-9\-_]+)[,:][ ]?)?s\/(?<first>[^\/]*)\/(?<second>[^\/]*)(\/(?<g>g)?)?/ =~ str
 
-    puts "<#{user}> #{result}"
+found = false
+
+ctx.pctx.log.messages.to_a.each do |m|
+  next if name && m.nick != name
+  firstRegex = Regexp.new(first)
+  msg = m.message
+  if m.message =~ firstRegex
+    next if msg =~ /([a-zA-Z0-9\-_]+[,:][ ]?)?s\/([^\/]*)\/([^\/]*)(\/(g)?)?/
+    repl = msg.gsub(firstRegex, second) if g
+    repl = msg.sub(firstRegex, second) unless g
+    puts "#{name || ARGV[0]}: <#{m.nick}> #{repl}"
+    found = true
+    break
   end
 end
+
+puts "Couldn't find a message that matches #{first}" unless found

@@ -543,6 +543,15 @@ emos = {
 
   "dongerf" => "ᕙ༼ຈل͜ຈ༽ᕗ",
   "donger" => "ヽ༼ຈل͜ຈ༽ﾉ",
+
+  "shrug" => "¯\_(ツ)_/¯",
+  "lenny" => "( ͡° ͜ʖ ͡°)",
+  "disapproval" => "ಠ_ಠ",
+
+  "gnab" => "⸘",
+  "gnaborretni" => "⸘",
+
+  "grav" => ";n;"
 }
 
 user = ARGV[3] ? "#{ARGV[3]}, " : ''
