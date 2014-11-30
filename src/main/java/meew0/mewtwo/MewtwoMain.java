@@ -5,9 +5,13 @@ import meew0.mewtwo.irc.MewtwoListener;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.apache.commons.io.FileUtils;
 import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 public class MewtwoMain {
 	public static String nick, server, login, password, prefix;
@@ -32,13 +36,22 @@ public class MewtwoMain {
         // Load config file
         config = new HierarchicalINIConfiguration("mewtwo.cfg");
 
+        password = "";
+
+        // Load password from file
+        try {
+            password = FileUtils.readFileToString(Paths.get("NickservPassword").toFile());
+            mewtwoLogger.info("Password file loaded successfully");
+        } catch (IOException e) {
+            mewtwoLogger.warn("Password file not found! Either you won't be able to identify or you've made your bot really insecure!");
+        }
+
         mewtwoLogger.info("Loaded config");
 
         // Load all arguments from config file
         nick = config.getString("nick", "Mewtwo");
         server = config.getString("server", "irc.esper.net");
         login = config.getString("login", "Mewtwo");
-        password = config.getString("password", "");
         port = config.getInt("port", 6667);
         prefix = config.getString("prefix", "%");
 
@@ -56,6 +69,7 @@ public class MewtwoMain {
 		        .setCapEnabled(true)
                 .addListener(new MewtwoListener());
 
+        // Only set password if it is there
         if(!password.equals("")) configuration.setNickservPassword(password);
 
         // Start bot in new thread

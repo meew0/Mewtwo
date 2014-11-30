@@ -24,6 +24,8 @@
 
 /*~
 
+/NickservPassword
+
 /include/*
 !/include/argv.rb
 
