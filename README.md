@@ -95,7 +95,7 @@ In addition to the user nick and the channel, `ARGV` also contains the arguments
 
 ## The context
 
-In addition to the things saved in `ARGV`, a variable called `ctx` is also passed to the script. It contains some more information about the user and channel and also contains a variable called `pctx`, which contains even more information. Take a look at (MewtwoContext.java)[https://github.com/meew0/Mewtwo/blob/master/src/main/java/meew0/mewtwo/context/MewtwoContext.java] and (PermanentContext.java)[https://github.com/meew0/Mewtwo/blob/master/src/main/java/meew0/mewtwo/context/PermanentContext.java] to see what exactly is saved.
+In addition to the things saved in `ARGV`, a variable called `ctx` is also passed to the script. It contains some more information about the user and channel and also contains a variable called `pctx`, which contains even more information. Take a look at [MewtwoContext.java](https://github.com/meew0/Mewtwo/blob/master/src/main/java/meew0/mewtwo/context/MewtwoContext.java) and [PermanentContext.java](https://github.com/meew0/Mewtwo/blob/master/src/main/java/meew0/mewtwo/context/PermanentContext.java) to see what exactly is saved.
 
 ## Using gems
 
@@ -113,8 +113,8 @@ TODO
 
 # Useful documentation
 
-* (Calling Java from JRuby)[https://github.com/jruby/jruby/wiki/CallingJavaFromJRuby] - you can use other Java classes, not just the contexts, in your commands.
-* (Ruby 1.9.3 documentation)[http://ruby-doc.org/core-1.9.3/] - as JRuby is only compatible with Ruby 1.9.3, you can't use some newer stuff.
+* [Calling Java from JRuby](https://github.com/jruby/jruby/wiki/CallingJavaFromJRuby) - you can use other Java classes, not just the contexts, in your commands.
+* [Ruby 1.9.3 documentation](http://ruby-doc.org/core-1.9.3/) - as JRuby is only compatible with Ruby 1.9.3, you can't use some newer stuff.
 
 # Contributing
 
