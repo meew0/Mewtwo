@@ -367,7 +367,7 @@ public class CommandChain implements ICommandChain {
                     }
 
                     colorStr = fgColor;
-                    if(bgColor != "") colorStr += ("," + bgColor);
+                    if(!bgColor.isEmpty()) colorStr += ("," + bgColor);
                 }
 
                 result = "" + ((char) 3) + colorStr + result + ((char) 3);
