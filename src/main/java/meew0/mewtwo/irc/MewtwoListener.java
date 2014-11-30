@@ -117,8 +117,11 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
             if (msg.startsWith(ctx.getPCtx().getMewtwoPrefix())) {
                 executeOneChain(msg, ctx);
             }
-            long diff = new Date().getTime() - counter;
-            MewtwoMain.mewtwoLogger.info("Mewtwo took " + diff + " ms to execute!");
+
+            if(MewtwoMain.shouldBenchmark) {
+                long diff = new Date().getTime() - counter;
+                MewtwoMain.mewtwoLogger.info("Mewtwo took " + diff + " ms to execute!");
+            }
         } catch (Exception e) {
             // Error handling
             event.respond("ERROR: An exception has occurred! "
@@ -126,6 +129,8 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
             event.respond("See console for details.");
             e.printStackTrace();
         }
-        MewtwoMain.mewtwoLogger.info("Benchmark data (times in ns): " + ctx.formatBenchmark());
+        if(MewtwoMain.shouldBenchmark) {
+            MewtwoMain.mewtwoLogger.info("Benchmark data (times in ns): " + ctx.formatBenchmark());
+        }
     }
 }
