@@ -290,7 +290,7 @@ public class CommandChain implements ICommandChain {
             }
             else if(arg.startsWith("repeat ")) {
                 String amountStr = getArgumentArgument(arg);
-                int amount = 0;
+                int amount;
                 try {
                     amount = Integer.parseInt(amountStr);
                 } catch (NumberFormatException t) {
@@ -312,7 +312,7 @@ public class CommandChain implements ICommandChain {
 
                 String chainToExecute = chainWithoutArgs(oldChain);
 
-                int amount = 0;
+                int amount;
                 try {
                     amount = Integer.parseInt(amountStr);
                 } catch (NumberFormatException t) {
@@ -346,7 +346,7 @@ public class CommandChain implements ICommandChain {
                 result = "" + ((char) 31) + result + ((char) 31);
             }
             else if(arg.startsWith("color ") || arg.startsWith("spoiler")) {
-                String colorStr = "";
+                String colorStr;
                 if(arg.startsWith("spoiler")) {
                     colorStr = "00,00";
                     result = result.replace("" + (char) 31, "");

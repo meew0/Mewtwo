@@ -18,21 +18,15 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     public void executeModules(String type, String msg, MewtwoContext ctx) {
-        String[] ret;
         try {
             String result = ctx.getPCtx().getModuleManager().executeModules(type, msg, ctx);
 
-            ret = result.split("\n");
+            String[] ret = result.split("\n");
             for (String s : ret) {
                 ctx.getChannel().send().message(s);
             }
         } catch (Throwable t) {
-            ret = new String[]{
-                    "ERROR: An exception has occurred while executing a module! "
-                            + t.getClass().getName() + ": " + t.getMessage(),
-                    "See console for details."
-            };
-            t.printStackTrace();
+            MewtwoMain.mewtwoLogger.error("Error while executing a module! (" + ctx.getId() + ")", t);
         }
     }
 
