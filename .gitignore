@@ -45,6 +45,7 @@
 
 /modules/*
 !/modules/talk.rb
+!/modules/regex.rb
 
 /*.cfg
 !/mewtwo.cfg
