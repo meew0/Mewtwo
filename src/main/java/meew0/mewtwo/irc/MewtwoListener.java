@@ -18,6 +18,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     void executeModules(String type, String msg, MewtwoContext ctx) {
+        ctx.getPCtx().setThreadInfo(msg, ctx.getUserNick());
         try {
             String result = ctx.getPCtx().getModuleManager().executeModules(type, msg, ctx);
 
@@ -50,6 +51,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     private static void executeOneChain(String msg, MewtwoContext ctx) {
+        ctx.getPCtx().setThreadInfo(msg, ctx.getUserNick());
         if (msg.startsWith(ctx.getPCtx().getMewtwoPrefix())) {
             CommandChainBuilder chainBuilder = new CommandChainBuilder(ctx, msg);
             ICommandChain chain = chainBuilder.buildChain();
