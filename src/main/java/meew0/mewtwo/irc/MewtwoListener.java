@@ -32,6 +32,44 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
+    public void onKick(KickEvent<PircBotX> event) throws Exception {
+        executeModules("kick", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+    }
+
+    @Override
+    public void onInvite(InviteEvent<PircBotX> event) throws Exception {
+        executeModules("invite", "", ctxMgr.makeContext(event.getBot(),
+                event.getBot().getUserChannelDao().getChannel(event.getChannel()),
+                event.getBot().getUserChannelDao().getUser(event.getUser()))); // what the actual fuck PircBotX
+    }
+
+    @Override
+    public void onOp(OpEvent<PircBotX> event) throws Exception {
+        executeModules("op", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+    }
+
+    @Override
+    public void onVoice(VoiceEvent<PircBotX> event) throws Exception {
+        executeModules("voice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+    }
+
+    @Override
+    public void onNotice(NoticeEvent<PircBotX> event) throws Exception {
+        executeModules("notice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+    }
+
+    @Override
+    public void onQuit(QuitEvent<PircBotX> event) throws Exception {
+        executeModules("quit", "", ctxMgr.makeContext(event.getBot(), new UserChannel(event.getUser()),
+                event.getUser()));
+    }
+
+    @Override
+    public void onPart(PartEvent<PircBotX> event) throws Exception {
+        executeModules("part", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+    }
+
+    @Override
     public void onJoin(JoinEvent<PircBotX> event) throws Exception {
         executeModules("join", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
