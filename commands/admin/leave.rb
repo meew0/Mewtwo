@@ -1,4 +1,4 @@
 # Command to leave a channel
-# Use like "%admin/leave" in the channel you want to leave
+# Use like "%admin/leave <channel>"
 
-ctx.channel.send.part 'NOOOOOoooooo.....'
+ctx.bot.user_channel_dao.channel(ARGV[2]).send.part 'NOOOOOoooooo.....'
