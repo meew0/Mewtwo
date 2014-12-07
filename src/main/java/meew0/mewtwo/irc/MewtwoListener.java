@@ -55,7 +55,9 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
 
     @Override
     public void onNotice(NoticeEvent<PircBotX> event) throws Exception {
-        executeModules("notice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        if(event.getChannel() != null) {
+            executeModules("notice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        }
     }
 
     @Override

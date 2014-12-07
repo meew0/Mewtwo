@@ -1,4 +1,4 @@
-package meew0.mewtwo.irc;
+package meew0.mewtwo.thread;
 
 /**
  * Created by miras on 03.12.14.

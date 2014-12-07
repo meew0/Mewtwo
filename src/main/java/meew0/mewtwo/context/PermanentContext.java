@@ -2,8 +2,8 @@ package meew0.mewtwo.context;
 
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.irc.ChatLog;
-import meew0.mewtwo.irc.ListenerPoolThreadInfo;
 import meew0.mewtwo.modules.ModuleManager;
+import meew0.mewtwo.thread.ListenerPoolThreadInfo;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 

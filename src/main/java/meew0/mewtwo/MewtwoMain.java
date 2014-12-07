@@ -1,7 +1,8 @@
 package meew0.mewtwo;
 
-import meew0.mewtwo.irc.BotWrapperThread;
 import meew0.mewtwo.irc.MewtwoListener;
+import meew0.mewtwo.thread.BotWrapperThread;
+import meew0.mewtwo.thread.InputWatchThread;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
@@ -18,9 +19,11 @@ import java.nio.file.Paths;
 public class MewtwoMain {
 	public static String nick, server, login, password, prefix;
     public static int port, maxChainLength, maxChars, maxLines;
+    public static int bwtCounter = 0;
     public static boolean shouldBenchmark, shouldProfile = false;
 
     public static Configuration config;
+    public static MewtwoListener listener;
 
     public static org.pircbotx.Configuration.Builder<PircBotX> configuration;
 
@@ -79,20 +82,30 @@ public class MewtwoMain {
         shouldBenchmark = config.getBoolean("shouldBenchmark", false);
         shouldProfile = config.getBoolean("shouldProfile", false);
 
+        listener = new MewtwoListener();
+
         // Make configuration
 		configuration = new org.pircbotx.Configuration.Builder<PircBotX>()
 		        .setLogin(login)
 		        .setRealName("Mewtwo")
 		        .setAutoNickChange(true)
 		        .setCapEnabled(true)
-                .addListener(new MewtwoListener());
+                .addListener(listener);
 
         // Only set password if it is there
         if(!password.equals("")) configuration.setNickservPassword(password);
 
         // Start bot in new thread
-        BotWrapperThread mewtwo = new BotWrapperThread(configuration, nick, server, port);
-        Thread mewtwoThread = new Thread(mewtwo);
+        String threadName = "bwt-" + (bwtCounter++);
+        BotWrapperThread mewtwo = new BotWrapperThread(configuration, nick, server, port, threadName);
+        Thread mewtwoThread = new Thread(mewtwo, threadName);
+        mewtwoLogger.info("Starting core BWT with name '" + threadName + "'");
         mewtwoThread.start();
+        mewtwoLogger.info("Successfully started core BWT");
+
+        Thread iwt = new Thread(new InputWatchThread(), "iwt-0");
+        mewtwoLogger.info("Starting IWT with name 'iwt-0'");
+        iwt.start();
+        mewtwoLogger.info("Successfully started IWT");
 	}
 }
