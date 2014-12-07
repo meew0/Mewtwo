@@ -31,7 +31,13 @@ task fatJar(type: Jar) {
     with jar
 }
 
-task buildGems << {
+task copyToLib(dependsOn: build, type: Copy) {
+    into "lib"
+    from configurations.runtime
+}
+
+//noinspection GroovyAssignabilityCheck
+task buildGems(dependsOn: copyToLib) << {
     def mewtwoGemFile = new File('MewtwoGemfile')
     //noinspection GroovyMissingReturnStatement
     mewtwoGemFile.eachLine {
@@ -52,6 +58,6 @@ def downloadOneGem(String target) {
     println "Downloading gem " + target
     exec {
         executable "java"
-        args "-jar", ("lib/jruby-complete-1.7.16.1.jar"), "-S", "gem", "install", "-i", "lib/", target
+        args "-jar", ("lib/jruby-1.7.16.1.jar"), "-S", "gem", "install", "-i", "lib/", target
     }
 }
