@@ -103,7 +103,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
                 // If the result is shorter than or equal to 500 characters,
                 // post it to the channel
                 String[] split = result.split("\n");
-                if (split.length <= 4) {
+                if (split.length <= 4 || ctx.getPCtx().isUserAdmin(ctx.getUserNick())) {
                     for (String s : split) {
                         if (s.length() >= 445) {
                             String messageToSend = s.substring(0, 445);
