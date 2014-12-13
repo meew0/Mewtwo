@@ -54,8 +54,8 @@ public class BotWrapperThread implements Runnable {
 
         try {
             mewtwo.startBot();
-        } catch(Exception e) {
-            e.printStackTrace();
+        } catch(Throwable t) {
+            MewtwoMain.mewtwoLogger.error("Error while starting/running bot! This is most likely fatal and you should restart Mewtwo now", t);
         }
     }
 }
