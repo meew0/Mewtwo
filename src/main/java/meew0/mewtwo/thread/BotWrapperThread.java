@@ -31,21 +31,18 @@ public class BotWrapperThread implements Runnable {
         MewtwoMain.mewtwoLogger.info("Bot created, starting up...");
 
         MewtwoMain.mewtwoLogger.info("Starting up processing thread...");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true) {
-                    if(InputWatchThread.hasNextFor(threadName)) {
-                        MewtwoMain.mewtwoLogger.info("Hey! There's something for me to do!");
-                        InputWatchThread.InputEntry entry = InputWatchThread.getNext();
-                        Channel channel = mewtwo.getUserChannelDao().getChannel(entry.getChannel());
-                        User user = new ConsoleUser(mewtwo);
-                        MessageEvent<PircBotX> event = new MessageEvent<PircBotX>(mewtwo, channel, user, entry.getMessage());
-                        try {
-                            MewtwoMain.listener.onMessage(event);
-                        } catch(Throwable t) {
-                            MewtwoMain.mewtwoLogger.error("Error while triggering console event!", t);
-                        }
+        new Thread(() -> {
+            while(true) {
+                if(InputWatchThread.hasNextFor(threadName)) {
+                    MewtwoMain.mewtwoLogger.info("Hey! There's something for me to do!");
+                    InputWatchThread.InputEntry entry = InputWatchThread.getNext();
+                    Channel channel = mewtwo.getUserChannelDao().getChannel(entry.getChannel());
+                    User user = new ConsoleUser(mewtwo);
+                    MessageEvent<PircBotX> event = new MessageEvent<PircBotX>(mewtwo, channel, user, entry.getMessage());
+                    try {
+                        MewtwoMain.listener.onMessage(event);
+                    } catch(Throwable t) {
+                        MewtwoMain.mewtwoLogger.error("Error while triggering console event!", t);
                     }
                 }
             }
