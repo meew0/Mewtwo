@@ -100,18 +100,18 @@ public class MewtwoMain {
         String threadName = "bwt-" + (bwtCounter++);
         BotWrapperThread mewtwo = new BotWrapperThread(configuration, nick, server, port, threadName);
         Thread mewtwoThread = new Thread(mewtwo, threadName);
-        mewtwoLogger.info("Starting core BWT with name '" + threadName + "'");
+        mewtwoLogger.info("Starting core BotWrapperThread with name '" + threadName + "'");
         mewtwoThread.start();
-        mewtwoLogger.info("Successfully started core BWT");
+        mewtwoLogger.info("Successfully started core BotWrapperThread");
 
-        Thread iwt = new Thread(new InputWatchThread(), "iwt-0");
-        mewtwoLogger.info("Starting IWT with name 'iwt-0'");
+        Thread iwt = new Thread(new InputWatchThread(), "InputWatchThread");
+        mewtwoLogger.info("Starting input watch thread with name '" + iwt.getName() + "'");
         iwt.start();
-        mewtwoLogger.info("Successfully started IWT");
+        mewtwoLogger.info("Successfully started file watch thread");
 
-        Thread fwt = new Thread(new FileWatchThread(), "fwt-0");
-        mewtwoLogger.info("Starting FWT with name 'fwt-0'");
+        Thread fwt = new Thread(new FileWatchThread(), "FileWatchThread");
+        mewtwoLogger.info("Starting file watch thread with name '" + fwt.getName() + "'");
         fwt.start();
-        mewtwoLogger.info("Successfully started FWT");
+        mewtwoLogger.info("Successfully started file watch thread");
 	}
 }
