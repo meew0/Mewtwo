@@ -27,41 +27,45 @@ public class ModuleManager {
         reloadConfigs();
     }
 
+    private List<Module> getSingleModuleForPath(File child) {
+        if(child.getName().endsWith(".rb")) {
+            try {
+                @SuppressWarnings("unchecked")
+                List<String> lines = FileUtils.readLines(child);
+                if(lines.size() > 1) {
+                    String regex = lines.get(0);
+                    regex = regex.substring(1, regex.length()).trim();
+
+                    String triggers = lines.get(1);
+                    triggers = triggers.substring(1, triggers.length()).trim();
+
+                    String filename = child.getName();
+                    String name = filename.substring(0, filename.length() - 3);
+                    MewtwoMain.mewtwoLogger.info("Adding module " + name + " - regex = " + regex +
+                            ", triggers = "+ triggers);
+
+                    Module m = new Module(
+                            new Regex(regex.getBytes(), 0, regex.length(), Option.NONE, UTF8Encoding.INSTANCE),
+                            Arrays.asList(triggers.split(",")), filename.substring(0, filename.length() - 3),
+                            filename);
+
+                    return Arrays.asList(m);
+                } else MewtwoMain.mewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
+            } catch (Throwable t) {
+                MewtwoMain.mewtwoLogger.error("Exception while parsing modules for " + child.getAbsolutePath() + "! ", t);
+            }
+
+        } else MewtwoMain.mewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
+
+        return Arrays.asList();
+    }
+
     private List<Module> traverseDirectoryForModules(Path directory) {
         List<Module> modulesList = new ArrayList<Module>();
         File[] files = directory.toFile().listFiles();
         for(File child : files != null ? files : new File[0]) {
             if(child.isDirectory()) modulesList.addAll(traverseDirectoryForModules(child.toPath()));
-            else {
-                if(child.getName().endsWith(".rb")) {
-                    try {
-                        @SuppressWarnings("unchecked")
-                        List<String> lines = FileUtils.readLines(child);
-                        if(lines.size() > 1) {
-                            String regex = lines.get(0);
-                            regex = regex.substring(1, regex.length()).trim();
-
-                            String triggers = lines.get(1);
-                            triggers = triggers.substring(1, triggers.length()).trim();
-
-                            String filename = child.getName();
-                            String name = filename.substring(0, filename.length() - 3);
-                            MewtwoMain.mewtwoLogger.info("Adding module " + name + " - regex = " + regex +
-                                    ", triggers = "+ triggers);
-
-                            Module m = new Module(
-                                    new Regex(regex.getBytes(), 0, regex.length(), Option.NONE, UTF8Encoding.INSTANCE),
-                                    Arrays.asList(triggers.split(",")), filename.substring(0, filename.length() - 3),
-                                    filename);
-
-                            modulesList.add(m);
-                        } else MewtwoMain.mewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
-                    } catch (Throwable t) {
-                        MewtwoMain.mewtwoLogger.error("Exception while parsing modules for " + child.getAbsolutePath() + "! ", t);
-                    }
-
-                } else MewtwoMain.mewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
-            }
+            else modulesList.addAll(getSingleModuleForPath(child));
         }
         return modulesList;
     }

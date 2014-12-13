@@ -2,6 +2,7 @@ package meew0.mewtwo;
 
 import meew0.mewtwo.irc.MewtwoListener;
 import meew0.mewtwo.thread.BotWrapperThread;
+import meew0.mewtwo.thread.FileWatchThread;
 import meew0.mewtwo.thread.InputWatchThread;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -107,5 +108,10 @@ public class MewtwoMain {
         mewtwoLogger.info("Starting IWT with name 'iwt-0'");
         iwt.start();
         mewtwoLogger.info("Successfully started IWT");
+
+        Thread fwt = new Thread(new FileWatchThread(), "fwt-0");
+        mewtwoLogger.info("Starting FWT with name 'fwt-0'");
+        fwt.start();
+        mewtwoLogger.info("Successfully started FWT");
 	}
 }

@@ -28,4 +28,8 @@ public class ContextManager {
     public MewtwoContext makeContext(PircBotX bot, Channel channel, User user) {
         return new MewtwoContext(bot, channel, user, permanent);
     }
+
+    public PermanentContext getPermanent() {
+        return permanent;
+    }
 }

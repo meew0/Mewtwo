@@ -5,6 +5,7 @@ import meew0.mewtwo.commands.CommandChainBuilder;
 import meew0.mewtwo.commands.ICommandChain;
 import meew0.mewtwo.context.ContextManager;
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.context.PermanentContext;
 import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
@@ -15,6 +16,14 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     private static final ContextManager ctxMgr = new ContextManager();
 
     public MewtwoListener() {
+    }
+
+    /**
+     * Gets the static permanent context, to be used by threads such as FileWatchThread
+     * @return permanent context of Mewtwo instance
+     */
+    public static PermanentContext getPCtx() {
+        return ctxMgr.getPermanent();
     }
 
     void executeModules(String type, String msg, MewtwoContext ctx) {
