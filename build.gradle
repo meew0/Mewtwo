@@ -16,6 +16,7 @@ dependencies {
     compile "org.jruby:jruby-complete:1.7.16.1"
     compile "org.slf4j:slf4j-simple:1.7.7"
     compile "junit:junit:3.8.1"
+    compile "org.projectlombok:lombok:1.14.8"
 }
 
 //noinspection GroovyAssignabilityCheck
