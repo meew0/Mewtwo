@@ -54,11 +54,8 @@ public class BotWrapperThread implements Runnable {
 
         try {
             mewtwo.startBot();
-            MewtwoMain.mewtwoLogger.info("Bot started, listening now");
         } catch(Exception e) {
             e.printStackTrace();
         }
-        MewtwoMain.mewtwoLogger.info("Bot started without problems! Yay! Now to spend the rest of my " +
-                "lifetime processing input items just so you can use the console interactively.");
     }
 }
