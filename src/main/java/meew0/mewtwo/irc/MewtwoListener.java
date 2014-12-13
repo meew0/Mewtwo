@@ -173,12 +173,12 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
                 long diff = new Date().getTime() - counter;
                 MewtwoMain.mewtwoLogger.info("Mewtwo took " + diff + " ms to execute!");
             }
-        } catch (Exception e) {
+        } catch (Throwable t) {
             // Error handling
             event.respond("ERROR: An exception has occurred! "
-                    + e.getClass().getName() + ": " + e.getMessage());
+                    + t.getClass().getName() + ": " + t.getMessage());
             event.respond("See console for details.");
-            e.printStackTrace();
+            MewtwoMain.mewtwoLogger.error("Error while processing message!", t);
         }
         if(MewtwoMain.shouldBenchmark) {
             MewtwoMain.mewtwoLogger.info("Benchmark data (times in ns): " + ctx.formatBenchmark());

@@ -185,7 +185,7 @@ public class PermanentContext {
         try {
             config.load();
         } catch (ConfigurationException e) {
-            e.printStackTrace();
+            MewtwoMain.mewtwoLogger.error("Error while reloading a specific config!", e);
         }
     }
 
