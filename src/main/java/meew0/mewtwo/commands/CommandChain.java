@@ -156,6 +156,10 @@ public class CommandChain implements ICommandChain {
 
             // Prevent disabled commands from being executed
             if(cmd.isDisabled()) return "The command '" + cmdName + "' is disabled!";
+
+            // Prevent out-of-scope commands from being executed
+            if(cmd.isOutsideScope()) return "The command '" + cmdName + "' is outside of the allowed scope!";
+
             try {
                 cmd.getWrapper();
 

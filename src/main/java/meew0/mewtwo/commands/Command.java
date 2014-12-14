@@ -43,6 +43,9 @@ public class Command {
     public boolean isDisabled() {
         return ctx.getPCtx().isCommandEnabled(commandName);
     }
+    public boolean isOutsideScope() {
+        return commandName.contains("..");
+    }
 
 
     public String execute(MewtwoContext ctx) {
