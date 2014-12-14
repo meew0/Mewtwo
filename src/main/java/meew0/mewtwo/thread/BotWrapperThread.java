@@ -9,6 +9,8 @@ import org.pircbotx.PircBotX;
 import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
+import java.util.Arrays;
+
 /**
  * Created by meew0 on 31.08.14.
  */
@@ -20,7 +22,7 @@ public class BotWrapperThread implements Runnable {
         this.configuration = configuration;
 
         this.configuration.setName(nick);
-        this.configuration.setServer(serverHostName, serverPort);
+        this.configuration.setServers(Arrays.asList(new Configuration.ServerEntry(serverHostName, serverPort)));
 
         this.threadName = threadName;
     }
