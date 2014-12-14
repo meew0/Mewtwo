@@ -12,10 +12,10 @@ import org.pircbotx.hooks.events.MessageEvent;
  * Created by meew0 on 31.08.14.
  */
 public class BotWrapperThread implements Runnable {
-    private final Configuration.Builder<PircBotX> configuration;
+    private final Configuration.Builder configuration;
     private final String threadName;
 
-    public BotWrapperThread(Configuration.Builder<PircBotX> configuration, String nick, String serverHostName, int serverPort, String threadName) {
+    public BotWrapperThread(Configuration.Builder configuration, String nick, String serverHostName, int serverPort, String threadName) {
         this.configuration = configuration;
 
         this.configuration.setName(nick);
@@ -38,7 +38,7 @@ public class BotWrapperThread implements Runnable {
                     InputWatchThread.InputEntry entry = InputWatchThread.getNext();
                     Channel channel = mewtwo.getUserChannelDao().getChannel(entry.getChannel());
                     User user = new ConsoleUser(mewtwo);
-                    MessageEvent<PircBotX> event = new MessageEvent<PircBotX>(mewtwo, channel, user, entry.getMessage());
+                    MessageEvent event = new MessageEvent(mewtwo, channel, user, entry.getMessage());
                     try {
                         MewtwoMain.listener.onMessage(event);
                     } catch(Throwable t) {
