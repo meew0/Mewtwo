@@ -183,10 +183,6 @@ public class UserChannel extends Channel {
         return ImmutableSortedSet.of(user);
     }
 
-    public String getTopicSetter() {
-        return "No topics in PM!";
-    }
-
     public boolean isOp(User user) {
         return false;
     }
