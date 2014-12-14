@@ -27,7 +27,7 @@ public class JRubyWrapper {
      * Create a new JRuby wrapper.
      * @param profile whether or not profiling is enabled
      */
-    public JRubyWrapper(boolean profile) { // TODO Make profiling configurable
+    public JRubyWrapper(boolean profile) {
         rb = new ScriptingContainer(LocalContextScope.THREADSAFE);
         rb.setCompatVersion(CompatVersion.RUBY1_9);
         rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to working directory of application
