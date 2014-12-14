@@ -15,11 +15,10 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
 
 @SuppressWarnings("WeakerAccess")
 public class MewtwoMain {
-	public static String nick, server, login, password, prefix, channels;
+	public static String nick, server, login, password, prefix;
     public static int port, maxChainLength, maxChars, maxLines;
     public static int bwtCounter = 0;
     public static boolean shouldBenchmark, shouldProfile = false;
@@ -59,7 +58,6 @@ public class MewtwoMain {
         mewtwoLogger = LoggerFactory.getLogger("Mewtwo");
         config = getConfig("mewtwo.cfg");
         password = "";
-        channels = "";
 
         // Load password from file
         try {
@@ -67,14 +65,6 @@ public class MewtwoMain {
             mewtwoLogger.info("Password file loaded successfully");
         } catch (IOException e) {
             mewtwoLogger.warn("Password file not found! Either you won't be able to identify or you've made your bot really insecure!");
-        }
-
-        // Load channels from file
-        try {
-            password = FileUtils.readFileToString(Paths.get("Autojoin").toFile());
-            mewtwoLogger.info("Autojoin file loaded successfully");
-        } catch (IOException e) {
-            mewtwoLogger.info("Autojoin file not found, ignoring");
         }
 
         mewtwoLogger.info("Loaded config");
@@ -102,9 +92,6 @@ public class MewtwoMain {
 		        .setAutoNickChange(true)
 		        .setCapEnabled(true)
                 .addListener(listener);
-
-        // If any channels to autojoin exist, join them
-        if(!channels.isEmpty()) Arrays.asList(channels.split("\n")).stream().forEachOrdered(configuration::addAutoJoinChannel);
 
         // Only set password if it is there
         if(!password.equals("")) configuration.setNickservPassword(password);

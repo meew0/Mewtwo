@@ -25,7 +25,6 @@
 /*~
 
 /NickservPassword
-/Autojoin
 
 /include/*
 !/include/argv.rb
