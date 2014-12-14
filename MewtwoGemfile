@@ -3,13 +3,13 @@
 # If you want to add more gems, just put its name on a new line into here and rerun the "buildGems" gradle task.
 
 # Parsing config files
-#parseconfig
+parseconfig
 
 # Web-related gems
-#nokogiri
-#open_uri_redirections
-#htmlentities
+nokogiri
+open_uri_redirections
+htmlentities
 
 # Calculating mathematical expressions
-#hilbert
+hilbert
 
