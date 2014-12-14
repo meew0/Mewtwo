@@ -8,7 +8,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.apache.commons.io.FileUtils;
-import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +25,7 @@ public class MewtwoMain {
     public static Configuration config;
     public static MewtwoListener listener;
 
-    public static org.pircbotx.Configuration.Builder<PircBotX> configuration;
+    public static org.pircbotx.Configuration.Builder configuration;
 
     public static Logger mewtwoLogger;
 
@@ -86,7 +85,7 @@ public class MewtwoMain {
         listener = new MewtwoListener();
 
         // Make configuration
-		configuration = new org.pircbotx.Configuration.Builder<PircBotX>()
+		configuration = new org.pircbotx.Configuration.Builder()
 		        .setLogin(login)
 		        .setRealName("Mewtwo")
 		        .setAutoNickChange(true)

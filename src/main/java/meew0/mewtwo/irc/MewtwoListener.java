@@ -6,13 +6,12 @@ import meew0.mewtwo.commands.ICommandChain;
 import meew0.mewtwo.context.ContextManager;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.context.PermanentContext;
-import org.pircbotx.PircBotX;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.*;
 
 import java.util.Date;
 
-public class MewtwoListener extends ListenerAdapter<PircBotX> {
+public class MewtwoListener extends ListenerAdapter {
     private static final ContextManager ctxMgr = new ContextManager();
 
     public MewtwoListener() {
@@ -41,7 +40,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
-    public void onConnect(ConnectEvent<PircBotX> event) throws Exception {
+    public void onConnect(ConnectEvent event) throws Exception {
         executeModules("connect", "", ctxMgr.makeContext(event.getBot(),
                 new UserChannel(new ConsoleUser(event.getBot())), new ConsoleUser(event.getBot())));
         executeModules("connect-" + event.getBot().getServerInfo().getServerName(), "",
@@ -50,58 +49,60 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
-    public void onKick(KickEvent<PircBotX> event) throws Exception {
+    public void onKick(KickEvent event) throws Exception {
         executeModules("kick", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
 
     @Override
-    public void onInvite(InviteEvent<PircBotX> event) throws Exception {
+    public void onInvite(InviteEvent event) throws Exception {
         executeModules("invite", "", ctxMgr.makeContext(event.getBot(),
                 event.getBot().getUserChannelDao().getChannel(event.getChannel()),
                 event.getBot().getUserChannelDao().getUser(event.getUser()))); // what the actual fuck PircBotX
     }
 
     @Override
-    public void onOp(OpEvent<PircBotX> event) throws Exception {
+    public void onOp(OpEvent event) throws Exception {
         executeModules("op", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
 
     @Override
-    public void onVoice(VoiceEvent<PircBotX> event) throws Exception {
+    public void onVoice(VoiceEvent event) throws Exception {
         executeModules("voice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
 
     @Override
-    public void onNotice(NoticeEvent<PircBotX> event) throws Exception {
+    public void onNotice(NoticeEvent event) throws Exception {
         if(event.getChannel() != null) {
             executeModules("notice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
         }
     }
 
     @Override
-    public void onQuit(QuitEvent<PircBotX> event) throws Exception {
+    public void onQuit(QuitEvent event) throws Exception {
         executeModules("quit", "", ctxMgr.makeContext(event.getBot(), new UserChannel(event.getUser()),
                 event.getUser()));
     }
 
     @Override
-    public void onPart(PartEvent<PircBotX> event) throws Exception {
+    public void onPart(PartEvent event) throws Exception {
         executeModules("part", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
 
     @Override
-    public void onJoin(JoinEvent<PircBotX> event) throws Exception {
+    public void onJoin(JoinEvent event) throws Exception {
         executeModules("join", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
 
     @Override
-    public void onNickChange(NickChangeEvent<PircBotX> event) throws Exception {
+    public void onNickChange(NickChangeEvent event) throws Exception {
         executeModules("nickchange", "", ctxMgr.makeContext(event.getBot(), new UserChannel(event.getUser()),
                         event.getUser()));
     }
 
     @Override
-    public void onPrivateMessage(PrivateMessageEvent<PircBotX> event) throws Exception {
+    public void onPrivateMessage(PrivateMessageEvent event) throws Exception {
+        event.getBot().sendRaw().rawLineNow("WHOIS " + event.getUser().getNick());
+        event.respond("MESSAGE BY " + event.getUser().getLogin() + "@" + event.getUser().getHostmask());
         MewtwoContext ctx = ctxMgr.makeContext(event.getBot(), new UserChannel(event.getUser()), event.getUser());
         executeOneChain(event.getMessage(), ctx);
 
@@ -145,7 +146,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
-    public void onAction(ActionEvent<PircBotX> event) throws Exception {
+    public void onAction(ActionEvent event) throws Exception {
         String msg = event.getMessage();
         MewtwoContext ctx = ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser());
 
@@ -156,7 +157,7 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
-    public void onMessage(MessageEvent<PircBotX> event) throws Exception {
+    public void onMessage(MessageEvent event) throws Exception {
         MewtwoContext ctx = ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser());
         try {
             long counter = new Date().getTime();
