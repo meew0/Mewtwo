@@ -2,7 +2,6 @@ package meew0.mewtwo.thread;
 
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.irc.ConsoleUser;
-import meew0.mewtwo.irc.ConsoleUserHostmask;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
@@ -42,7 +41,7 @@ public class BotWrapperThread implements Runnable {
                     Channel channel = mewtwo.getUserChannelDao().getChannel(entry.getChannel());
                     User user = new ConsoleUser(mewtwo);
                     MessageEvent event = new MessageEvent(mewtwo, channel, "not sure what this is",
-                            new ConsoleUserHostmask(mewtwo), user, entry.getMessage());
+                            user, user, entry.getMessage());
                     // TODO: fix channel source and hostmask
 
                     try {
