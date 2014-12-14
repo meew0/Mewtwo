@@ -40,7 +40,7 @@ public class CommandChainBuilder {
     public ICommandChain buildChain() {
         if(ctx.getPCtx().shouldIgnoreUser(ctx.getUserNick())) return new StaticChain("");   // ignore user if I should
         if(ctx.getPCtx().isSlowmodeActive()) return new StaticChain("");                    // ignore if slowmode is active
-        if(bareChain.contains("admin/") && !ctx.getPCtx().isUserAdmin(ctx.getUserNick()))
+        if(bareChain.contains("admin/") && !ctx.getPCtx().isUserAdmin(ctx.getUser()))
             return new StaticChain("I'm sorry. I can't let you do that.");                  // enforce security
         ctx.benchmark("chain.prebuild");
 

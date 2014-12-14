@@ -6,6 +6,7 @@ import meew0.mewtwo.modules.ModuleManager;
 import meew0.mewtwo.thread.ListenerPoolThreadInfo;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.pircbotx.User;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -121,11 +122,11 @@ public class PermanentContext {
     }
 
     /**
-     * @param userNick the user's nick
+     * @param user the user
      * @return whether or not the user is admin
      */
-    public boolean isUserAdmin(String userNick) {
-        return checkConfigFile(admins, userNick);
+    public boolean isUserAdmin(User user) {
+        return checkConfigFile(admins, user.getLogin() + "@" + user.getHostmask());
     }
 
     /**
