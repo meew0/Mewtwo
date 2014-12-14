@@ -41,6 +41,15 @@ public class MewtwoListener extends ListenerAdapter<PircBotX> {
     }
 
     @Override
+    public void onConnect(ConnectEvent<PircBotX> event) throws Exception {
+        executeModules("connect", "", ctxMgr.makeContext(event.getBot(),
+                new UserChannel(new ConsoleUser(event.getBot())), new ConsoleUser(event.getBot())));
+        executeModules("connect-" + event.getBot().getServerInfo().getServerName(), "",
+                ctxMgr.makeContext(event.getBot(), new UserChannel(new ConsoleUser(event.getBot())),
+                        new ConsoleUser(event.getBot())));
+    }
+
+    @Override
     public void onKick(KickEvent<PircBotX> event) throws Exception {
         executeModules("kick", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
     }
