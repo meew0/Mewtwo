@@ -43,7 +43,7 @@ public class MewtwoListener extends ListenerAdapter {
     public void onConnect(ConnectEvent event) throws Exception {
         executeModules("connect", "", ctxMgr.makeContext(event.getBot(),
                 new UserChannel(new ConsoleUser(event.getBot())), new ConsoleUser(event.getBot())));
-        executeModules("connect-" + event.getBot().getServerInfo().getServerName(), "",
+        executeModules("connect-" + event.getBot().getServerInfo().getNetwork(), "",
                 ctxMgr.makeContext(event.getBot(), new UserChannel(new ConsoleUser(event.getBot())),
                         new ConsoleUser(event.getBot())));
     }
