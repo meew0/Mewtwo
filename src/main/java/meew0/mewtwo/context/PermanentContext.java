@@ -118,6 +118,9 @@ public class PermanentContext {
     }
 
     private boolean checkConfigFile(HierarchicalINIConfiguration config, String thing) {
+        // Apache Configuration makes us do this. It automatically replaces all periods in keys with double
+        // periods. This will not work otherwise. I'm sorry for this.
+        thing = thing.replace(".", "..");
         return config.containsKey(thing) && config.getBoolean(thing);
     }
 
@@ -126,7 +129,7 @@ public class PermanentContext {
      * @return whether or not the user is admin
      */
     public boolean isUserAdmin(User user) {
-        return checkConfigFile(admins, user.getLogin() + "@" + user.getHostmask());
+        return checkConfigFile(admins, user.getHostmask());
     }
 
     /**
