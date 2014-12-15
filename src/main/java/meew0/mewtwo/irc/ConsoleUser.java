@@ -9,7 +9,6 @@ import org.pircbotx.UserLevel;
 import org.pircbotx.dcc.DccState;
 import org.pircbotx.dcc.SendChat;
 import org.pircbotx.dcc.SendFileTransfer;
-import org.pircbotx.exception.DccException;
 import org.pircbotx.output.OutputUser;
 import org.pircbotx.snapshot.UserSnapshot;
 
@@ -156,37 +155,17 @@ public class ConsoleUser extends User {
         public void mode(String mode) {
             MewtwoMain.mewtwoLogger.info("[MODE] " + mode);
         }
-
-        @Override
-        public SendFileTransfer dccFile(File file) throws IOException, DccException, InterruptedException {
-            return new NullSendFileTransfer(user, file);
-        }
-
-        @Override
-        public SendFileTransfer dccFile(File file, boolean passive) throws IOException, DccException, InterruptedException {
-            return new NullSendFileTransfer(user, file);
-        }
-
-        @Override
-        public SendChat dccChat() throws IOException, InterruptedException {
-            return new ConsoleSendChat(user);
-        }
-
-        @Override
-        public SendChat dccChat(boolean passive) throws IOException, InterruptedException {
-            return new ConsoleSendChat(user);
-        }
     }
 
     private static final String consoleUserNick = "CONSOLE";
     private static final int consoleUserHash = consoleUserNick.hashCode();
     public ConsoleUser(PircBotX bot) {
-        super(bot, bot.getUserChannelDao(), consoleUserNick);
+        super(new ConsoleUserHostmask(bot), bot.getUserChannelDao());
     }
 
     @Override
     public OutputUser send() {
-        return new ConsoleUserOutput(bot, this);
+        return new ConsoleUserOutput(getBot(), this);
     }
 
     @Override
@@ -250,11 +229,6 @@ public class ConsoleUser extends User {
     }
 
     @Override
-    public PircBotX getBot() {
-        return bot;
-    }
-
-    @Override
     public String getNick() {
         return consoleUserNick;
     }
@@ -304,12 +278,6 @@ public class ConsoleUser extends User {
 
     @Override
     protected void setRealName(String realName) {}
-
-    @Override
-    protected void setLogin(String login) {}
-
-    @Override
-    protected void setHostmask(String hostmask) {}
 
     @Override
     protected void setAwayMessage(String awayMessage) {}
