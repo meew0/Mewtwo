@@ -40,7 +40,8 @@ public class MewtwoListener extends ListenerAdapter {
     }
 
     @Override
-    public void onConnect(ConnectEvent event) throws Exception {
+    public void onMotd(MotdEvent event) throws Exception {
+        MewtwoMain.mewtwoLogger.info("Successfully connected, now triggering connect- events");
         executeModules("connect", "", ctxMgr.makeContext(event.getBot(),
                 new UserChannel(new ConsoleUser(event.getBot())), new ConsoleUser(event.getBot())));
         executeModules("connect-" + event.getBot().getServerInfo().getNetwork(), "",
