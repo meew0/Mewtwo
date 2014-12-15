@@ -101,8 +101,6 @@ public class MewtwoListener extends ListenerAdapter {
 
     @Override
     public void onPrivateMessage(PrivateMessageEvent event) throws Exception {
-        event.getBot().sendRaw().rawLineNow("WHOIS " + event.getUser().getNick());
-        event.respond("MESSAGE BY " + event.getUser().getLogin() + "@" + event.getUser().getHostmask());
         MewtwoContext ctx = ctxMgr.makeContext(event.getBot(), new UserChannel(event.getUser()), event.getUser());
         executeOneChain(event.getMessage(), ctx);
 
