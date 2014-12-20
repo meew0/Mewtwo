@@ -1,0 +1,61 @@
+#!/bin/bash
+# Shell script to run specific instances of mewtwo
+
+if [ $# -lt 1 ]
+then
+	echo "Usage: mewtwoctl [action] [args ...]"
+	exit
+fi
+
+# Get path of current script
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+case "$1" in
+run)
+	# Make sure the instance name is specified
+	if [ $# -lt 2 ]
+	then
+		echo "Usage: mewtwoctl run [instance name]"
+		exit
+	fi
+
+	# Get the full path of the instance
+	instance_path="$(java -jar $DIR/lib/jruby-complete-1.7.16.1.jar $DIR/instance_resolve.rb $2)"
+	echo "Instance path is $instance_path"
+	cd $instance_path
+
+	java -cp $DIR/build/libs/Mewtwo-all.jar meew0.mewtwo.MewtwoMain
+	;;
+create)
+	# Make sure the instance name is specified
+	if [ $# -lt 2 ]
+	then
+		echo "Usage: mewtwoctl create [instance name]"
+		exit
+	fi
+
+	echo "Creating instance with name $2"
+
+	mkdir $2
+	java -jar $DIR/lib/jruby-complete-1.7.16.1.jar $DIR/instance_add.rb $2 ./$2
+
+	# Get the full path of the instance
+	instance_path="$(java -jar $DIR/lib/jruby-complete-1.7.16.1.jar $DIR/instance_resolve.rb $2)"
+	echo "Instance path is $instance_path"
+	echo "Copying files..."
+
+	cp -R $DIR/commands ./$2
+	cp -R $DIR/modules ./$2
+	cp -R $DIR/include ./$2
+	cp -R $DIR/lib ./$2
+	cp $DIR/admins.cfg ./$2
+	cp $DIR/mewtwo.cfg ./$2
+
+	echo "lib/" > ./$2/.gitignore
+
+	echo "Successfully created instance $2"
+
+	;;
+*)	echo "Valid actions: run [instance name], create [instance name]"
+	;;
+esac
