@@ -49,7 +49,7 @@ public class InputWatchThread implements Runnable {
         }
     }
 
-    public static LinkedBlockingQueue<InputEntry> workerQueue = new LinkedBlockingQueue<InputEntry>();
+    public static LinkedBlockingQueue<InputEntry> workerQueue = new LinkedBlockingQueue<>();
 
     private BufferedReader stdinReader;
 

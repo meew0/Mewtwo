@@ -15,7 +15,7 @@ public class CommandChain implements ICommandChain {
     private String[] chainArgs;
     private String chain;
 
-    private static final HashMap<String, String> variables = new HashMap<String, String>();
+    private static final HashMap<String, String> variables = new HashMap<>();
 
     public CommandChain(String chain) {
         this.chain = chain;

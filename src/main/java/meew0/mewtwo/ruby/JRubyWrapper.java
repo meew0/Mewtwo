@@ -33,14 +33,14 @@ public class JRubyWrapper {
         rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to working directory of application
 
         @SuppressWarnings("unchecked")
-        Map<String, String> env = new HashMap<String, String>(rb.getEnvironment());
+        Map<String, String> env = new HashMap<>(rb.getEnvironment());
 
         env.put("GEM_PATH", Paths.get("lib/gems").toAbsolutePath().toString());
         MewtwoMain.mewtwoLogger.info("Setting GEM_PATH of container to " + env.get("GEM_PATH"));
 
         rb.setEnvironment(env);
 
-        ArrayList<String> loadPaths = new ArrayList<String>();
+        ArrayList<String> loadPaths = new ArrayList<>();
 
         File gemsFile = Paths.get("lib/gems").toFile();
         File[] files = gemsFile.listFiles();

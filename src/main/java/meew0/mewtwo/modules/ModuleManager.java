@@ -61,7 +61,7 @@ public class ModuleManager {
     }
 
     private List<Module> traverseDirectoryForModules(Path directory) {
-        List<Module> modulesList = new ArrayList<Module>();
+        List<Module> modulesList = new ArrayList<>();
         File[] files = directory.toFile().listFiles();
         for(File child : files != null ? files : new File[0]) {
             if(child.isDirectory()) modulesList.addAll(traverseDirectoryForModules(child.toPath()));

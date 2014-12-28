@@ -18,7 +18,7 @@ public class ChatLog {
 
 	
 	public ChatLog() {
-		messages = new LinkedList<Message>();
+		messages = new LinkedList<>();
 	}
 	
 	public void add(String s, String nick) {

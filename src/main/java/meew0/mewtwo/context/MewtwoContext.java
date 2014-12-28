@@ -160,7 +160,7 @@ public class MewtwoContext {
         this.channel = channel;
         this.user = user;
         this.permanent = permanent;
-        benchmark = new HashMap<String, Long>();
+        benchmark = new HashMap<>();
         benchmark("ctx.create");
     }
 }

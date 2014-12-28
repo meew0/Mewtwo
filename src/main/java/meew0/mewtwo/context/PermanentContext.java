@@ -38,7 +38,7 @@ public class PermanentContext {
         admins = MewtwoMain.getConfig("admins.cfg");
         disable = MewtwoMain.getConfig("disable.cfg");
         ignore = MewtwoMain.getConfig("ignore.cfg");
-        threadInfos = new HashMap<Integer, ListenerPoolThreadInfo>();
+        threadInfos = new HashMap<>();
     }
 
     /**
