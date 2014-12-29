@@ -17,7 +17,7 @@ public class MewtwoContext {
     private final PircBotX bot;
     private final Channel channel;
     private final User user;
-    private String id = "", output = "", input = "";
+    private String id = "", output = "", input = "", currentId = "";
     private long lastBenchmark;
     private final HashMap<String, Long> benchmark;
     private final PermanentContext permanent;
@@ -100,6 +100,7 @@ public class MewtwoContext {
      */
     public void append(String s) {
         id += (";" + s);
+        currentId = s;
     }
 
     public void write(String s) {
@@ -145,6 +146,34 @@ public class MewtwoContext {
      */
     public PermanentContext getPCtx() {
         return permanent;
+    }
+
+    /**
+     * Store something in the command data with this command's ID (set by append())
+     * If you want to store something under a different ID, use getPCtx().put(...)
+     * @param key The key under which to store the value
+     * @param value The value to store
+     */
+    public void put(String key, Object value) {
+        permanent.put(currentId, key, value);
+    }
+
+    /**
+     * Get something from the command data using this command's ID
+     * @param key The key under which the value is stored
+     * @return The value
+     */
+    public Object get(String key) {
+        return permanent.get(currentId, key);
+    }
+
+    /**
+     * Check whether or not a key exists in the command data
+     * @param key The key to check
+     * @return Whether or not it exists
+     */
+    public boolean has(String key) {
+        return permanent.has(currentId, key);
     }
 
     /**
