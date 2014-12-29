@@ -23,6 +23,7 @@ public class PermanentContext {
     private final ModuleManager moduleManager;
 
     private final HashMap<Integer, ListenerPoolThreadInfo> threadInfos;
+    private final HashMap<String, HashMap<String, Object>> commandData;
 
     private boolean slowmodeEnabled = false;
     private int slowmodeTime = 0;
@@ -39,6 +40,7 @@ public class PermanentContext {
         disable = MewtwoMain.getConfig("disable.cfg");
         ignore = MewtwoMain.getConfig("ignore.cfg");
         threadInfos = new HashMap<>();
+        commandData = new HashMap<>();
     }
 
     /**
@@ -219,6 +221,56 @@ public class PermanentContext {
 
     public HashMap<Integer, ListenerPoolThreadInfo> getThreadInfos() {
         return threadInfos;
+    }
+
+    /**
+     * Add something to the command data
+     * @param id The id of the executing command/module/something else
+     * @param key The key under which the value should be stored
+     * @param value The value that should be stored
+     */
+    public void put(String id, String key, Object value) {
+        if(commandData.containsKey(id)) commandData.get(id).put(key, value);
+        else {
+            HashMap<String, Object> mapToInsert = new HashMap<>();
+            mapToInsert.put(key, value);
+            commandData.put(id, mapToInsert);
+        }
+    }
+
+    /**
+     * Retrieve something from the command data
+     * @param id The id of the executing command/module/something else
+     * @param key The key under which the value is stored
+     * @return The value that is stored
+     */
+    public Object get(String id, String key) {
+        return get(id, key, null);
+    }
+
+    /**
+     * Retrieve something from the command data
+     * @param id The id of the executing command/module/something else
+     * @param key The key under which the value is stored
+     * @param defaultValue The default value that should be returned if nothing is found
+     * @return The value that is stored
+     */
+    public Object get(String id, String key, Object defaultValue) {
+        if(commandData.containsKey(id)) {
+            HashMap<String, Object> subMap = commandData.get(id);
+            if(subMap.containsKey(key)) return subMap.get(key);
+            else return defaultValue;
+        } else return defaultValue;
+    }
+
+    /**
+     * Check if something is present in the command data
+     * @param id The id of the executing command/module/something else
+     * @param key The key under which the value might be stored
+     * @return Whether or not a value exists with the given ID and key
+     */
+    public boolean has(String id, String key) {
+        return commandData.containsKey(id) && commandData.get(id).containsKey(key);
     }
 
     /**
