@@ -35,6 +35,12 @@ public class CommandExecutor {
     public static String genericExecute(String path, String userNick, String channel, String args, MewtwoContext ctx) throws IOException {
         ctx.benchmark("chain.parse_end");
 
+        String absolutePath = Paths.get(path).toAbsolutePath().toString();
+
+        if(!(absolutePath.startsWith(Paths.get("./commands").toAbsolutePath().toString())
+                || absolutePath.startsWith(Paths.get("./modules").toAbsolutePath().toString())))
+            return "Script path must be inside commands or modules path!";
+
         String script = Joiner.on('\n').join(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)); // read script from file
 
         script = "# encoding: utf-8\n" + script;
