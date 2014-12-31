@@ -37,9 +37,12 @@ public class CommandExecutor {
 
         String absolutePath = Paths.get(path).toAbsolutePath().toString();
 
-        if(!(absolutePath.startsWith(Paths.get("./commands").toAbsolutePath().toString())
-                || absolutePath.startsWith(Paths.get("./modules").toAbsolutePath().toString())))
+        if(!(absolutePath.startsWith(Paths.get("commands").toAbsolutePath().toString())
+                || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString()))) {
+            MewtwoMain.mewtwoLogger.info("Script path: " + absolutePath);
+            MewtwoMain.mewtwoLogger.info("Commands path: " + Paths.get("commands").toAbsolutePath().toString());
             return "Script path must be inside commands or modules path!";
+        }
 
         String script = Joiner.on('\n').join(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)); // read script from file
 
