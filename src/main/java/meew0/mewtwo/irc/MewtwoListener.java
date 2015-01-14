@@ -157,6 +157,7 @@ public class MewtwoListener extends ListenerAdapter {
 
     @Override
     public void onMessage(MessageEvent event) throws Exception {
+        //new ThreadWatchThread(Thread.currentThread()).run();
         MewtwoContext ctx = ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser());
         try {
             long counter = new Date().getTime();

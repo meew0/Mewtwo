@@ -243,6 +243,10 @@ public class CommandChain implements ICommandChain {
         for(int i = 0; i < result.length(); i++) {
             char c = result.charAt(i);
             if(c == '%') {
+                if(i + 1 == result.length()) {
+                    newResult += c;
+                    break;
+                }
                 if(result.charAt(i + 1) == '$') {
                     String varName = result.substring(i + 2).split("[^a-zA-Z0-9]")[0];
                     newResult += variables.get(varName);
