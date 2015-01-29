@@ -17,7 +17,10 @@ public class MewtwoContext {
     private final PircBotX bot;
     private final Channel channel;
     private final User user;
-    private String id = "", output = "", input = "", currentId = "";
+    private String id = "";
+    private String output = "";
+    private String input = "";
+    private String currentId = "";
     private long lastBenchmark;
     private final HashMap<String, Long> benchmark;
     private final PermanentContext permanent;
@@ -155,7 +158,7 @@ public class MewtwoContext {
      * @param value The value to store
      */
     public void put(String key, Object value) {
-        permanent.put(currentId, key, value);
+        permanent.put(getCurrentId(), key, value);
     }
 
     /**
@@ -164,7 +167,7 @@ public class MewtwoContext {
      * @return The value
      */
     public Object get(String key) {
-        return permanent.get(currentId, key);
+        return permanent.get(getCurrentId(), key);
     }
 
     /**
@@ -173,8 +176,10 @@ public class MewtwoContext {
      * @return Whether or not it exists
      */
     public boolean has(String key) {
-        return permanent.has(currentId, key);
+        return permanent.has(getCurrentId(), key);
     }
+
+
 
     /**
      * Create a new context, should only be used by ContextManager
@@ -191,5 +196,9 @@ public class MewtwoContext {
         this.permanent = permanent;
         benchmark = new HashMap<>();
         benchmark("ctx.create");
+    }
+
+    public String getCurrentId() {
+        return currentId;
     }
 }
