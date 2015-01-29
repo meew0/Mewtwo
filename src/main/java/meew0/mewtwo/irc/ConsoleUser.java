@@ -160,7 +160,7 @@ public class ConsoleUser extends User {
     private static final String consoleUserNick = "CONSOLE";
     private static final int consoleUserHash = consoleUserNick.hashCode();
     public ConsoleUser(PircBotX bot) {
-        super(new ConsoleUserHostmask(bot), bot.getUserChannelDao());
+        super(new ConsoleUserHostmask(bot));
     }
 
     @Override

@@ -139,7 +139,7 @@ public class UserChannel extends Channel {
     private final User user;
 
     public UserChannel(User user) {
-        super(user.getBot(), user.getBot().getUserChannelDao(), user.getNick());
+        super(user.getBot(), user.getNick());
         this.user = user;
     }
 
