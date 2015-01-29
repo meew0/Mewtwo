@@ -179,7 +179,13 @@ public class MewtwoContext {
         return permanent.has(getCurrentId(), key);
     }
 
-
+    /**
+     * Method to write something to the channel for scripts that take long to execute
+     * @param s String to write
+     */
+    public void puts(String s) {
+        channel.send().message(s);
+    }
 
     /**
      * Create a new context, should only be used by ContextManager
