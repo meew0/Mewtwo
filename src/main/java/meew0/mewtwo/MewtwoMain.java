@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 @SuppressWarnings("WeakerAccess")
 public class MewtwoMain {
 	public static String nick, server, login, password, prefix;
-    public static int port, maxChainLength, maxChars, maxLines;
+    public static int port, maxChainLength, maxChars, maxLines, autoShutdown;
     public static int bwtCounter = 0;
     public static boolean shouldBenchmark, shouldProfile = false;
 
@@ -74,6 +74,8 @@ public class MewtwoMain {
         login = config.getString("login", "Mewtwo");
         port = config.getInt("port", 6667);
         prefix = config.getString("prefix", "%");
+
+        autoShutdown = config.getInt("autoShutdown", 0);
 
         maxChainLength = config.getInt("maxChainLength", 1000);
         maxChars = config.getInt("maxChars", 600);

@@ -54,6 +54,14 @@ public class BotWrapperThread implements Runnable {
         }, threadName + "-InputProcessingThread").start();
         MewtwoMain.mewtwoLogger.info("Successfully started input processing thread");
 
+        if(MewtwoMain.autoShutdown > 0) {
+            Thread ast = new Thread(new AutoShutdownThread(mewtwo), threadName + "-AutoShutdownThread");
+            MewtwoMain.mewtwoLogger.info("Starting AutoShutdownThread");
+            ast.start();
+        } else {
+            MewtwoMain.mewtwoLogger.info("AutoShutdown <= 0, not starting an AutoShutdownThread");
+        }
+
         try {
             mewtwo.startBot();
         } catch(Throwable t) {
