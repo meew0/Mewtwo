@@ -63,12 +63,20 @@ public class MewtwoListener extends ListenerAdapter {
 
     @Override
     public void onOp(OpEvent event) throws Exception {
-        executeModules("op", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        if(event.isOp()) {
+            executeModules("op", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        } else {
+            executeModules("deop", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        }
     }
 
     @Override
     public void onVoice(VoiceEvent event) throws Exception {
-        executeModules("voice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        if(event.hasVoice()) {
+            executeModules("voice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        } else {
+            executeModules("devoice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+        }
     }
 
     @Override
