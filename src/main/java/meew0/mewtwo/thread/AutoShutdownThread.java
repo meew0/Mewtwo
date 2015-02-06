@@ -15,6 +15,10 @@ public class AutoShutdownThread implements Runnable {
 
     @Override
     public void run() {
+        if(MewtwoMain.autoShutdown <= 0) {
+            MewtwoMain.mewtwoLogger.info("Not starting up AutoShutdownThread");
+            return;
+        }
         MewtwoMain.mewtwoLogger.info("AutoShutdownThread starting up, automatically shutting down Mewtwo in " + MewtwoMain.autoShutdown + " seconds");
 
         try {
