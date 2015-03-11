@@ -30,6 +30,13 @@ public class MewtwoListener extends ListenerAdapter {
         try {
             String result = ctx.getPCtx().getModuleManager().executeModules(type, msg, ctx);
 
+            if(result.length() > 500) {
+                if(!ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+                    ctx.getChannel().send().message("Module result longer than the allowed character limit!");
+                    return;
+                }
+            }
+
             String[] ret = result.split("\n");
             for (String s : ret) {
                 ctx.getChannel().send().message(s);
@@ -64,18 +71,18 @@ public class MewtwoListener extends ListenerAdapter {
     @Override
     public void onOp(OpEvent event) throws Exception {
         if(event.isOp()) {
-            executeModules("op", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+            executeModules("op", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getRecipient()));
         } else {
-            executeModules("deop", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+            executeModules("deop", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getRecipient()));
         }
     }
 
     @Override
     public void onVoice(VoiceEvent event) throws Exception {
         if(event.hasVoice()) {
-            executeModules("voice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+            executeModules("voice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getRecipient()));
         } else {
-            executeModules("devoice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getUser()));
+            executeModules("devoice", "", ctxMgr.makeContext(event.getBot(), event.getChannel(), event.getRecipient()));
         }
     }
 

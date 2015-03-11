@@ -10,6 +10,8 @@ nokogiri
 open_uri_redirections
 htmlentities
 
+rbrainfuck
+
 # Calculating mathematical expressions
 hilbert
 
