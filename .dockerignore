@@ -1,0 +1,8 @@
+.git/
+.gradle/
+Dockerfile
+.dockerignore
+build/
+.gitignore
+CONTRIBUTING.md
+README.md
