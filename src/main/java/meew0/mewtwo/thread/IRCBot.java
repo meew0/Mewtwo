@@ -52,12 +52,26 @@ public class IRCBot extends Thread {
             try {
                 if (reader.ready()) {
                     String message = reader.readLine();
+
+                    // We don't want to parse our own commands
+                    if(message.startsWith(":" + nick + "!")) continue;
+
                     MewtwoLogger.incoming(message);
+
+                    // Handle PINGs accordingly
+                    if(message.startsWith("PING")) {
+                        writeRaw("PONG", message.substring(5));
+                        continue;
+                    }
                 }
             } catch (IOException e) {
                 MewtwoLogger.errorThrowable(e);
             }
         }
+    }
+
+    public void parseServerCommand(String command, String data) {
+
     }
 
     public void writeRaw(String command, String data) {
