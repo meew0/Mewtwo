@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-version = '2.0.1'
+version = '3.0.0'
 mainClassName = 'meew0.mewtwo.MewtwoMain'
 
 repositories {
