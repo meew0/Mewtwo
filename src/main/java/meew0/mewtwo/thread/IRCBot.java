@@ -1,6 +1,6 @@
 package meew0.mewtwo.thread;
 
-import meew0.mewtwo.MewtwoMain;
+import meew0.mewtwo.MewtwoLogger;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,7 +39,7 @@ public class IRCBot extends Thread {
             writer.write(command + " " + data + newLine);
             writer.flush();
 
-            MewtwoMain.mewtwoLogger.info("\\u001B[32m→ \\u001B[0m" + command + " " + data);
+            MewtwoLogger.outcoming(command + " " + data);
         } catch (IOException e) {
             e.printStackTrace();
         }
