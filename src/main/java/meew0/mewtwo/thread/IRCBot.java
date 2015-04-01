@@ -2,9 +2,7 @@ package meew0.mewtwo.thread;
 
 import meew0.mewtwo.MewtwoLogger;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -31,7 +29,28 @@ public class IRCBot extends Thread {
 
     @Override
     public void run() {
+        // Connect
+        try {
+            socket = new Socket(serverHostname, port);
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e) {
+            MewtwoLogger.errorThrowable(e);
+            MewtwoLogger.error("Fatal error occurred while connecting to IRC server, exiting now");
+            return;
+        }
 
+        // Log in
+        writeRaw("NICK", nick);
+        writeRaw("USER", nick + " 0 " + realName);
+
+        // Join test channel
+        writeRaw("JOIN", "#test");
+
+        // Message loop
+        while(true) {
+            // do nothing yet
+        }
     }
 
     public void writeRaw(String command, String data) {
