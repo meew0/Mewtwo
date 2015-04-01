@@ -41,7 +41,7 @@ public class IRCBot extends Thread {
 
             MewtwoLogger.outcoming(command + " " + data);
         } catch (IOException e) {
-            e.printStackTrace();
+            MewtwoLogger.errorThrowable(e);
         }
     }
 }

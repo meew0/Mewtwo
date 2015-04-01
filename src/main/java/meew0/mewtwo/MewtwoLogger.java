@@ -1,5 +1,7 @@
 package meew0.mewtwo;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 /**
  * Created by meew0 on 01.04.15.
  */
@@ -33,6 +35,12 @@ public class MewtwoLogger {
 
     public static void error(String data) {
         log(cross, red, data);
+    }
+
+    public static void errorThrowable(Throwable t) {
+        for(String line : ExceptionUtils.getStackTrace(t).split("\n")) {
+            error(line);
+        }
     }
 
     public static void warn(String data) {
