@@ -42,14 +42,21 @@ public class IRCBot extends Thread {
 
         // Log in
         writeRaw("NICK", nick);
-        writeRaw("USER", nick + " 0 " + realName);
+        writeRaw("USER", nick + " 0 * :" + realName);
 
         // Join test channel
         writeRaw("JOIN", "#test");
 
         // Message loop
         while(true) {
-            // do nothing yet
+            try {
+                if (reader.ready()) {
+                    String message = reader.readLine();
+                    MewtwoLogger.incoming(message);
+                }
+            } catch (IOException e) {
+                MewtwoLogger.errorThrowable(e);
+            }
         }
     }
 
