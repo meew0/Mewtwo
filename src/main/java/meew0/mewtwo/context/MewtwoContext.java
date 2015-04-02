@@ -1,13 +1,8 @@
 package meew0.mewtwo.context;
 
-import com.google.common.base.Functions;
-import com.google.common.collect.ImmutableSortedMap;
-import com.google.common.collect.Ordering;
 import meew0.mewtwo.irc.Channel;
 import meew0.mewtwo.irc.IRCBot;
 import meew0.mewtwo.irc.User;
-
-import java.util.HashMap;
 
 /**
  * Created by meew0 on 08.11.14.
@@ -20,8 +15,6 @@ public class MewtwoContext {
     private String output = "";
     private String input = "";
     private String currentId = "";
-    private long lastBenchmark;
-    private final HashMap<String, Long> benchmark;
     private final PermanentContext permanent;
 
     /**
@@ -75,25 +68,6 @@ public class MewtwoContext {
         String result = output;
         output = "";
         return result;
-    }
-
-    /**
-     * Get all benchmark data as a hash map
-     * @return benchmark data
-     */
-    public HashMap<String, Long> getBenchmarkData() {
-        return benchmark;
-    }
-
-    /**
-     * Format the benchmark data into a semi-readable format. Sorted by duration (longest last)
-     * @return benchmark data, formatted
-     */
-    public String formatBenchmark() {
-        Ordering comparator = Ordering.natural().onResultOf(Functions.forMap(benchmark));
-        @SuppressWarnings("unchecked")
-        ImmutableSortedMap<String, Long> sorted = ImmutableSortedMap.copyOf(benchmark, comparator);
-        return sorted.toString();
     }
 
     /**
@@ -177,13 +151,10 @@ public class MewtwoContext {
      * @param permanent the permanent context
      */
     MewtwoContext(IRCBot bot, Channel channel, User user, PermanentContext permanent) {
-        lastBenchmark = System.nanoTime();
         this.bot = bot;
         this.channel = channel;
         this.user = user;
         this.permanent = permanent;
-        benchmark = new HashMap<>();
-        benchmark("ctx.create");
     }
 
     public String getCurrentId() {
