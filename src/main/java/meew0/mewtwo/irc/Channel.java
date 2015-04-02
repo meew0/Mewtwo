@@ -20,6 +20,10 @@ public class Channel implements IMessageTarget {
         return bot;
     }
 
+    public String getUnprefixedName() {
+        return name.substring(1);
+    }
+
     @Override
     public void sendMessage(String message) {
         bot.writePrivmsg(name, message);
