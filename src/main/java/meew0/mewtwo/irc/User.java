@@ -31,4 +31,8 @@ public class User {
     public IRCBot getBot() {
         return bot;
     }
+
+    public void sendMessage(String message) {
+        bot.writePrivmsg(nick, message);
+    }
 }
