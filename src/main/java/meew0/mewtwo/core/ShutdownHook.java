@@ -1,6 +1,6 @@
-package meew0.mewtwo.thread;
+package meew0.mewtwo.core;
 
-import meew0.mewtwo.MewtwoLogger;
+import meew0.mewtwo.irc.IRCBot;
 
 /**
  * Created by meew0 on 02.04.15.

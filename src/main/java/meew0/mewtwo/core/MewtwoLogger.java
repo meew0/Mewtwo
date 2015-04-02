@@ -1,4 +1,4 @@
-package meew0.mewtwo;
+package meew0.mewtwo.core;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 

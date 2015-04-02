@@ -1,6 +1,6 @@
-package meew0.mewtwo.thread;
+package meew0.mewtwo.irc;
 
-import meew0.mewtwo.MewtwoLogger;
+import meew0.mewtwo.core.MewtwoLogger;
 
 import java.io.*;
 import java.net.Socket;

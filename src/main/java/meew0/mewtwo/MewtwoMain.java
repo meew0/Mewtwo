@@ -1,6 +1,6 @@
 package meew0.mewtwo;
 
-import meew0.mewtwo.thread.IRCBot;
+import meew0.mewtwo.irc.IRCBot;
 
 public class MewtwoMain {
     /**
