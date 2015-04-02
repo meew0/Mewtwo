@@ -16,7 +16,6 @@ import java.nio.file.Paths;
  * Created by meew0 on 23.07.14.
  */
 public class CommandExecutor {
-
     private static final String commandFolder = "commands/";
     private static final JRubyWrapper rb = new JRubyWrapper(MewtwoMain.shouldProfile);
 
@@ -43,6 +42,7 @@ public class CommandExecutor {
             return "Script path must be inside commands or modules path!";
         }
 
+        // TODO: possibly preload scripts instead of loading them when they're executed to save time
         String script = Joiner.on('\n').join(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)); // read script from file
 
         script = "# encoding: utf-8\n" + script;

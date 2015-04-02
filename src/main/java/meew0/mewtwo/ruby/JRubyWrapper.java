@@ -29,6 +29,7 @@ public class JRubyWrapper {
      */
     public JRubyWrapper(boolean profile) {
         rb = new ScriptingContainer(LocalContextScope.THREADSAFE);
+        // TODO: update JRuby to v9000 for performance and Ruby 2.2 compatibility
         rb.setCompatVersion(CompatVersion.RUBY1_9);
         rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to working directory of application
 
@@ -42,6 +43,7 @@ public class JRubyWrapper {
 
         ArrayList<String> loadPaths = new ArrayList<>();
 
+        // TODO: possibly find a better way to load gems
         File gemsFile = Paths.get("lib/gems").toFile();
         File[] files = gemsFile.listFiles();
 
@@ -53,7 +55,6 @@ public class JRubyWrapper {
 
         rb.setLoadPaths(loadPaths);
 
-
         swOut = new StringWriter();
         swErr = new StringWriter();
 
@@ -63,6 +64,7 @@ public class JRubyWrapper {
         rb.setOutput(pwOut);
         rb.setError(pwErr);
 
+        // TODO: maybe get rid of profiling, it wasn't doing anything anyway
         if(profile) {
             rb.setProfile(RubyInstanceConfig.ProfilingMode.GRAPH);
             try {
