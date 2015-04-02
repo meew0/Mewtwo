@@ -89,9 +89,13 @@ public class IRCBot extends Thread {
                 String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length));
 
                 // TODO: Actual privmsg handling
-                writeRaw("PRIVMSG", target + " :" + nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
+                writePrivmsg(target, nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
             }
         }
+    }
+
+    public void writePrivmsg(String target, String data) {
+        writeRaw("PRIVMSG", target + " :" + data);
     }
 
     public void writeRaw(String command, String data) {
