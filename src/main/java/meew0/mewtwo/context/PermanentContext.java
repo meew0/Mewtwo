@@ -4,7 +4,6 @@ import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.irc.ChatLog;
 import meew0.mewtwo.modules.ModuleManager;
-import meew0.mewtwo.thread.ListenerPoolThreadInfo;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 import org.pircbotx.User;
@@ -23,7 +22,6 @@ public class PermanentContext {
 
     private final ModuleManager moduleManager;
 
-    private final HashMap<Integer, ListenerPoolThreadInfo> threadInfos;
     private final HashMap<String, HashMap<String, Object>> commandData;
 
     private boolean slowmodeEnabled = false;
@@ -40,7 +38,6 @@ public class PermanentContext {
         admins = MewtwoMain.getConfig("admins.cfg");
         disable = MewtwoMain.getConfig("disable.cfg");
         ignore = MewtwoMain.getConfig("ignore.cfg");
-        threadInfos = new HashMap<>();
         commandData = new HashMap<>();
     }
 
@@ -194,34 +191,6 @@ public class PermanentContext {
         } catch (ConfigurationException e) {
             MewtwoLogger.errorThrowable(e);
         }
-    }
-
-    /**
-     * Get the thread info for a specified thread of style "listenerPool0-threadXX"
-     * @param lptNum the thread number (XX)
-     * @return thread info
-     */
-    public ListenerPoolThreadInfo getThreadInfoForLPT(int lptNum) {
-        return threadInfos.get(lptNum);
-    }
-
-    /**
-     * Insert thread info for the current thread into the thread info map
-     * The current time is generated automatically
-     * @param user the user provoking a bot reaction
-     * @param message the message provoking the reaction
-     */
-    public void setThreadInfo(String message, String user) {
-        String threadName = Thread.currentThread().getName();
-        if(!threadName.startsWith("listenerPool0-thread")) {
-            MewtwoMain.mewtwoLogger.warn("Thread " + threadName + " tried to put in LPT info despite not being of correct format! Ignoring");
-        }
-        int lptNum = Integer.parseInt(threadName.substring("listenerPool0-thread".length(), threadName.length()));
-        threadInfos.put(lptNum, new ListenerPoolThreadInfo(message, user, System.currentTimeMillis()));
-    }
-
-    public HashMap<Integer, ListenerPoolThreadInfo> getThreadInfos() {
-        return threadInfos;
     }
 
     /**
