@@ -3,6 +3,7 @@ package meew0.mewtwo.ruby;
 import com.google.common.base.Joiner;
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.File;
@@ -39,8 +40,8 @@ public class CommandExecutor {
 
         if(!(absolutePath.startsWith(Paths.get("commands").toAbsolutePath().toString())
                 || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString()))) {
-            MewtwoMain.mewtwoLogger.info("Script path: " + absolutePath);
-            MewtwoMain.mewtwoLogger.info("Commands path: " + Paths.get("commands").toAbsolutePath().toString());
+            MewtwoLogger.info("Script path: " + absolutePath);
+            MewtwoLogger.info("Commands path: " + Paths.get("commands").toAbsolutePath().toString());
             return "Script path must be inside commands or modules path!";
         }
 
@@ -63,8 +64,7 @@ public class CommandExecutor {
             rb.run(script);
             ctx.benchmark("execute.run");
         } catch(Throwable t) {
-            MewtwoMain.mewtwoLogger.error("An exception occurred during JRuby execution! (ctx-id=" +
-                    ctx.getId() + ")", t);
+            MewtwoLogger.errorThrowable(t);
         }
 
         ctx.benchmark("execute.finish");

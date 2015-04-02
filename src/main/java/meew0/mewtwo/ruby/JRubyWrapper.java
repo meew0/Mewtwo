@@ -1,7 +1,7 @@
 package meew0.mewtwo.ruby;
 
-import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 import org.jruby.CompatVersion;
 import org.jruby.RubyInstanceConfig;
 import org.jruby.embed.LocalContextScope;
@@ -36,7 +36,7 @@ public class JRubyWrapper {
         Map<String, String> env = new HashMap<>(rb.getEnvironment());
 
         env.put("GEM_PATH", Paths.get("lib/gems").toAbsolutePath().toString());
-        MewtwoMain.mewtwoLogger.info("Setting GEM_PATH of container to " + env.get("GEM_PATH"));
+        MewtwoLogger.info("Setting GEM_PATH of container to " + env.get("GEM_PATH"));
 
         rb.setEnvironment(env);
 
@@ -47,7 +47,7 @@ public class JRubyWrapper {
 
         for(File child : files != null ? files : new File[0]) {
             String subPath = Paths.get(child.getAbsolutePath()).resolve("lib").toString();
-            MewtwoMain.mewtwoLogger.info("Adding '" + subPath + "' to loadPaths");
+            MewtwoLogger.info("Adding '" + subPath + "' to loadPaths");
             loadPaths.add(subPath);
         }
 
@@ -68,16 +68,16 @@ public class JRubyWrapper {
             try {
                 rb.setProfileOutput(new ProfileOutput(new File("profile.txt")));
             } catch(IOException e) {
-                MewtwoMain.mewtwoLogger.error("Could not initialize JRuby profiler! Disabling profiling.");
+                MewtwoLogger.error("Could not initialize JRuby profiler! Disabling profiling.");
             }
         }
 
         long time = System.currentTimeMillis();
-        MewtwoMain.mewtwoLogger.info("Initializing ScriptingContainer - this might take a few seconds!");
+        MewtwoLogger.info("Initializing ScriptingContainer - this might take a few seconds!");
 
         rb.runScriptlet("require 'java'; Java::Meew0Mewtwo::MewtwoMain.mewtwoLogger.info('Hello world! This is JRuby')");
 
-        MewtwoMain.mewtwoLogger.info("ScriptingContainer successfully initialized in " +
+        MewtwoLogger.info("ScriptingContainer successfully initialized in " +
                 (System.currentTimeMillis() - time) + " ms");
     }
 
