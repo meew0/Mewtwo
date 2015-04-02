@@ -3,7 +3,6 @@ package meew0.mewtwo.context;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
-import meew0.mewtwo.MewtwoMain;
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
@@ -124,23 +123,6 @@ public class MewtwoContext {
      */
     public String getInput() {
         return input;
-    }
-
-    /**
-     * Benchmark something.
-     *
-     * Benchmarks provide a quick-and-dirty way to profile stuff.
-     * @param thing the thing to benchmark, can be any string
-     */
-    public void benchmark(String thing) {
-        if(!MewtwoMain.shouldBenchmark) return;
-        long newTime = System.nanoTime();
-        long elapsed = newTime - lastBenchmark;
-
-        if(benchmark.containsKey(thing)) benchmark.put(thing, benchmark.get(thing) + elapsed);
-        else benchmark.put(thing, elapsed);
-
-        lastBenchmark = newTime;
     }
 
     /**
