@@ -18,6 +18,8 @@ public class IRCBot extends Thread {
     public static final String realName = "Mewtwo";
     public static final String newLine = "\r\n";
 
+    public static boolean shouldShutDown = false;
+
     private Socket socket;
     private BufferedReader reader;
     private BufferedWriter writer;
@@ -49,7 +51,7 @@ public class IRCBot extends Thread {
         writeRaw("JOIN", "#test");
 
         // Message loop
-        while(true) {
+        while(!shouldShutDown) {
             try {
                 if (reader.ready()) {
                     String message = reader.readLine();
@@ -73,6 +75,9 @@ public class IRCBot extends Thread {
                 MewtwoLogger.errorThrowable(e);
             }
         }
+
+        MewtwoLogger.info("IRCBot shutting down");
+        writeRaw("QUIT", "JVM terminated");
     }
 
     public void parseCommand(String[] arguments) {
