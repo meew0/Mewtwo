@@ -79,7 +79,7 @@ public class IRCBot extends Thread {
         // User command?
         if(arguments[0].matches(":.+!.+@.+")) {
             String[] hostmask = arguments[0].split("[:!]");
-            String nick = hostmask[0];
+            String nick = hostmask[1];
 
             // Get the actual command
             String command = arguments[1];
@@ -89,7 +89,7 @@ public class IRCBot extends Thread {
                 String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length));
 
                 // TODO: Actual privmsg handling
-                writeRaw("PRIVMSG", nick + " (" + hostmask[1] + ") @ " + target + ": " + data);
+                writeRaw("PRIVMSG", target + " :" + nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
             }
         }
     }
