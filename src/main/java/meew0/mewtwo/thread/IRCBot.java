@@ -86,7 +86,7 @@ public class IRCBot extends Thread {
 
             if(command.equals("PRIVMSG")) {
                 String target = arguments[2];
-                String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length));
+                String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length)).substring(1);
 
                 // TODO: Actual privmsg handling
                 writePrivmsg(target, nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
