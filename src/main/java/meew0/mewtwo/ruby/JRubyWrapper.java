@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by miras on 09.11.14.
+ * Created by meew0 on 09.11.14.
  */
 @SuppressWarnings("WeakerAccess")
 public class JRubyWrapper {
