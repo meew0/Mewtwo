@@ -194,6 +194,7 @@ public class PermanentContext {
         }
     }
 
+    // TODO also use a better key-value store (perhaps a database?)
     /**
      * Add something to the command data
      * @param id The id of the executing command/module/something else
