@@ -1,8 +1,8 @@
 package meew0.mewtwo.context;
 
-import org.pircbotx.Channel;
-import org.pircbotx.PircBotX;
-import org.pircbotx.User;
+import meew0.mewtwo.irc.Channel;
+import meew0.mewtwo.irc.IRCBot;
+import meew0.mewtwo.irc.User;
 
 /**
  * Created by meew0 on 15.11.14.
@@ -25,7 +25,7 @@ public class ContextManager {
      * @param user The user object.
      * @return A new nonpermanent context.
      */
-    public MewtwoContext makeContext(PircBotX bot, Channel channel, User user) {
+    public MewtwoContext makeContext(IRCBot bot, Channel channel, User user) {
         return new MewtwoContext(bot, channel, user, permanent);
     }
 

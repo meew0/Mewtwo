@@ -3,9 +3,9 @@ package meew0.mewtwo.context;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableSortedMap;
 import com.google.common.collect.Ordering;
-import org.pircbotx.Channel;
-import org.pircbotx.PircBotX;
-import org.pircbotx.User;
+import meew0.mewtwo.irc.Channel;
+import meew0.mewtwo.irc.IRCBot;
+import meew0.mewtwo.irc.User;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Created by meew0 on 08.11.14.
  */
 public class MewtwoContext {
-    private final PircBotX bot;
+    private final IRCBot bot;
     private final Channel channel;
     private final User user;
     private String id = "";
@@ -28,7 +28,7 @@ public class MewtwoContext {
      * Get the bot object
      * @return the bot object
      */
-    public PircBotX getBot() {
+    public IRCBot getBot() {
         return bot;
     }
 
@@ -176,7 +176,7 @@ public class MewtwoContext {
      * @param user the user who executed something
      * @param permanent the permanent context
      */
-    MewtwoContext(PircBotX bot, Channel channel, User user, PermanentContext permanent) {
+    MewtwoContext(IRCBot bot, Channel channel, User user, PermanentContext permanent) {
         lastBenchmark = System.nanoTime();
         this.bot = bot;
         this.channel = channel;

@@ -3,10 +3,10 @@ package meew0.mewtwo.context;
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.irc.ChatLog;
+import meew0.mewtwo.irc.User;
 import meew0.mewtwo.modules.ModuleManager;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
-import org.pircbotx.User;
 
 import java.util.Date;
 import java.util.HashMap;
