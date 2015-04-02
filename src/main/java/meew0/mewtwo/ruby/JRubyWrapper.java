@@ -3,12 +3,13 @@ package meew0.mewtwo.ruby;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import org.jruby.CompatVersion;
-import org.jruby.RubyInstanceConfig;
 import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.ScriptingContainer;
-import org.jruby.runtime.profile.builtin.ProfileOutput;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -25,9 +26,8 @@ public class JRubyWrapper {
 
     /**
      * Create a new JRuby wrapper.
-     * @param profile whether or not profiling is enabled
      */
-    public JRubyWrapper(boolean profile) {
+    public JRubyWrapper() {
         rb = new ScriptingContainer(LocalContextScope.THREADSAFE);
         // TODO: update JRuby to v9000 for performance and Ruby 2.2 compatibility
         rb.setCompatVersion(CompatVersion.RUBY1_9);
@@ -63,16 +63,6 @@ public class JRubyWrapper {
 
         rb.setOutput(pwOut);
         rb.setError(pwErr);
-
-        // TODO: maybe get rid of profiling, it wasn't doing anything anyway
-        if(profile) {
-            rb.setProfile(RubyInstanceConfig.ProfilingMode.GRAPH);
-            try {
-                rb.setProfileOutput(new ProfileOutput(new File("profile.txt")));
-            } catch(IOException e) {
-                MewtwoLogger.error("Could not initialize JRuby profiler! Disabling profiling.");
-            }
-        }
 
         long time = System.currentTimeMillis();
         MewtwoLogger.info("Initializing ScriptingContainer - this might take a few seconds!");

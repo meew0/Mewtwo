@@ -1,7 +1,6 @@
 package meew0.mewtwo.ruby;
 
 import com.google.common.base.Joiner;
-import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import org.apache.commons.lang.ArrayUtils;
@@ -17,7 +16,7 @@ import java.nio.file.Paths;
  */
 public class CommandExecutor {
     private static final String commandFolder = "commands/";
-    private static final JRubyWrapper rb = new JRubyWrapper(MewtwoMain.shouldProfile);
+    private static final JRubyWrapper rb = new JRubyWrapper();
 
     private String name;
 
