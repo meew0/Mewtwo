@@ -89,7 +89,7 @@ public class IRCBot extends Thread {
                 String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length)).substring(1);
 
                 // TODO: Actual privmsg handling
-                writePrivmsg(target, nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
+                writePrivmsg(getReturnTarget(target, nick), nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
             }
         }
     }
@@ -107,5 +107,13 @@ public class IRCBot extends Thread {
         } catch (IOException e) {
             MewtwoLogger.errorThrowable(e);
         }
+    }
+
+    public boolean targetIsChannel(String target) {
+        return target.startsWith("#");
+    }
+
+    public String getReturnTarget(String currentTarget, String nick) {
+        return targetIsChannel(currentTarget) ? currentTarget : nick;
     }
 }
