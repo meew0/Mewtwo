@@ -24,7 +24,8 @@ public class IRCBot extends Thread {
     private BufferedReader reader;
     private BufferedWriter writer;
 
-    public IRCBot(String serverHostname, int port, String nick) {
+    public IRCBot(String serverHostname, int port, String nick, String threadName) {
+        super(threadName);
         this.serverHostname = serverHostname;
         this.port = port;
         this.nick = nick;
