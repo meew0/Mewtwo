@@ -140,7 +140,7 @@ public class MewtwoContext {
      * @param s String to write
      */
     public void puts(String s) {
-        channel.send().message(s);
+        channel.sendMessage(s);
     }
 
     /**
