@@ -2,7 +2,6 @@ package meew0.mewtwo.context;
 
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.core.MewtwoLogger;
-import meew0.mewtwo.irc.ChatLog;
 import meew0.mewtwo.irc.User;
 import meew0.mewtwo.modules.ModuleManager;
 import org.apache.commons.configuration.ConfigurationException;
@@ -10,13 +9,15 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
+
+//import meew0.mewtwo.irc.ChatLog;
 
 /**
  * Created by miras on 14.11.14.
  */
 public class PermanentContext {
-    private final ChatLog log;
+    // TODO: Replace ChatLog with a better way to log stuff
+    //private final ChatLog log;
 
     private final HierarchicalINIConfiguration aliases, admins, disable, ignore;
 
@@ -33,7 +34,7 @@ public class PermanentContext {
      */
     public PermanentContext() {
         moduleManager = new ModuleManager();
-        log = new ChatLog();
+        //log = new ChatLog();
         aliases = MewtwoMain.getConfig("aliases.cfg");
         admins = MewtwoMain.getConfig("admins.cfg");
         disable = MewtwoMain.getConfig("disable.cfg");
@@ -57,47 +58,47 @@ public class PermanentContext {
         return slowmodeEnabled;
     }
 
-    /**
-     * @return this context's chat log
-     */
-    public ChatLog getLog() {
-        return log;
-    }
-
-    /**
-     * Adds a message to the chat log
-     * @param msg the message
-     * @param nick the nick of the user who wrote the message
-     */
-    public void logMessage(String msg, String nick) {
-        log.add(msg, nick);
-    }
-
-    /**
-     *
-     * @return A linked list of the last (ChatLog.limit) messages, newest first
-     */
-    public LinkedList<ChatLog.Message> getLastLogged() {
-        return log.messages;
-    }
-
-    /**
-     * Gets the last message written by a specific user
-     * @param userNick the user's nick
-     * @return the user's last message
-     */
-    public ChatLog.Message getLastOfUser(String userNick) {
-        return log.getLatestFromUser(userNick);
-    }
-
-    /**
-     * Gets the last message that matches a specific regex
-     * @param regex the regex
-     * @return the last message that matches
-     */
-    public ChatLog.Message getLastMatch(String regex) {
-        return log.getLatestThatMatches(regex);
-    }
+//    /**
+//     * @return this context's chat log
+//     */
+//    public ChatLog getLog() {
+//        return log;
+//    }
+//
+//    /**
+//     * Adds a message to the chat log
+//     * @param msg the message
+//     * @param nick the nick of the user who wrote the message
+//     */
+//    public void logMessage(String msg, String nick) {
+//        log.add(msg, nick);
+//    }
+//
+//    /**
+//     *
+//     * @return A linked list of the last (ChatLog.limit) messages, newest first
+//     */
+//    public LinkedList<ChatLog.Message> getLastLogged() {
+//        return log.messages;
+//    }
+//
+//    /**
+//     * Gets the last message written by a specific user
+//     * @param userNick the user's nick
+//     * @return the user's last message
+//     */
+//    public ChatLog.Message getLastOfUser(String userNick) {
+//        return log.getLatestFromUser(userNick);
+//    }
+//
+//    /**
+//     * Gets the last message that matches a specific regex
+//     * @param regex the regex
+//     * @return the last message that matches
+//     */
+//    public ChatLog.Message getLastMatch(String regex) {
+//        return log.getLatestThatMatches(regex);
+//    }
 
     /**
      * Enables slowmode with a specific duration
