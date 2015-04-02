@@ -3,7 +3,7 @@ package meew0.mewtwo.irc;
 /**
  * Created by meew0 on 02.04.15.
  */
-public class Channel {
+public class Channel implements IMessageTarget {
     private final String name;
     private final IRCBot bot;
 
@@ -18,5 +18,10 @@ public class Channel {
 
     public IRCBot getBot() {
         return bot;
+    }
+
+    @Override
+    public void sendMessage(String message) {
+        bot.writePrivmsg(name, message);
     }
 }
