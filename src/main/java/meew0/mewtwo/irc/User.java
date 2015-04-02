@@ -3,7 +3,7 @@ package meew0.mewtwo.irc;
 /**
  * Created by meew0 on 02.04.15.
  */
-public class User {
+public class User implements IMessageTarget {
     private final String nick;
     private final String fullHostmask;
     private final String hostmask;
