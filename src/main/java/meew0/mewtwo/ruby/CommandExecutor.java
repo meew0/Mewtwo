@@ -34,8 +34,6 @@ public class CommandExecutor {
     }
 
     public static String genericExecute(String path, String userNick, String channel, String args, MewtwoContext ctx) throws IOException {
-        ctx.benchmark("chain.parse_end");
-
         String absolutePath = Paths.get(path).toAbsolutePath().toString();
 
         if(!(absolutePath.startsWith(Paths.get("commands").toAbsolutePath().toString())
@@ -49,8 +47,6 @@ public class CommandExecutor {
 
         script = "# encoding: utf-8\n" + script;
 
-        ctx.benchmark("execute.file.read");
-
         String[] argsAry = args.split(" ");
         argsAry = (String[]) ArrayUtils.addAll(new String[]{userNick, channel}, argsAry);
 
@@ -58,21 +54,13 @@ public class CommandExecutor {
         rb.bindStdin(ctx.getInput());
         rb.bindCtx(ctx); // add ctx to script container
 
-        ctx.benchmark("execute.container.init");
-
         try {
             rb.run(script);
-            ctx.benchmark("execute.run");
         } catch(Throwable t) {
             MewtwoLogger.errorThrowable(t);
         }
 
-        ctx.benchmark("execute.finish");
-
         System.err.print(rb.getError()); // print stderr result to stderr,
         return rb.getResult(); // and return stdout result
-
-
-
     }
 }
