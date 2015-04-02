@@ -4,6 +4,7 @@ import meew0.mewtwo.MewtwoLogger;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 
 /**
  * Created by meew0 on 01.04.15.
@@ -63,6 +64,10 @@ public class IRCBot extends Thread {
                         writeRaw("PONG", message.substring(5));
                         continue;
                     }
+
+                    // Handle other commands
+
+                    parseCommand(message.split(" "));
                 }
             } catch (IOException e) {
                 MewtwoLogger.errorThrowable(e);
@@ -70,8 +75,23 @@ public class IRCBot extends Thread {
         }
     }
 
-    public void parseServerCommand(String command, String data) {
+    public void parseCommand(String[] arguments) {
+        // User command?
+        if(arguments[0].matches(":.+!.+@.+")) {
+            String[] hostmask = arguments[0].split("[:!]");
+            String nick = hostmask[0];
 
+            // Get the actual command
+            String command = arguments[1];
+
+            if(command.equals("PRIVMSG")) {
+                String target = arguments[2];
+                String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length));
+
+                // TODO: Actual privmsg handling
+                writeRaw("PRIVMSG", nick + " (" + hostmask[1] + ") @ " + target + ": " + data);
+            }
+        }
     }
 
     public void writeRaw(String command, String data) {
