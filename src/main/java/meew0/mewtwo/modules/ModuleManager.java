@@ -1,7 +1,7 @@
 package meew0.mewtwo.modules;
 
-import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 import org.apache.commons.io.FileUtils;
 import org.jcodings.specific.UTF8Encoding;
 import org.joni.Option;
@@ -41,8 +41,8 @@ public class ModuleManager {
 
                     String filename = child.getName();
                     String name = filename.substring(0, filename.length() - 3);
-                    MewtwoMain.mewtwoLogger.info("Adding module " + name + " - regex = " + regex +
-                            ", triggers = "+ triggers);
+                    MewtwoLogger.info("Adding module " + name + " - regex = " + regex +
+                            ", triggers = " + triggers);
 
                     Module m = new Module(
                             new Regex(regex.getBytes(), 0, regex.length(), Option.NONE, UTF8Encoding.INSTANCE),
@@ -50,12 +50,12 @@ public class ModuleManager {
                             filename);
 
                     return Arrays.asList(m);
-                } else MewtwoMain.mewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
+                } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
             } catch (Throwable t) {
-                MewtwoMain.mewtwoLogger.error("Exception while parsing modules for " + child.getAbsolutePath() + "! ", t);
+                MewtwoLogger.errorThrowable(t);
             }
 
-        } else MewtwoMain.mewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
+        } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
 
         return Arrays.asList();
     }

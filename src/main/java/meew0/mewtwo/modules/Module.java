@@ -1,7 +1,7 @@
 package meew0.mewtwo.modules;
 
-import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.ruby.CommandExecutor;
 import org.joni.Option;
 import org.joni.Regex;
@@ -35,7 +35,7 @@ public class Module {
             return CommandExecutor.genericExecute(ModuleManager.modulesFolder + filename,
                     ctx.getUserNick(), ctx.getChannelName(), message, ctx);
         } catch (Throwable t) {
-            MewtwoMain.mewtwoLogger.error("Exception occurred while executing module! ", t);
+            MewtwoLogger.errorThrowable(t);
         }
         return "";
     }
