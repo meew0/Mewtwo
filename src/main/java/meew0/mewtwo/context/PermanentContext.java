@@ -1,6 +1,7 @@
 package meew0.mewtwo.context;
 
 import meew0.mewtwo.MewtwoMain;
+import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.irc.ChatLog;
 import meew0.mewtwo.modules.ModuleManager;
 import meew0.mewtwo.thread.ListenerPoolThreadInfo;
@@ -191,7 +192,7 @@ public class PermanentContext {
         try {
             config.load();
         } catch (ConfigurationException e) {
-            MewtwoMain.mewtwoLogger.error("Error while reloading a specific config!", e);
+            MewtwoLogger.errorThrowable(e);
         }
     }
 
