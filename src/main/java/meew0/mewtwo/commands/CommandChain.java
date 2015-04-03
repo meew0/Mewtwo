@@ -270,6 +270,7 @@ public class CommandChain implements ICommandChain {
 
         if(chainArgs == null) chainArgs = new String[]{};
 
+        // TODO: Replace chain arguments (except for possibly repeat_chain and related) with commands
         for(String arg : chainArgs) {
             arg = specialTrim(arg);
             if(arg.startsWith("delim")) {

@@ -43,7 +43,9 @@ public class Command {
     public boolean isDisabled() {
         return ctx.getPCtx().isCommandEnabled(commandName);
     }
+
     public boolean isOutsideScope() {
+        // TODO: More secure way to check if a command is outside the scope
         return commandName.contains("..");
     }
 
