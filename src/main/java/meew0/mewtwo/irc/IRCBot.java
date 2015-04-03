@@ -5,6 +5,7 @@ import meew0.mewtwo.core.MewtwoLogger;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by meew0 on 01.04.15.
@@ -25,6 +26,8 @@ public class IRCBot extends Thread {
     private BufferedWriter writer;
 
     private static int botNumber = 0;
+
+    private HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
 
     public IRCBot(String serverHostname, int port, String nick) {
         super("Bot-" + (++botNumber));
@@ -98,6 +101,21 @@ public class IRCBot extends Thread {
 
                 // TODO: Actual privmsg handling
                 writePrivmsg(getReturnTarget(target, nick), nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
+                return;
+            }
+
+            // NAMES list
+            if(command.equals("353")) {
+                String channelName = arguments[4];
+
+                String[] names = new String[arguments.length - 5];
+                names[0] = arguments[5].substring(1);
+                for(int i = 6; i < arguments.length; i++) {
+                    names[i - 5] = arguments[i];
+                }
+
+                ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
+                channelUserLists.put(channelName, list);
             }
         }
     }
