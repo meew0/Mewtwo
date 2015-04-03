@@ -6,27 +6,22 @@ import meew0.mewtwo.ruby.CommandExecutor;
 import org.joni.Option;
 import org.joni.Regex;
 
-import java.util.List;
-
 /**
  * Created by meew0 on 25.11.14.
  */
 @SuppressWarnings("WeakerAccess")
 public class Module {
     private final String name, filename;
-    private final List<String> triggers;
     private final Regex regex;
 
-    public Module(Regex regex, List<String> trigger, String name, String filename) {
+    public Module(Regex regex, String name, String filename) {
         this.regex = regex;
-        this.triggers = trigger;
         this.name = name;
         this.filename = filename;
     }
 
-    public boolean activatesOn(String message, String trigger) {
-        return (regex.matcher(message.getBytes()).search(0, message.length(), Option.DEFAULT) == 0)
-                && triggers.contains(trigger);
+    public boolean activatesOn(String message) {
+        return (regex.matcher(message.getBytes()).search(0, message.length(), Option.DEFAULT) == 0);
     }
 
     public String execute(String message, MewtwoContext ctx) {

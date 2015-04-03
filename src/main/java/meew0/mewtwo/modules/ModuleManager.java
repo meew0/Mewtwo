@@ -36,18 +36,13 @@ public class ModuleManager {
                     String regex = lines.get(0);
                     regex = regex.substring(1, regex.length()).trim();
 
-                    String triggers = lines.get(1);
-                    triggers = triggers.substring(1, triggers.length()).trim();
-
                     String filename = child.getName();
-                    String name = filename.substring(0, filename.length() - 3);
-                    MewtwoLogger.info("Adding module " + name + " - regex = " + regex +
-                            ", triggers = " + triggers);
+                    String name = filename.substring(0, filename.length() - 2);
+                    MewtwoLogger.info("Adding module " + name + " - regex = " + regex);
 
                     Module m = new Module(
                             new Regex(regex.getBytes(), 0, regex.length(), Option.NONE, UTF8Encoding.INSTANCE),
-                            Arrays.asList(triggers.split(",")), filename.substring(0, filename.length() - 3),
-                            filename);
+                            filename.substring(0, filename.length() - 2), filename);
 
                     return Arrays.asList(m);
                 } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
@@ -74,10 +69,10 @@ public class ModuleManager {
         modules = traverseDirectoryForModules(Paths.get(ModuleManager.modulesFolder));
     }
 
-    public String executeModules(String trigger, String message, MewtwoContext ctx) {
+    public String executeModules(String message, MewtwoContext ctx) {
         String result = "";
         for (Module m : modules) {
-            if (m.activatesOn(message, trigger)) result += m.execute(message, ctx);
+            if (m.activatesOn(message)) result += m.execute(message, ctx);
         }
         return result;
     }
