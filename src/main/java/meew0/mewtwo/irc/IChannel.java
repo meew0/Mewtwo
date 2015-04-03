@@ -5,6 +5,8 @@ package meew0.mewtwo.irc;
  */
 public interface IChannel {
     public void sendMessage(String message);
+
     public String[] getUserNicks();
+
     public String getName();
 }

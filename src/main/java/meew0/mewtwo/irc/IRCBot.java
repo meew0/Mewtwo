@@ -65,18 +65,18 @@ public class IRCBot extends Thread {
         writeRaw("JOIN", "#test");
 
         // Message loop
-        while(!shouldShutDown) {
+        while (!shouldShutDown) {
             try {
                 if (reader.ready()) {
                     String message = reader.readLine();
 
                     // We don't want to parse our own commands
-                    if(message.startsWith(":" + nick + "!")) continue;
+                    if (message.startsWith(":" + nick + "!")) continue;
 
                     MewtwoLogger.incoming(message);
 
                     // Handle PINGs accordingly
-                    if(message.startsWith("PING")) {
+                    if (message.startsWith("PING")) {
                         writeRaw("PONG", message.substring(5));
                         continue;
                     }
@@ -96,21 +96,21 @@ public class IRCBot extends Thread {
 
     public void parseCommand(String[] arguments) {
         // User command?
-        if(arguments[0].matches(":.+!.+@.+")) {
+        if (arguments[0].matches(":.+!.+@.+")) {
             String[] hostmask = arguments[0].split("[:!]");
             String nick = hostmask[1];
 
             // Get the actual command
             String command = arguments[1];
 
-            if(command.equals("PRIVMSG")) {
+            if (command.equals("PRIVMSG")) {
                 String target = arguments[2];
                 String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length)).substring(1);
 
                 // TODO: Actual privmsg handling
                 writePrivmsg(getReturnTarget(target, nick), nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
 
-                if(data.startsWith(MewtwoMain.prefix)) {
+                if (data.startsWith(MewtwoMain.prefix)) {
                     // We have a command chain!
 
                     User user = new User(nick, arguments[0].substring(1), hostmask[2], this);
@@ -128,12 +128,12 @@ public class IRCBot extends Thread {
             }
 
             // NAMES list
-            if(command.equals("353")) {
+            if (command.equals("353")) {
                 String channelName = arguments[4];
 
                 String[] names = new String[arguments.length - 5];
                 names[0] = arguments[5].substring(1);
-                for(int i = 6; i < arguments.length; i++) {
+                for (int i = 6; i < arguments.length; i++) {
                     names[i - 5] = arguments[i];
                 }
 
@@ -142,17 +142,17 @@ public class IRCBot extends Thread {
             }
 
             // Invalidate channel lists when a user joins or leaves a channel or changes their nick
-            if(command.equals("JOIN")) {
+            if (command.equals("JOIN")) {
                 String channelName = arguments[3].substring(1);
                 channelUserLists.get(channelName).invalidate();
             }
-            if(command.equals("PART")) {
+            if (command.equals("PART")) {
                 String channelName = arguments[4];
                 channelUserLists.get(channelName).invalidate();
             }
-            if(command.equals("NICK")) {
+            if (command.equals("NICK")) {
                 // Invalidate all channels
-                for(ChannelUserList list : channelUserLists.values()) {
+                for (ChannelUserList list : channelUserLists.values()) {
                     list.invalidate();
                 }
             }

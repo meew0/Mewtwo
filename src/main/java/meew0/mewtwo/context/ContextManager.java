@@ -20,9 +20,10 @@ public class ContextManager {
 
     /**
      * Creates a new non-permanent context with this manager's permanent context and the given arguments.
-     * @param bot The bot object.
+     *
+     * @param bot     The bot object.
      * @param channel The channel object.
-     * @param user The user object.
+     * @param user    The user object.
      * @return A new nonpermanent context.
      */
     public MewtwoContext makeContext(IRCBot bot, IChannel channel, User user) {

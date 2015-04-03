@@ -22,7 +22,7 @@ public class CommandExecutor {
 
     public CommandExecutor(String name) {
         File f = new File(commandFolder + name + ".rb");
-        if(!f.exists()) throw new IllegalArgumentException("Command file " + name + ".rb does not exist!");
+        if (!f.exists()) throw new IllegalArgumentException("Command file " + name + ".rb does not exist!");
 
         this.name = name;
     }
@@ -34,7 +34,7 @@ public class CommandExecutor {
     public static String genericExecute(String path, String userNick, String channel, String args, MewtwoContext ctx) throws IOException {
         String absolutePath = Paths.get(path).toAbsolutePath().toString();
 
-        if(!(absolutePath.startsWith(Paths.get("commands").toAbsolutePath().toString())
+        if (!(absolutePath.startsWith(Paths.get("commands").toAbsolutePath().toString())
                 || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString()))) {
             MewtwoLogger.info("Script path: " + absolutePath);
             MewtwoLogger.info("Commands path: " + Paths.get("commands").toAbsolutePath().toString());
@@ -55,7 +55,7 @@ public class CommandExecutor {
 
         try {
             rb.run(script);
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             MewtwoLogger.errorThrowable(t);
         }
 

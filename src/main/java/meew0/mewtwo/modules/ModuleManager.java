@@ -28,11 +28,11 @@ public class ModuleManager {
     }
 
     private List<Module> getSingleModuleForPath(File child) {
-        if(child.getName().endsWith(".rb")) {
+        if (child.getName().endsWith(".rb")) {
             try {
                 @SuppressWarnings("unchecked")
                 List<String> lines = FileUtils.readLines(child);
-                if(lines.size() > 1) {
+                if (lines.size() > 1) {
                     String regex = lines.get(0);
                     regex = regex.substring(1, regex.length()).trim();
 
@@ -63,8 +63,8 @@ public class ModuleManager {
     private List<Module> traverseDirectoryForModules(Path directory) {
         List<Module> modulesList = new ArrayList<>();
         File[] files = directory.toFile().listFiles();
-        for(File child : files != null ? files : new File[0]) {
-            if(child.isDirectory()) modulesList.addAll(traverseDirectoryForModules(child.toPath()));
+        for (File child : files != null ? files : new File[0]) {
+            if (child.isDirectory()) modulesList.addAll(traverseDirectoryForModules(child.toPath()));
             else modulesList.addAll(getSingleModuleForPath(child));
         }
         return modulesList;
@@ -76,8 +76,8 @@ public class ModuleManager {
 
     public String executeModules(String trigger, String message, MewtwoContext ctx) {
         String result = "";
-        for(Module m : modules) {
-            if(m.activatesOn(message, trigger)) result += m.execute(message, ctx);
+        for (Module m : modules) {
+            if (m.activatesOn(message, trigger)) result += m.execute(message, ctx);
         }
         return result;
     }

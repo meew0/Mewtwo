@@ -47,7 +47,7 @@ public class JRubyWrapper {
         File gemsFile = Paths.get("lib/gems").toFile();
         File[] files = gemsFile.listFiles();
 
-        for(File child : files != null ? files : new File[0]) {
+        for (File child : files != null ? files : new File[0]) {
             String subPath = Paths.get(child.getAbsolutePath()).resolve("lib").toString();
             MewtwoLogger.info("Adding '" + subPath + "' to loadPaths");
             loadPaths.add(subPath);
@@ -81,6 +81,7 @@ public class JRubyWrapper {
 
     /**
      * Get the standard output of the script
+     *
      * @return standard output of the script
      */
     public String getResult() {
@@ -89,6 +90,7 @@ public class JRubyWrapper {
 
     /**
      * Get the standard error of the script (i.e. all debug messages that have been written using STDERR.puts)
+     *
      * @return standard error of the script
      */
     public String getError() {
@@ -97,6 +99,7 @@ public class JRubyWrapper {
 
     /**
      * Bind a context to the script.
+     *
      * @param ctx the context to bind
      */
     public void bindCtx(MewtwoContext ctx) {
@@ -105,6 +108,7 @@ public class JRubyWrapper {
 
     /**
      * Bind command line arguments to the script. ARGV[0] should be the user nick, ARGV[1] the channel name and ARGV[2 .. end] the rest.
+     *
      * @param argv ARGV to bind
      */
     public void bindArgv(String[] argv) {
@@ -113,6 +117,7 @@ public class JRubyWrapper {
 
     /**
      * Set the standard input of the script, usually got using MewtwoContext.getInput
+     *
      * @param stdin standard input
      */
     public void bindStdin(String stdin) {
@@ -121,6 +126,7 @@ public class JRubyWrapper {
 
     /**
      * Actually run a script.
+     *
      * @param script script to run
      */
     public void run(String script) {

@@ -8,6 +8,7 @@ import meew0.mewtwo.context.MewtwoContext;
 public class CommandChainBuilder {
     private final MewtwoContext ctx;
     private String bareChain;
+
     public CommandChainBuilder(MewtwoContext ctx, String message) {
         this.ctx = ctx;
 
@@ -19,10 +20,11 @@ public class CommandChainBuilder {
     }
 
     public ICommandChain buildChain() {
-        if(ctx.getPCtx().shouldIgnoreUser(ctx.getUserNick())) return new StaticChain("");   // ignore user if I should
-        if(ctx.getPCtx().isSlowmodeActive()) return new StaticChain("");                    // ignore if slowmode is active
+        if (ctx.getPCtx().shouldIgnoreUser(ctx.getUserNick())) return new StaticChain("");   // ignore user if I should
+        if (ctx.getPCtx().isSlowmodeActive())
+            return new StaticChain("");                    // ignore if slowmode is active
         // TODO: Check commands individually and not the chain as a whole
-        if(bareChain.contains("admin/") && !ctx.getPCtx().isUserAdmin(ctx.getUser()))
+        if (bareChain.contains("admin/") && !ctx.getPCtx().isUserAdmin(ctx.getUser()))
             return new StaticChain("I'm sorry. I can't let you do that.");                  // enforce security
 
         replaceChainArguments();

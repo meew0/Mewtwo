@@ -51,7 +51,7 @@ public class Command {
 
 
     public String execute(MewtwoContext ctx) {
-        if(wrapper == null) getWrapper();
+        if (wrapper == null) getWrapper();
 
         ctx.append("cmd:" + commandName);
 
@@ -59,7 +59,7 @@ public class Command {
         try {
             result = wrapper.execute(ctx.getUser().getNick(),
                     ctx.getChannel().getName().substring(1, ctx.getChannel().getName().length()), arguments, ctx);
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             throw new RuntimeException(t);
         }
 

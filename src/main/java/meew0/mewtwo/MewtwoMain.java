@@ -14,8 +14,10 @@ public class MewtwoMain {
     public static String prefix = "%";
 
     // TODO find a better way to do configuration
+
     /**
      * Returns a config file, creating it if it doesn't exist
+     *
      * @param configName The path to the file
      * @return a config file
      */
@@ -25,7 +27,7 @@ public class MewtwoMain {
             if (!cfgFile.exists() && !cfgFile.createNewFile())
                 MewtwoLogger.error("Could not create config file " + configName);
             return new HierarchicalINIConfiguration(configName);
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             MewtwoLogger.errorThrowable(t);
         }
 
@@ -34,9 +36,10 @@ public class MewtwoMain {
 
     /**
      * Main method, shouldn't be called
+     *
      * @param args The command line arguments, unused
      */
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         // Register shutdown hook
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
@@ -45,5 +48,5 @@ public class MewtwoMain {
 
         IRCBot bot = new IRCBot("127.0.0.1", 6667, "Mewtwo");
         bot.start();
-	}
+    }
 }

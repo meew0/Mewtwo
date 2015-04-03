@@ -38,7 +38,7 @@ public class MewtwoLogger {
     }
 
     public static void errorThrowable(Throwable t) {
-        for(String line : ExceptionUtils.getStackTrace(t).split("\n")) {
+        for (String line : ExceptionUtils.getStackTrace(t).split("\n")) {
             error(line);
         }
     }

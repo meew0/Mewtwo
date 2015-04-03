@@ -38,7 +38,7 @@ public class User implements IChannel {
 
     @Override
     public String[] getUserNicks() {
-        return new String[] { nick };
+        return new String[]{nick};
     }
 
     @Override

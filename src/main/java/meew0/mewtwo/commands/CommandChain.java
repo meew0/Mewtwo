@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 /**
  * Here's a haiku for you:
- *
+ * <p>
  * The hardest class written
  * was this one. Use with respect
  * and don't abuse it
@@ -23,18 +23,20 @@ public class CommandChain implements ICommandChain {
 
     /**
      * Trims spaces and newlines from the beginning and end of a string
+     *
      * @param result the string to trim
      * @return the string, trimmed
      */
     String specialTrim(String result) {
-        while(result.startsWith(" ") || result.startsWith("\n")) result = result.substring(1, result.length());
-        while(result.endsWith(" ") || result.endsWith("\n")) result = result.substring(0, result.length() - 1);
+        while (result.startsWith(" ") || result.startsWith("\n")) result = result.substring(1, result.length());
+        while (result.endsWith(" ") || result.endsWith("\n")) result = result.substring(0, result.length() - 1);
 
         return result;
     }
 
     /**
      * Execute this command chain without channel arguments.
+     *
      * @param ctx the currently active context
      * @return the result of the chain
      */
@@ -59,32 +61,32 @@ public class CommandChain implements ICommandChain {
         for (int i = 0; i < chain.length(); i++) {
             char c = chain.charAt(i);
 
-            if(c == '\'') {
+            if (c == '\'') {
                 quoted = !quoted;
                 continue;
             }
 
-            if(c == '>' && quoted) {
+            if (c == '>' && quoted) {
                 // Use the previously defined private use character instead of an actual >, so it's not parsed later
                 resultChain += privateUseLT;
                 continue;
             }
 
-            if(c == '[' && !quoted) {
+            if (c == '[' && !quoted) {
                 // Beginning of subchain
-                if(bracketLevel == 0) bracketStart = i;
+                if (bracketLevel == 0) bracketStart = i;
                 bracketLevel++;
             }
 
-            if(bracketLevel <= 0) {
+            if (bracketLevel <= 0) {
                 // Add character to result chain verbatim if not in a subchain
                 resultChain += c;
             }
 
-            if(c == ']' && !quoted) {
+            if (c == ']' && !quoted) {
                 // End of subchain
                 bracketLevel--;
-                if(bracketLevel == 0) {
+                if (bracketLevel == 0) {
                     // nested command chain detected
 
                     // Find the sub chain
@@ -100,7 +102,7 @@ public class CommandChain implements ICommandChain {
 
 
         // Print an error message if somebody forgot a bracket or has an extra one
-        if(bracketLevel != 0) return "Your bracket level is " + bracketLevel + "! This means you " +
+        if (bracketLevel != 0) return "Your bracket level is " + bracketLevel + "! This means you " +
                 ((bracketLevel > 0) ? "forgot " + bracketLevel + " closing bracket" + ((bracketLevel > 1) ? "s" : "")
                         : "have " + (-bracketLevel) + " extra closing bracket" + ((bracketLevel > 1) ? "s" : "")); // ternary operator gore
 
@@ -113,11 +115,10 @@ public class CommandChain implements ICommandChain {
         // Point where chain arguments end
         int colonIndex = chain.indexOf(':');
 
-        if(colonIndex < 0) {
+        if (colonIndex < 0) {
             // If there's no colon, assume no arguments
             chainArgs = new String[]{};
-        }
-        else {
+        } else {
             // Otherwise parse arguments
             chainArgs = chain.substring(0, colonIndex).split(",");
             chain = chain.substring(colonIndex + 1, chain.length());
@@ -128,12 +129,13 @@ public class CommandChain implements ICommandChain {
         String previousResult = "";
 
         String chainToSplit = chain;
-        if(chain.charAt(0) == '>') chainToSplit = chain.substring(1, chain.length()); // don't break if a command happens to be called ">"
+        if (chain.charAt(0) == '>')
+            chainToSplit = chain.substring(1, chain.length()); // don't break if a command happens to be called ">"
         boolean first = true;
 
-        for(String s1 : chainToSplit.split(">")) {
+        for (String s1 : chainToSplit.split(">")) {
             // If we're at the first character and it happens to be a >, execute it instead of parsing it
-            if(first && chain.charAt(0) == '>') s1 = ">" + s1;
+            if (first && chain.charAt(0) == '>') s1 = ">" + s1;
             first = false;
 
             // Remove spaces
@@ -149,16 +151,16 @@ public class CommandChain implements ICommandChain {
             String cmdName = (firstSpace > -1) ? s.substring(0, firstSpace) : s;
             String args = (firstSpace > -1) ? s.substring(firstSpace + 1, s.length()) : "";
 
-            if(!args.contains("%p")) args += " %p";
+            if (!args.contains("%p")) args += " %p";
 
             // Create a command from name and args
             Command cmd = new Command(cmdName, args.replace("%p", previousResult), ctx);
 
             // Prevent disabled commands from being executed
-            if(cmd.isDisabled()) return "The command '" + cmdName + "' is disabled!";
+            if (cmd.isDisabled()) return "The command '" + cmdName + "' is disabled!";
 
             // Prevent out-of-scope commands from being executed
-            if(cmd.isOutsideScope()) return "The command '" + cmdName + "' is outside of the allowed scope!";
+            if (cmd.isOutsideScope()) return "The command '" + cmdName + "' is outside of the allowed scope!";
 
             try {
                 cmd.getWrapper();
@@ -176,33 +178,45 @@ public class CommandChain implements ICommandChain {
 
     /**
      * Convert a color name to an IRC color code
+     *
      * @param color the color name to convert
      * @return an IRC color code, from 00 to 15
      */
     private String strToColor(String color) {
-        if(color.equalsIgnoreCase("white")) color = "00";
-        if(color.equalsIgnoreCase("black")) color = "01";
-        if(color.equalsIgnoreCase("blue")) color = "02"; if(color.equalsIgnoreCase("navy")) color = "02";
-        if(color.equalsIgnoreCase("green")) color = "03";
-        if(color.equalsIgnoreCase("red")) color = "04";
-        if(color.equalsIgnoreCase("brown")) color = "05"; if(color.equalsIgnoreCase("maroon")) color = "05";
-        if(color.equalsIgnoreCase("purple")) color = "06"; if(color.equalsIgnoreCase("violet")) color = "06";
-        if(color.equalsIgnoreCase("orange")) color = "07";
-        if(color.equalsIgnoreCase("yellow")) color = "08";
-        if(color.equalsIgnoreCase("lightgreen")) color = "09"; if(color.equalsIgnoreCase("lime")) color = "09";
-        if(color.equalsIgnoreCase("teal")) color = "10"; if(color.equalsIgnoreCase("turquoise")) color = "10";
-        if(color.equalsIgnoreCase("cyan")) color = "11"; if(color.equalsIgnoreCase("aqua")) color = "11";
-        if(color.equalsIgnoreCase("lightblue")) color = "12"; if(color.equalsIgnoreCase("royal")) color = "12";
-        if(color.equalsIgnoreCase("pink")) color = "13"; if(color.equalsIgnoreCase("fuchsia")) color = "13";
-        if(color.equalsIgnoreCase("grey")) color = "14"; if(color.equalsIgnoreCase("gray")) color = "14";
-        if(color.equalsIgnoreCase("silver")) color = "15"; if(color.equalsIgnoreCase("lightgrey")) color = "15";
-        if(color.equalsIgnoreCase("lightgray")) color = "15";
+        if (color.equalsIgnoreCase("white")) color = "00";
+        if (color.equalsIgnoreCase("black")) color = "01";
+        if (color.equalsIgnoreCase("blue")) color = "02";
+        if (color.equalsIgnoreCase("navy")) color = "02";
+        if (color.equalsIgnoreCase("green")) color = "03";
+        if (color.equalsIgnoreCase("red")) color = "04";
+        if (color.equalsIgnoreCase("brown")) color = "05";
+        if (color.equalsIgnoreCase("maroon")) color = "05";
+        if (color.equalsIgnoreCase("purple")) color = "06";
+        if (color.equalsIgnoreCase("violet")) color = "06";
+        if (color.equalsIgnoreCase("orange")) color = "07";
+        if (color.equalsIgnoreCase("yellow")) color = "08";
+        if (color.equalsIgnoreCase("lightgreen")) color = "09";
+        if (color.equalsIgnoreCase("lime")) color = "09";
+        if (color.equalsIgnoreCase("teal")) color = "10";
+        if (color.equalsIgnoreCase("turquoise")) color = "10";
+        if (color.equalsIgnoreCase("cyan")) color = "11";
+        if (color.equalsIgnoreCase("aqua")) color = "11";
+        if (color.equalsIgnoreCase("lightblue")) color = "12";
+        if (color.equalsIgnoreCase("royal")) color = "12";
+        if (color.equalsIgnoreCase("pink")) color = "13";
+        if (color.equalsIgnoreCase("fuchsia")) color = "13";
+        if (color.equalsIgnoreCase("grey")) color = "14";
+        if (color.equalsIgnoreCase("gray")) color = "14";
+        if (color.equalsIgnoreCase("silver")) color = "15";
+        if (color.equalsIgnoreCase("lightgrey")) color = "15";
+        if (color.equalsIgnoreCase("lightgray")) color = "15";
 
         return color;
     }
 
     /**
      * Get the argument of a chain argument
+     *
      * @param arg the chain argument
      * @return its argument
      */
@@ -212,24 +226,26 @@ public class CommandChain implements ICommandChain {
 
     /**
      * Get the chain without its arguments
+     *
      * @param chain chain with arguments
      * @return chain without arguments
      */
     private String chainWithoutArgs(String chain) {
         int colonIndex = chain.indexOf(':');
 
-        if(colonIndex < 0) return chain;
+        if (colonIndex < 0) return chain;
         else return chain.substring(colonIndex + 1, chain.length());
     }
 
     /**
      * Execute a chain with arguments
+     *
      * @param ctx currently active context
      * @return the chain's result
      */
     public String execute(MewtwoContext ctx) {
 
-        if(chain.length() > 1000) {
+        if (chain.length() > 1000) {
             return "The command chain length limit has been reached!";
         }
 
@@ -240,18 +256,18 @@ public class CommandChain implements ICommandChain {
         String result = executeBareChain(ctx);
         String newResult = "";
 
-        for(int i = 0; i < result.length(); i++) {
+        for (int i = 0; i < result.length(); i++) {
             char c = result.charAt(i);
-            if(c == '%') {
-                if(i + 1 == result.length()) {
+            if (c == '%') {
+                if (i + 1 == result.length()) {
                     newResult += c;
                     break;
                 }
-                if(result.charAt(i + 1) == '$') {
+                if (result.charAt(i + 1) == '$') {
                     String varName = result.substring(i + 2).split("[^a-zA-Z0-9]")[0];
                     newResult += variables.get(varName);
                     i = i + 1 + varName.length();
-                } else if(result.charAt(i + 1) == '!') {
+                } else if (result.charAt(i + 1) == '!') {
                     String varName = result.substring(i + 2).split("[^a-zA-Z0-9]")[0];
                     newResult += new CommandChain(":" + variables.get(varName)).execute(ctx);
                     i = i + 1 + varName.length();
@@ -268,13 +284,13 @@ public class CommandChain implements ICommandChain {
         String delimiter = " ";
         String countVar = "", prevVar = "";
 
-        if(chainArgs == null) chainArgs = new String[]{};
+        if (chainArgs == null) chainArgs = new String[]{};
 
         // TODO: Replace chain arguments (except for possibly repeat_chain and related) with commands
-        for(String arg : chainArgs) {
+        for (String arg : chainArgs) {
             arg = specialTrim(arg);
-            if(arg.startsWith("delim")) {
-                if(arg.length() == 5) {
+            if (arg.startsWith("delim")) {
+                if (arg.length() == 5) {
                     delimiter = "";
                 } else {
                     delimiter = getArgumentArgument(arg);
@@ -286,18 +302,14 @@ public class CommandChain implements ICommandChain {
                     delimiter = delimiter.replace("%newline", "\n");
                     if (delimiter.equals("%nothing")) delimiter = "";
                 }
-            }
-            else if(arg.startsWith("count ")) {
+            } else if (arg.startsWith("count ")) {
                 countVar = getArgumentArgument(arg);
-            }
-            else if(arg.startsWith("prev ")) {
+            } else if (arg.startsWith("prev ")) {
                 prevVar = getArgumentArgument(arg);
-            }
-            else if(arg.startsWith("chain ")) { // save as command chain
+            } else if (arg.startsWith("chain ")) { // save as command chain
                 String chainToExecute = chainWithoutArgs(oldChain);
                 variables.put(getArgumentArgument(arg), chainToExecute);
-            }
-            else if(arg.startsWith("repeat ")) {
+            } else if (arg.startsWith("repeat ")) {
                 String amountStr = getArgumentArgument(arg);
                 int amount;
                 try {
@@ -306,17 +318,16 @@ public class CommandChain implements ICommandChain {
                     return "'" + amountStr + "' is not an integer!";
                 }
 
-                if(amount > 100 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+                if (amount > 100 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
                     return "You can't repeat something more than 100 times!";
                 }
 
                 newResult = "";
-                for(int i = 0; i < amount; i++) {
-                    newResult += (result + ((i == amount-1) ? "" : delimiter));
+                for (int i = 0; i < amount; i++) {
+                    newResult += (result + ((i == amount - 1) ? "" : delimiter));
                 }
                 result = newResult;
-            }
-            else if(arg.startsWith("repeat_chain ")) {
+            } else if (arg.startsWith("repeat_chain ")) {
                 String amountStr = getArgumentArgument(arg);
 
                 String chainToExecute = chainWithoutArgs(oldChain);
@@ -328,35 +339,30 @@ public class CommandChain implements ICommandChain {
                     return "'" + amountStr + "' is not an integer!";
                 }
 
-                if(amount > 20 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+                if (amount > 20 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
                     return "You can't repeat a chain more than 20 times!";
                 }
 
                 newResult = "";
                 String prevResult = "";
-                for(int i = 0; i < amount; i++) {
+                for (int i = 0; i < amount; i++) {
                     variables.put(countVar, "" + i);
                     variables.put(prevVar, prevResult);
-                    prevResult = (new CommandChain(":" + chainToExecute).execute(ctx) + ((i == amount-1) ? "" : delimiter));
+                    prevResult = (new CommandChain(":" + chainToExecute).execute(ctx) + ((i == amount - 1) ? "" : delimiter));
                     newResult += prevResult;
                 }
                 result = newResult;
-            }
-            else if(arg.startsWith("override ")) {
+            } else if (arg.startsWith("override ")) {
                 result = getArgumentArgument(arg);
-            }
-            else if(arg.startsWith("bold")) {
+            } else if (arg.startsWith("bold")) {
                 result = "" + ((char) 2) + result + ((char) 2);
-            }
-            else if(arg.startsWith("italic")) {
+            } else if (arg.startsWith("italic")) {
                 result = "" + ((char) 29) + result + ((char) 29);
-            }
-            else if(arg.startsWith("underline")) {
+            } else if (arg.startsWith("underline")) {
                 result = "" + ((char) 31) + result + ((char) 31);
-            }
-            else if(arg.startsWith("color ") || arg.startsWith("spoiler")) {
+            } else if (arg.startsWith("color ") || arg.startsWith("spoiler")) {
                 String colorStr;
-                if(arg.startsWith("spoiler")) {
+                if (arg.startsWith("spoiler")) {
                     colorStr = "00,00";
                     result = result.replace("" + (char) 31, "");
                     result = result.replace("" + (char) 2, "");
@@ -376,31 +382,27 @@ public class CommandChain implements ICommandChain {
                     }
 
                     colorStr = fgColor;
-                    if(!bgColor.isEmpty()) colorStr += ("," + bgColor);
+                    if (!bgColor.isEmpty()) colorStr += ("," + bgColor);
                 }
 
                 result = "" + ((char) 3) + colorStr + result + ((char) 3);
 
-            }
-            else if(arg.startsWith("plain")) {
+            } else if (arg.startsWith("plain")) {
 
                 result = result.replace("" + (char) 31, "");
                 result = result.replace("" + (char) 2, "");
                 result = result.replace("" + (char) 29, "");
                 result = result.replace("" + (char) 3, "");
-            }
-            else if(arg.startsWith("discard")) { // discard result
+            } else if (arg.startsWith("discard")) { // discard result
                 result = "";
-            }
-            else if(arg.startsWith("as ")) { // save as variable
-                if(arg.length() == 5) {
+            } else if (arg.startsWith("as ")) { // save as variable
+                if (arg.length() == 5) {
                     variables.put("", result);
                 } else {
                     variables.put(getArgumentArgument(arg), result);
                 }
             }
         }
-
 
 
         return specialTrim(result);

@@ -44,6 +44,7 @@ public class PermanentContext {
 
     /**
      * Get this context's module manager
+     *
      * @return the module manager
      */
     public ModuleManager getModuleManager() {
@@ -51,7 +52,6 @@ public class PermanentContext {
     }
 
     /**
-     *
      * @return whether or not slowmode is enabled
      */
     public boolean isSlowmodeEnabled() {
@@ -102,6 +102,7 @@ public class PermanentContext {
 
     /**
      * Enables slowmode with a specific duration
+     *
      * @param time the duration in milliseconds
      */
     public void enableSlowmode(int time) {
@@ -134,7 +135,6 @@ public class PermanentContext {
     }
 
     /**
-     *
      * @param userNick the user's nick
      * @return whether or not the user should be ignored
      */
@@ -143,7 +143,6 @@ public class PermanentContext {
     }
 
     /**
-     *
      * @param commandName the command's name
      * @return whether or not the command is enabled
      */
@@ -154,16 +153,16 @@ public class PermanentContext {
     /**
      * Get the command from an alias, as defined by aliases.cfg
      * If no alias is defined, the original alias is returned
+     *
      * @param commandName the alias
      * @return the actual command
      */
     public String getAliasForCommand(String commandName) {
-        if(!aliases.containsKey(commandName)) return commandName;
+        if (!aliases.containsKey(commandName)) return commandName;
         else return aliases.getString(commandName);
     }
 
     /**
-     *
      * @return the prefix Mewtwo uses for commands
      */
     public String getMewtwoPrefix() {
@@ -172,13 +171,14 @@ public class PermanentContext {
 
     /**
      * Returns whether or not slowmode is currently active and, if it is active, whether or not the time has run out yet
+     *
      * @return is slowmode active?
      */
     public boolean isSlowmodeActive() {
-        if(!slowmodeEnabled) return false;
+        if (!slowmodeEnabled) return false;
 
         long d = new Date().getTime();
-        if(slowmodeEnabled && ((d - slowmodeTime) > slowmodeTS)) {
+        if (slowmodeEnabled && ((d - slowmodeTime) > slowmodeTS)) {
             slowmodeTS = d;
             return true;
         }
@@ -195,14 +195,16 @@ public class PermanentContext {
     }
 
     // TODO also use a better key-value store (perhaps a database?)
+
     /**
      * Add something to the command data
-     * @param id The id of the executing command/module/something else
-     * @param key The key under which the value should be stored
+     *
+     * @param id    The id of the executing command/module/something else
+     * @param key   The key under which the value should be stored
      * @param value The value that should be stored
      */
     public void put(String id, String key, Object value) {
-        if(commandData.containsKey(id)) commandData.get(id).put(key, value);
+        if (commandData.containsKey(id)) commandData.get(id).put(key, value);
         else {
             HashMap<String, Object> mapToInsert = new HashMap<>();
             mapToInsert.put(key, value);
@@ -212,7 +214,8 @@ public class PermanentContext {
 
     /**
      * Retrieve something from the command data
-     * @param id The id of the executing command/module/something else
+     *
+     * @param id  The id of the executing command/module/something else
      * @param key The key under which the value is stored
      * @return The value that is stored
      */
@@ -222,22 +225,24 @@ public class PermanentContext {
 
     /**
      * Retrieve something from the command data
-     * @param id The id of the executing command/module/something else
-     * @param key The key under which the value is stored
+     *
+     * @param id           The id of the executing command/module/something else
+     * @param key          The key under which the value is stored
      * @param defaultValue The default value that should be returned if nothing is found
      * @return The value that is stored
      */
     public Object get(String id, String key, Object defaultValue) {
-        if(commandData.containsKey(id)) {
+        if (commandData.containsKey(id)) {
             HashMap<String, Object> subMap = commandData.get(id);
-            if(subMap.containsKey(key)) return subMap.get(key);
+            if (subMap.containsKey(key)) return subMap.get(key);
             else return defaultValue;
         } else return defaultValue;
     }
 
     /**
      * Check if something is present in the command data
-     * @param id The id of the executing command/module/something else
+     *
+     * @param id  The id of the executing command/module/something else
      * @param key The key under which the value might be stored
      * @return Whether or not a value exists with the given ID and key
      */

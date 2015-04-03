@@ -6,7 +6,7 @@ import java.util.Date;
 
 /**
  * Created by meew0 on 03.04.15.
- *
+ * <p>
  * Represents the users in a channel
  */
 public class ChannelUserList {
@@ -40,16 +40,16 @@ public class ChannelUserList {
     }
 
     public String[] getNicks() {
-        if(!isValid) revalidate();
+        if (!isValid) revalidate();
         return nicks;
     }
 
     public void invalidate() {
-        if(isValid) MewtwoLogger.info("Invalidating channel " + channel.getName());
+        if (isValid) MewtwoLogger.info("Invalidating channel " + channel.getName());
         isValid = false;
 
         // Revalidate channel after a certain amount of time
-        if(((new Date().getTime()) - lastRevalidationTimestamp) > channelRevalidationDelay) revalidate();
+        if (((new Date().getTime()) - lastRevalidationTimestamp) > channelRevalidationDelay) revalidate();
     }
 
     public void revalidate() {

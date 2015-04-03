@@ -19,6 +19,7 @@ public class MewtwoContext {
 
     /**
      * Get the bot object
+     *
      * @return the bot object
      */
     public IRCBot getBot() {
@@ -35,6 +36,7 @@ public class MewtwoContext {
 
     /**
      * Get the user nick. Equivalent to getUser().getNick()
+     *
      * @return the user nick
      */
     public String getUserNick() {
@@ -43,6 +45,7 @@ public class MewtwoContext {
 
     /**
      * Get the channel name. Equivalent to getChannel().getName()
+     *
      * @return the channel name
      */
     public String getChannelName() {
@@ -51,9 +54,10 @@ public class MewtwoContext {
 
     /**
      * Get the context's id.
-     *
+     * <p>
      * The id is a concatenation of all the things appended to this context, separated by semicola. It's used for debugging purposes.
      * The last thing is the most recent.
+     *
      * @return the id
      */
     public String getId() {
@@ -62,6 +66,7 @@ public class MewtwoContext {
 
     /**
      * Clear the result of the previous command and return the pre-cleaned result
+     *
      * @return the result, before it was cleaned
      */
     public String clearResult() {
@@ -72,6 +77,7 @@ public class MewtwoContext {
 
     /**
      * Append something to the id. For more information, see {@link #getId}
+     *
      * @param s the thing to append.
      */
     public void append(String s) {
@@ -85,6 +91,7 @@ public class MewtwoContext {
 
     /**
      * Set something as the stdin for future commands in the same chain.
+     *
      * @param input thing to bind
      */
     public void bindInput(String input) {
@@ -93,6 +100,7 @@ public class MewtwoContext {
 
     /**
      * Get the input data set by previous commands.
+     *
      * @return the input data
      */
     public String getInput() {
@@ -100,7 +108,6 @@ public class MewtwoContext {
     }
 
     /**
-     *
      * @return this context's permanent context
      */
     public PermanentContext getPCtx() {
@@ -110,7 +117,8 @@ public class MewtwoContext {
     /**
      * Store something in the command data with this command's ID (set by append())
      * If you want to store something under a different ID, use getPCtx().put(...)
-     * @param key The key under which to store the value
+     *
+     * @param key   The key under which to store the value
      * @param value The value to store
      */
     public void put(String key, Object value) {
@@ -119,6 +127,7 @@ public class MewtwoContext {
 
     /**
      * Get something from the command data using this command's ID
+     *
      * @param key The key under which the value is stored
      * @return The value
      */
@@ -128,6 +137,7 @@ public class MewtwoContext {
 
     /**
      * Check whether or not a key exists in the command data
+     *
      * @param key The key to check
      * @return Whether or not it exists
      */
@@ -137,6 +147,7 @@ public class MewtwoContext {
 
     /**
      * Method to write something to the channel for scripts that take long to execute
+     *
      * @param s String to write
      */
     public void puts(String s) {
@@ -145,9 +156,10 @@ public class MewtwoContext {
 
     /**
      * Create a new context, should only be used by ContextManager
-     * @param bot the bot
-     * @param channel the current channel (can be a UserChannel)
-     * @param user the user who executed something
+     *
+     * @param bot       the bot
+     * @param channel   the current channel (can be a UserChannel)
+     * @param user      the user who executed something
      * @param permanent the permanent context
      */
     MewtwoContext(IRCBot bot, IChannel channel, User user, PermanentContext permanent) {
