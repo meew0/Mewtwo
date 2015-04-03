@@ -76,4 +76,11 @@ public class ModuleManager {
         }
         return result;
     }
+
+    public boolean doesModuleExistForMessage(String message) {
+        for (Module m : modules) {
+            if (m.activatesOn(message)) return true;
+        }
+        return false;
+    }
 }
