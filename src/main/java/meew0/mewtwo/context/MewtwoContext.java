@@ -1,6 +1,6 @@
 package meew0.mewtwo.context;
 
-import meew0.mewtwo.irc.Channel;
+import meew0.mewtwo.irc.IChannel;
 import meew0.mewtwo.irc.IRCBot;
 import meew0.mewtwo.irc.User;
 
@@ -9,7 +9,7 @@ import meew0.mewtwo.irc.User;
  */
 public class MewtwoContext {
     private final IRCBot bot;
-    private final Channel channel;
+    private final IChannel channel;
     private final User user;
     private String id = "";
     private String output = "";
@@ -25,7 +25,7 @@ public class MewtwoContext {
         return bot;
     }
 
-    public Channel getChannel() {
+    public IChannel getChannel() {
         return channel;
     }
 
@@ -150,7 +150,7 @@ public class MewtwoContext {
      * @param user the user who executed something
      * @param permanent the permanent context
      */
-    MewtwoContext(IRCBot bot, Channel channel, User user, PermanentContext permanent) {
+    MewtwoContext(IRCBot bot, IChannel channel, User user, PermanentContext permanent) {
         this.bot = bot;
         this.channel = channel;
         this.user = user;

@@ -1,6 +1,6 @@
 package meew0.mewtwo.context;
 
-import meew0.mewtwo.irc.Channel;
+import meew0.mewtwo.irc.IChannel;
 import meew0.mewtwo.irc.IRCBot;
 import meew0.mewtwo.irc.User;
 
@@ -25,7 +25,7 @@ public class ContextManager {
      * @param user The user object.
      * @return A new nonpermanent context.
      */
-    public MewtwoContext makeContext(IRCBot bot, Channel channel, User user) {
+    public MewtwoContext makeContext(IRCBot bot, IChannel channel, User user) {
         return new MewtwoContext(bot, channel, user, permanent);
     }
 
