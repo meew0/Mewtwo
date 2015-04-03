@@ -1,6 +1,7 @@
 package meew0.mewtwo.commands;
 
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 
 import java.util.HashMap;
 
@@ -164,8 +165,8 @@ public class CommandChain implements ICommandChain {
 
             try {
                 cmd.getWrapper();
-
             } catch (Throwable t) {
+                MewtwoLogger.errorThrowable(t);
                 return "The command '" + cmdName + "' does not exist!";
             }
 
