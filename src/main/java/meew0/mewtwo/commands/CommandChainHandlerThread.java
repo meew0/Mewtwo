@@ -13,12 +13,21 @@ public class CommandChainHandlerThread extends Thread {
     private static int threadNumber = 0;
 
     private final MewtwoContext ctx;
-    private final String message;
+    private final String target, message;
 
-    public CommandChainHandlerThread(MewtwoContext ctx, String message) {
+    private static final int maxLineChars = 430;
+
+    public CommandChainHandlerThread(MewtwoContext ctx, String target, String message) {
         super("CCHT-" + (++threadNumber));
         this.ctx = ctx;
+        this.target = target;
         this.message = message;
+    }
+
+    private void sendMessage(String message) {
+        if(!message.isEmpty()) {
+            ctx.getBot().writePrivmsg(target, message);
+        }
     }
 
     @Override
@@ -32,5 +41,31 @@ public class CommandChainHandlerThread extends Thread {
         ICommandChain chain = ccBuilder.buildChain();
 
         String result = chain.execute(ctx);
+
+        if(result.length() > 600 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+            // Result is too long
+            sendMessage("Sorry, the result length exceeds the limit of 600 characters");
+            return;
+        }
+
+        // Split result into lines
+        String[] splitResult = result.split("\n");
+
+        if(splitResult.length > 4 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+            // Result has too many lines
+            sendMessage("Sorry, the result line count exceeds the limit of four lines");
+        }
+
+        for(String line : splitResult) {
+            // Make sure lines are not too long for IRC to handle
+            while(line.length() > maxLineChars) {
+                String lineToWrite = line.substring(0, maxLineChars);
+                line = line.substring(maxLineChars);
+                sendMessage(lineToWrite);
+            }
+
+            // Send remainder of line
+            sendMessage(line);
+        }
     }
 }
