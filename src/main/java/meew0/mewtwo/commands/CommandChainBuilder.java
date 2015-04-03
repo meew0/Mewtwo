@@ -34,7 +34,6 @@ public class CommandChainBuilder {
         bareChain = bareChain.replace("%msg", ctx.getPCtx().getMewtwoPrefix() + bareChain);
         bareChain = bareChain.replace("%user", ctx.getUser().getNick());
         bareChain = bareChain.replace("%chan", ctx.getChannel().getName());
-        ctx.benchmark("chain.replace");
     }
 
     public ICommandChain buildChain() {
@@ -42,7 +41,6 @@ public class CommandChainBuilder {
         if(ctx.getPCtx().isSlowmodeActive()) return new StaticChain("");                    // ignore if slowmode is active
         if(bareChain.contains("admin/") && !ctx.getPCtx().isUserAdmin(ctx.getUser()))
             return new StaticChain("I'm sorry. I can't let you do that.");                  // enforce security
-        ctx.benchmark("chain.prebuild");
 
         replaceChainArguments();
         return new CommandChain(":" + bareChain);
