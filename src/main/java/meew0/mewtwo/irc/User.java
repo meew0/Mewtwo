@@ -3,7 +3,7 @@ package meew0.mewtwo.irc;
 /**
  * Created by meew0 on 02.04.15.
  */
-public class User implements IMessageTarget {
+public class User implements IChannel {
     private final String nick;
     private final String fullHostmask;
     private final String hostmask;
@@ -34,5 +34,10 @@ public class User implements IMessageTarget {
 
     public void sendMessage(String message) {
         bot.writePrivmsg(nick, message);
+    }
+
+    @Override
+    public String[] getUserNicks() {
+        return new String[] { nick };
     }
 }

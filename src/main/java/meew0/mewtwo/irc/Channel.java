@@ -3,7 +3,7 @@ package meew0.mewtwo.irc;
 /**
  * Created by meew0 on 02.04.15.
  */
-public class Channel implements IMessageTarget {
+public class Channel implements IChannel {
     private final String name;
     private final IRCBot bot;
 
