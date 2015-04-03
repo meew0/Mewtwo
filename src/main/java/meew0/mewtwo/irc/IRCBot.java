@@ -147,7 +147,7 @@ public class IRCBot extends Thread {
                 channelUserLists.get(channelName).invalidate();
             }
             if (command.equals("PART")) {
-                String channelName = arguments[4];
+                String channelName = arguments[3];
                 channelUserLists.get(channelName).invalidate();
             }
             if (command.equals("NICK")) {
