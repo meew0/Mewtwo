@@ -151,6 +151,10 @@ public class IRCBot extends Thread {
         }
     }
 
+    public ChannelUserList getUserListForChannel(String channelName) {
+        return channelUserLists.get(channelName);
+    }
+
     public boolean targetIsChannel(String target) {
         return target.startsWith("#");
     }

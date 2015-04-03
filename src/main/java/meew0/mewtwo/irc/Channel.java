@@ -24,6 +24,10 @@ public class Channel implements IMessageTarget {
         return name.substring(1);
     }
 
+    public String[] getUserNicks() {
+        return bot.getUserListForChannel(name).getNicks();
+    }
+
     @Override
     public void sendMessage(String message) {
         bot.writePrivmsg(name, message);
