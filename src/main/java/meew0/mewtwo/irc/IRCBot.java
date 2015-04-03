@@ -1,5 +1,6 @@
 package meew0.mewtwo.irc;
 
+import meew0.mewtwo.context.ContextManager;
 import meew0.mewtwo.core.MewtwoLogger;
 
 import java.io.*;
@@ -19,6 +20,8 @@ public class IRCBot extends Thread {
     public static final String realName = "Mewtwo";
     public static final String newLine = "\r\n";
 
+    private final ContextManager ctxMgr;
+
     public static boolean shouldShutDown = false;
 
     private Socket socket;
@@ -34,6 +37,8 @@ public class IRCBot extends Thread {
         this.serverHostname = serverHostname;
         this.port = port;
         this.nick = nick;
+
+        ctxMgr = new ContextManager();
     }
 
     @Override
