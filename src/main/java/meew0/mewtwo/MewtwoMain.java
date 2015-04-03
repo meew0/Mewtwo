@@ -10,6 +10,7 @@ import java.io.File;
 public class MewtwoMain {
     public static String prefix = "%";
 
+    // TODO find a better way to do configuration
     /**
      * Returns a config file, creating it if it doesn't exist
      * @param configName The path to the file
