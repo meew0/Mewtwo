@@ -1,8 +1,6 @@
 package meew0.mewtwo.irc;
 
-import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
-import meew0.mewtwo.core.MewtwoLogger;
 
 /**
  * Created by meew0 on 03.04.15.
@@ -34,11 +32,6 @@ public abstract class GenericHandlerThread extends Thread {
 
     @Override
     public void run() {
-        if (!message.startsWith(MewtwoMain.prefix)) {
-            MewtwoLogger.warn("CCHT created that apparently doesn't actually handle a command chain, ignoring");
-            return;
-        }
-
         String result = handle(ctx, message);
 
         if (result.length() > 600 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
