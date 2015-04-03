@@ -117,6 +117,22 @@ public class IRCBot extends Thread {
                 ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
                 channelUserLists.put(channelName, list);
             }
+
+            // Invalidate channel lists when a user joins or leaves a channel or changes their nick
+            if(command.equals("JOIN")) {
+                String channelName = arguments[3].substring(1);
+                channelUserLists.get(channelName).invalidate();
+            }
+            if(command.equals("PART")) {
+                String channelName = arguments[4];
+                channelUserLists.get(channelName).invalidate();
+            }
+            if(command.equals("NICK")) {
+                // Invalidate all channels
+                for(ChannelUserList list : channelUserLists.values()) {
+                    list.invalidate();
+                }
+            }
         }
     }
 
