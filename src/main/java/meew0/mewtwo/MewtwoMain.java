@@ -1,8 +1,11 @@
 package meew0.mewtwo;
 
+import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.core.ShutdownHook;
 import meew0.mewtwo.irc.IRCBot;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+
+import java.io.File;
 
 public class MewtwoMain {
     public static String prefix = "%";
@@ -16,10 +19,10 @@ public class MewtwoMain {
         try {
             File cfgFile = new File(configName);
             if (!cfgFile.exists() && !cfgFile.createNewFile())
-                mewtwoLogger.error("Could not create config file " + configName);
+                MewtwoLogger.error("Could not create config file " + configName);
             return new HierarchicalINIConfiguration(configName);
         } catch(Throwable t) {
-            mewtwoLogger.error("Error while creating config file " + configName + "!", t);
+            MewtwoLogger.errorThrowable(t);
         }
 
         return null;
