@@ -67,7 +67,7 @@ public class JRubyWrapper {
         long time = System.currentTimeMillis();
         MewtwoLogger.info("Initializing ScriptingContainer - this might take a few seconds!");
 
-        rb.runScriptlet("require 'java'; Java::Meew0Mewtwo::MewtwoLogger.good('Hello world! This is JRuby')");
+        rb.runScriptlet("require 'java'; Java::Meew0MewtwoCore::MewtwoLogger.good('Hello world! This is JRuby')");
 
         MewtwoLogger.info("ScriptingContainer successfully initialized in " +
                 (System.currentTimeMillis() - time) + " ms");
