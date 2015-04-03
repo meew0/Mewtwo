@@ -1,6 +1,9 @@
 package meew0.mewtwo.irc;
 
+import meew0.mewtwo.MewtwoMain;
+import meew0.mewtwo.commands.CommandChainHandlerThread;
 import meew0.mewtwo.context.ContextManager;
+import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 
 import java.io.*;
@@ -106,6 +109,21 @@ public class IRCBot extends Thread {
 
                 // TODO: Actual privmsg handling
                 writePrivmsg(getReturnTarget(target, nick), nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
+
+                if(data.startsWith(MewtwoMain.prefix)) {
+                    // We have a command chain!
+
+                    User user = new User(nick, arguments[0].substring(1), hostmask[2], this);
+                    IChannel channel = (targetIsChannel(target)) ? new Channel(target, this) : user;
+
+                    MewtwoContext ctx = ctxMgr.makeContext(this, channel, user);
+
+                    CommandChainHandlerThread ccht = new CommandChainHandlerThread(ctx, getReturnTarget(target, nick),
+                            data);
+
+                    ccht.run();
+                }
+
                 return;
             }
 
