@@ -80,7 +80,7 @@ public class IRCBot extends Thread {
         }
 
         MewtwoLogger.info("IRCBot shutting down");
-        writeRaw("QUIT", "JVM terminated");
+        writeRaw("QUIT", ":JVM terminated");
     }
 
     public void parseCommand(String[] arguments) {
