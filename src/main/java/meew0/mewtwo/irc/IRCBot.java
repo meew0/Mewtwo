@@ -83,7 +83,7 @@ public class IRCBot extends Thread {
 
                     // Handle other commands
 
-                    parseCommand(message.split(" "));
+                    parseCommand(message.split(" "), message);
                 }
             } catch (IOException e) {
                 MewtwoLogger.errorThrowable(e);
@@ -94,7 +94,7 @@ public class IRCBot extends Thread {
         writeRaw("QUIT", ":JVM terminated");
     }
 
-    public void parseCommand(String[] arguments) {
+    public void parseCommand(String[] arguments, String message) {
         // User command?
         if (arguments[0].matches(":.+!.+@.+")) {
             String[] hostmask = arguments[0].split("[:!]");
