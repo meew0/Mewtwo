@@ -6,16 +6,16 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * Created by meew0 on 01.04.15.
  */
 public class MewtwoLogger {
-    public static final String reset = "\\u001B[0m",
-            black = "\\u001B[30m",
-            red = "\\u001B[31m",
-            green = "\\u001B[32m",
-            yellow = "\\u001B[33m",
-            blue = "\\u001B[34m",
-            purple = "\\u001B[35m",
-            cyan = "\\u001B[36m",
-            white = "\\u001B[37m",
-            bold = "\\u001B[1m",
+    public static final String reset = "\u001B[0m",
+            black = "\u001B[30m",
+            red = "\u001B[31m",
+            green = "\u001B[32m",
+            yellow = "\u001B[33m",
+            blue = "\u001B[34m",
+            purple = "\u001B[35m",
+            cyan = "\u001B[36m",
+            white = "\u001B[37m",
+            bold = "\u001B[1m",
             none = "";
 
     public static final String outcomingArrow = "→",
