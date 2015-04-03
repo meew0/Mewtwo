@@ -1,5 +1,7 @@
 package meew0.mewtwo.irc;
 
+import meew0.mewtwo.core.MewtwoLogger;
+
 import java.util.Date;
 
 /**
@@ -43,6 +45,7 @@ public class ChannelUserList {
     }
 
     public void invalidate() {
+        if(isValid) MewtwoLogger.info("Invalidating channel " + channel.getName());
         isValid = false;
 
         // Revalidate channel after a certain amount of time
@@ -50,6 +53,7 @@ public class ChannelUserList {
     }
 
     public void revalidate() {
+        MewtwoLogger.info("Revalidating channel " + channel.getName());
         bot.writeRaw("NAMES", channel.getName());
     }
 }
