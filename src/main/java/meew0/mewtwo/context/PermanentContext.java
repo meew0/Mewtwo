@@ -13,7 +13,7 @@ import java.util.HashMap;
 //import meew0.mewtwo.irc.ChatLog;
 
 /**
- * Created by miras on 14.11.14.
+ * Created by meew0 on 14.11.14.
  */
 public class PermanentContext {
     // TODO: Replace ChatLog with a better way to log stuff

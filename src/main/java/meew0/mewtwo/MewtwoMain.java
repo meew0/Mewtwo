@@ -7,6 +7,9 @@ import org.apache.commons.configuration.HierarchicalINIConfiguration;
 
 import java.io.File;
 
+/**
+ * Created by meew0 on 13.05.14.
+ */
 public class MewtwoMain {
     public static String prefix = "%";
 
