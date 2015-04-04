@@ -101,17 +101,18 @@ public class IRCBot extends Thread {
             // Get the actual command
             String command = arguments[1];
 
+            String target = getReturnTargetForArguments(arguments, hostmask);
+
+            User user = new User(nick, arguments[0].substring(1), hostmask[2], this);
+            IChannel channel = (targetIsChannel(target)) ? new Channel(target, this) : user;
+
+            MewtwoContext ctx = ctxMgr.makeContext(this, channel, user);
+
             if (command.equals("PRIVMSG")) {
-                String target = arguments[2];
                 String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length)).substring(1);
 
                 // TODO: Actual privmsg handling
                 writePrivmsg(getReturnTarget(target, nick), nick + " (" + hostmask[2] + ") @ " + target + ": " + data);
-
-                User user = new User(nick, arguments[0].substring(1), hostmask[2], this);
-                IChannel channel = (targetIsChannel(target)) ? new Channel(target, this) : user;
-
-                MewtwoContext ctx = ctxMgr.makeContext(this, channel, user);
 
                 if (data.startsWith(MewtwoMain.prefix)) {
                     // We have a command chain!
