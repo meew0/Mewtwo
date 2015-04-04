@@ -1,5 +1,4 @@
-# .*[Mm][Ee][Ww][Tt][Ww][Oo].*
-# message,pm
+# :[^ ]+ PRIVMSG [^ ]+ :.*[Mm][Ee][Ww][Tt][Ww][Oo].*
 
 # This is an example for a module.
 # In the first line, the regex for which this module should activate

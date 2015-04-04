@@ -1,5 +1,4 @@
-# ([a-zA-Z0-9\-_]+[,:][ ]?)?s/([^/]*)/([^/]*)(/(g)?)?
-# message
+# :[^ ]+ PRIVMSG #[^ ]+ :([a-zA-Z0-9\-_]+[,:][ ]?)?s/([^/]*)/([^/]*)(/(g)?)?
 
 # Module that allows users to replace stuff from earlier messages using sed regex syntax.
 # Also allows users to specify whose messages to replace using "meew0, s///" syntax
