@@ -5,6 +5,7 @@ import meew0.mewtwo.commands.CommandChainHandlerThread;
 import meew0.mewtwo.context.ContextManager;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
+import meew0.mewtwo.modules.ModuleHandlerThread;
 
 import java.io.*;
 import java.net.Socket;
@@ -154,6 +155,11 @@ public class IRCBot extends Thread {
                 for (ChannelUserList list : channelUserLists.values()) {
                     list.invalidate();
                 }
+            }
+
+            // Handle modules
+            if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
+                ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
             }
         }
     }
