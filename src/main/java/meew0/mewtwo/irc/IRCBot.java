@@ -160,6 +160,7 @@ public class IRCBot extends Thread {
             // Handle modules
             if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
                 ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
+                mht.run();
             }
         }
     }
