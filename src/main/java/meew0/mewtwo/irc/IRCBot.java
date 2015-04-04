@@ -123,8 +123,6 @@ public class IRCBot extends Thread {
 
                     ccht.start();
                 }
-
-                return;
             }
 
             // NAMES list
