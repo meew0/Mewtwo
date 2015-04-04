@@ -157,6 +157,18 @@ public class IRCBot extends Thread {
         }
     }
 
+    public String getReturnTargetForArguments(String[] arguments, String[] hostmask) {
+        String command = arguments[1];
+        if (command.equals("PRIVMSG")) {
+            if (targetIsChannel(arguments[2])) return arguments[2];
+            else return hostmask[1];
+        }
+        if (command.equals("NICK") || command.equals("AWAY")) return hostmask[1];
+        if (command.equals("JOIN")) return arguments[3].substring(1);
+        if (command.equals("PART")) return arguments[3];
+        return "";
+    }
+
     public void writePrivmsg(String target, String data) {
         writeRaw("PRIVMSG", target + " :" + data);
     }
