@@ -121,7 +121,7 @@ public class IRCBot extends Thread {
                     CommandChainHandlerThread ccht = new CommandChainHandlerThread(ctx, getReturnTarget(target, nick),
                             data);
 
-                    ccht.run();
+                    ccht.start();
                 }
 
                 return;
@@ -160,7 +160,7 @@ public class IRCBot extends Thread {
             // Handle modules
             if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
                 ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
-                mht.run();
+                mht.start();
             }
         }
     }
