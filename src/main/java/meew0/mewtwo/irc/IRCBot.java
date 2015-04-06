@@ -171,8 +171,8 @@ public class IRCBot extends Thread {
             else return hostmask[1];
         }
         if (command.equals("NICK") || command.equals("AWAY")) return hostmask[1];
-        if (command.equals("JOIN")) return arguments[3].substring(1);
-        if (command.equals("PART")) return arguments[3];
+        if (command.equals("JOIN")) return arguments[2].substring(1);
+        if (command.equals("PART")) return arguments[2];
         return "";
     }
 
