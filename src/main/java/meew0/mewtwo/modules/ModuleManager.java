@@ -72,7 +72,10 @@ public class ModuleManager {
     public String executeModules(String message, MewtwoContext ctx) {
         String result = "";
         for (Module m : modules) {
-            if (m.activatesOn(message)) result += m.execute(message, ctx);
+            if (m.activatesOn(message)) {
+                MewtwoLogger.info("Executing module: " + m.getName());
+                result += m.execute(message, ctx);
+            }
         }
         return result;
     }

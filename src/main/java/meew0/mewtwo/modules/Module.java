@@ -20,6 +20,10 @@ public class Module {
         this.filename = filename;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public boolean activatesOn(String message) {
         return (regex.matcher(message.getBytes()).search(0, message.length(), Option.DEFAULT) == 0);
     }

@@ -157,6 +157,7 @@ public class IRCBot extends Thread {
 
             // Handle modules
             if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
+                MewtwoLogger.info("Module found");
                 ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
                 mht.start();
             }
