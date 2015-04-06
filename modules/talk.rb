@@ -15,10 +15,12 @@
 msg = ARGV[2..-1].join(' ').downcase  # Get the full message
 user = ARGV[0]  # Get the user
 
+puts msg
+
 # Regexes for greetings, farewells and asking who Mewtwo is
-greeting_regex = /o?hai|[\\\/]?[oO0][\\\/]?|(evenin|mornin|afternoon)[g']?|[eh]e(yo?|llo)|hi|sup|greeting[sz]?/i
-farewell_regex = /(good)?b(ye|ai)|cya/i
-identity_regex = /who (is|are)( you)?/i
+greeting_regex = /:[^ ]+ privmsg [^ ]+ :(o?hai|[\\\/]?[oO0][\\\/]?|(evenin|mornin|afternoon)[g']?|[eh]e(yo?|llo)|hi|sup|greeting[sz]?)/i
+farewell_regex = /:[^ ]+ privmsg [^ ]+ :((good)?b(ye|ai)|cya)/i
+identity_regex = /:[^ ]+ privmsg [^ ]+ :(who (is|are)( you)?)/i
 
 # Now check if one of the regexes is found in the message.
 if (msg =~ greeting_regex) == 0
