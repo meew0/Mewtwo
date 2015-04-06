@@ -3,8 +3,8 @@ package meew0.mewtwo.modules;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.ruby.CommandExecutor;
-import org.joni.Option;
-import org.joni.Regex;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by meew0 on 25.11.14.
@@ -12,9 +12,9 @@ import org.joni.Regex;
 @SuppressWarnings("WeakerAccess")
 public class Module {
     private final String name, filename;
-    private final Regex regex;
+    private final Pattern regex;
 
-    public Module(Regex regex, String name, String filename) {
+    public Module(Pattern regex, String name, String filename) {
         this.regex = regex;
         this.name = name;
         this.filename = filename;
@@ -25,7 +25,7 @@ public class Module {
     }
 
     public boolean activatesOn(String message) {
-        return (regex.matcher(message.getBytes()).search(0, message.length(), Option.DEFAULT) == 0);
+        return regex.matcher(message).matches();
     }
 
     public String execute(String message, MewtwoContext ctx) {

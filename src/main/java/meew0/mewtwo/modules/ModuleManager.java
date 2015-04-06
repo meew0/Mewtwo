@@ -3,9 +3,6 @@ package meew0.mewtwo.modules;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import org.apache.commons.io.FileUtils;
-import org.jcodings.specific.UTF8Encoding;
-import org.joni.Option;
-import org.joni.Regex;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -13,6 +10,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by meew0 on 12.08.14.
@@ -40,9 +38,8 @@ public class ModuleManager {
                     String name = filename.substring(0, filename.length() - 2);
                     MewtwoLogger.info("Adding module " + name + " - regex = " + regex);
 
-                    Module m = new Module(
-                            new Regex(regex.getBytes(), 0, regex.length(), Option.NONE, UTF8Encoding.INSTANCE),
-                            filename.substring(0, filename.length() - 2), filename);
+                    Module m = new Module(Pattern.compile(regex), filename.substring(0, filename.length() - 2),
+                            filename);
 
                     return Arrays.asList(m);
                 } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
