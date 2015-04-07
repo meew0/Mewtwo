@@ -93,7 +93,7 @@ public class IRCBot extends Thread {
 
     public void parseCommand(String[] arguments, String message) {
         // User command?
-        if (arguments[0].matches(":[^ ]+")) {
+        if (arguments[0].matches(":.+!.+@.+")) {
             String[] hostmask = arguments[0].split("[:!]");
             String nick = hostmask[1];
 
@@ -164,6 +164,41 @@ public class IRCBot extends Thread {
                 ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
                 mht.start();
             }
+        } else if (arguments[0].matches(":[^ ]+")) {
+            String hostmask = arguments[0].substring(1);
+
+            // Get the actual command
+            String command = arguments[1];
+
+            // NAMES list
+            if (command.equals("353")) {
+                String channelName = arguments[4];
+
+                String[] names = new String[arguments.length - 5];
+                names[0] = arguments[5].substring(1);
+                for (int i = 6; i < arguments.length; i++) {
+                    names[i - 5] = arguments[i];
+                }
+
+                ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
+                channelUserLists.put(channelName, list);
+            }
+
+            // MOTD finished
+            if (command.equals("376")) {
+                // Identify to NickServ
+                writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
+            }
+
+            MewtwoContext ctx = ctxMgr.makeContext(this, new Channel("", this), new User("", hostmask, hostmask, this));
+
+            // Handle modules
+            if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
+                MewtwoLogger.info("Module found");
+                ModuleHandlerThread mht = new ModuleHandlerThread(ctx, "", message);
+                mht.start();
+            }
+
         }
     }
 
