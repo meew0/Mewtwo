@@ -172,4 +172,8 @@ public class MewtwoContext {
     public String getCurrentId() {
         return currentId;
     }
+
+    public void send(String command, String data) {
+        bot.writeRaw(command, data);
+    }
 }
