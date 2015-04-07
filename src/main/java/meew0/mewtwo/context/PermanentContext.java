@@ -131,7 +131,7 @@ public class PermanentContext {
      * @return whether or not the user is admin
      */
     public boolean isUserAdmin(User user) {
-        return checkConfigFile(admins, user.getHostmask());
+        return checkConfigFile(admins, user.getFullHostmask());
     }
 
     /**
