@@ -63,12 +63,6 @@ public class IRCBot extends Thread {
         writeRaw("NICK", nick);
         writeRaw("USER", nick + " 0 * :" + realName);
 
-        // Join test channel
-        writeRaw("JOIN", "#test");
-
-        // Identify to NickServ
-        writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
-
         // Message loop
         while (!shouldShutDown) {
             try {
@@ -141,6 +135,15 @@ public class IRCBot extends Thread {
 
                 ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
                 channelUserLists.put(channelName, list);
+            }
+
+            // MOTD finished
+            if (command.equals("376")) {
+                // Join test channel
+                writeRaw("JOIN", "#test");
+
+                // Identify to NickServ
+                writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
             }
 
             // Invalidate channel lists when a user joins or leaves a channel or changes their nick
