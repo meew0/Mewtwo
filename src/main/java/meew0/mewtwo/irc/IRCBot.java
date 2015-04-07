@@ -137,15 +137,6 @@ public class IRCBot extends Thread {
                 channelUserLists.put(channelName, list);
             }
 
-            // MOTD finished
-            if (command.equals("376")) {
-                // Join test channel
-                writeRaw("JOIN", "#test");
-
-                // Identify to NickServ
-                writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
-            }
-
             // Invalidate channel lists when a user joins or leaves a channel or changes their nick
             if (command.equals("JOIN")) {
                 String channelName = arguments[2].substring(1);
