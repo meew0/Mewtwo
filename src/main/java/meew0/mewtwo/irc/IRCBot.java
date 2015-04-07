@@ -93,7 +93,7 @@ public class IRCBot extends Thread {
 
     public void parseCommand(String[] arguments, String message) {
         // User command?
-        if (arguments[0].matches(":.+!.+@.+")) {
+        if (arguments[0].matches(":[^ ]+")) {
             String[] hostmask = arguments[0].split("[:!]");
             String nick = hostmask[1];
 
@@ -132,6 +132,12 @@ public class IRCBot extends Thread {
 
                 ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
                 channelUserLists.put(channelName, list);
+            }
+
+            // MOTD finished
+            if (command.equals("376")) {
+                // Identify to NickServ
+                writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
             }
 
             // Invalidate channel lists when a user joins or leaves a channel or changes their nick
