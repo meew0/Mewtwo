@@ -19,7 +19,7 @@ public class IRCBot extends Thread {
     private final String serverHostname;
     private final int port;
 
-    private String nick;
+    private String nick, nickservPW;
 
     public static final String realName = "Mewtwo";
     public static final String newLine = "\r\n";
@@ -36,11 +36,12 @@ public class IRCBot extends Thread {
 
     private HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
 
-    public IRCBot(String serverHostname, int port, String nick) {
+    public IRCBot(String serverHostname, int port, String nick, String nickservPW) {
         super("Bot-" + (++botNumber));
         this.serverHostname = serverHostname;
         this.port = port;
         this.nick = nick;
+        this.nickservPW = nickservPW;
 
         ctxMgr = new ContextManager();
     }
@@ -64,6 +65,9 @@ public class IRCBot extends Thread {
 
         // Join test channel
         writeRaw("JOIN", "#test");
+
+        // Identify to NickServ
+        writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
 
         // Message loop
         while (!shouldShutDown) {

@@ -46,7 +46,7 @@ public class MewtwoMain {
 
         // Start initial bot
 
-        IRCBot bot = new IRCBot("127.0.0.1", 6667, "Mewtwo");
+        IRCBot bot = new IRCBot("127.0.0.1", 6667, "Mewtwo", "");
         bot.start();
     }
 }
