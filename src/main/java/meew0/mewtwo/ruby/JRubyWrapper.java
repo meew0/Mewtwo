@@ -4,6 +4,7 @@ import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import org.jruby.CompatVersion;
 import org.jruby.embed.LocalContextScope;
+import org.jruby.embed.LocalVariableBehavior;
 import org.jruby.embed.ScriptingContainer;
 
 import java.io.ByteArrayInputStream;
@@ -28,7 +29,7 @@ public class JRubyWrapper {
      * Create a new JRuby wrapper.
      */
     public JRubyWrapper() {
-        rb = new ScriptingContainer(LocalContextScope.THREADSAFE);
+        rb = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.TRANSIENT);
         // TODO: update JRuby to v9000 for performance and Ruby 2.2 compatibility
         rb.setCompatVersion(CompatVersion.RUBY1_9);
         rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to working directory of application
