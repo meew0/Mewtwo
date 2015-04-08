@@ -4,8 +4,11 @@ import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.core.ShutdownHook;
 import meew0.mewtwo.irc.IRCBot;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Created by meew0 on 13.05.14.
@@ -44,9 +47,20 @@ public class MewtwoMain {
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 
+        // Load password from file
+
+        String password = "";
+
+        try {
+            password = FileUtils.readFileToString(Paths.get("NickservPassword").toFile());
+            MewtwoLogger.info("Password file loaded successfully");
+        } catch (IOException e) {
+            MewtwoLogger.warn("Password file not found! Either you won't be able to identify or you've made your bot really insecure!");
+        }
+
         // Start initial bot
 
-        IRCBot bot = new IRCBot("127.0.0.1", 6667, "Mewtwo", "");
+        IRCBot bot = new IRCBot("irc.esper.net", 6667, "Mewtwo", password);
         bot.start();
     }
 }
