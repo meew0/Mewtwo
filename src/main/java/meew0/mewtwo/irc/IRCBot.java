@@ -240,4 +240,8 @@ public class IRCBot extends Thread {
     public String getReturnTarget(String currentTarget, String nick) {
         return targetIsChannel(currentTarget) ? currentTarget : nick;
     }
+
+    public String getNick() {
+        return nick;
+    }
 }
