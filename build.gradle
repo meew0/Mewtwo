@@ -61,6 +61,6 @@ def downloadOneGem(String target) {
     println "Downloading gem " + target
     exec {
         executable "java"
-        args "-jar", ("lib/jruby-complete-1.7.16.1.jar"), "-S", "gem", "install", "-i", "lib/", target
+        args "-jar", ("lib/jruby-complete-9.0.0.0.pre1.jar"), "-S", "gem", "install", "-i", "lib/", target
     }
 }
