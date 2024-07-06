@@ -21,8 +21,7 @@ dependencies {
     implementation "org.projectlombok:lombok:1.14.8"
 }
 
-//noinspection GroovyAssignabilityCheck
-task fatJar(type: Jar) {
+tasks.register('fatJar', Jar) {
     manifest {
         attributes 'Implementation-Title': 'Mewtwo',
                 'Implementation-Version': version,
@@ -30,30 +29,23 @@ task fatJar(type: Jar) {
     }
     archiveBaseName = project.name + '-all-dev.jar'
     from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    //noinspection GroovyAssignabilityCheck
     with jar
 }
 
-task copyToLib(dependsOn: build, type: Copy) {
+tasks.register('copyToLib', Copy) {
+    dependsOn build
     into "lib"
     from configurations.compileClasspath
 }
 
-//noinspection GroovyAssignabilityCheck
-task buildGems(dependsOn: copyToLib) {
+tasks.register('buildGems') {
+    dependsOn copyToLib
     def mewtwoGemFile = new File('MewtwoGemfile')
     //noinspection GroovyMissingReturnStatement
     mewtwoGemFile.eachLine {
         if (!(it.startsWith('#') || it.isEmpty())) {
             downloadOneGem(it)
         }
-    }
-}
-
-def downloadFile(String url, String path) {
-    def f = new File(path)
-    if (!f.exists()) {
-        new URL(url).withInputStream { i -> f.withOutputStream { it.write(i) } }
     }
 }
 
