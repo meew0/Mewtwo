@@ -63,6 +63,6 @@ def downloadOneGem(String target) {
     def javaExec = "${javaHome}/bin/java"
     exec {
         executable javaExec
-        args "-jar", ("lib/jruby-complete-9.4.8.0.jar"), "-S", "gem", "install", "-i", "lib/", target
+        args "-jar", ("lib/jruby-complete-9.4.8.0.jar"), "-S", "gem", "install", "--conservative", "-i", "lib/", target
     }
 }

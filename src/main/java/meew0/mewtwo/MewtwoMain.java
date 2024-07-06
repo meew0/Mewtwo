@@ -15,6 +15,7 @@ import java.nio.file.Paths;
  */
 public class MewtwoMain {
     public static String prefix = "%";
+    public static int maxChainLength = 1000, maxChars = 600, maxLines = 4;
 
     // TODO find a better way to do configuration
 
@@ -47,6 +48,20 @@ public class MewtwoMain {
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 
+        // Load config
+
+        HierarchicalINIConfiguration config = getConfig("mewtwo.cfg");
+
+        prefix = config.getString("prefix");
+        String nick = config.getString("nick");
+        String serverHostname = config.getString("server");
+        int port = config.getInt("port");
+        maxChainLength = config.getInt("maxChainLength");
+        maxChars = config.getInt("maxChars");
+        maxLines = config.getInt("maxLines");
+
+        // TODO remaining mewtwo.cfg values
+
         // Load password from file
 
         String password = "";
@@ -60,7 +75,7 @@ public class MewtwoMain {
 
         // Start initial bot
 
-        IRCBot bot = new IRCBot("irc.esper.net", 6667, "Mewtwo", password);
+        IRCBot bot = new IRCBot(serverHostname, port, nick, password);
         bot.start();
     }
 }

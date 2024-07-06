@@ -1,5 +1,6 @@
 package meew0.mewtwo.commands;
 
+import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 
@@ -246,7 +247,7 @@ public class CommandChain implements ICommandChain {
      */
     public String execute(MewtwoContext ctx) {
 
-        if (chain.length() > 1000) {
+        if (chain.length() > MewtwoMain.maxChainLength) {
             return "The command chain length limit has been reached!";
         }
 

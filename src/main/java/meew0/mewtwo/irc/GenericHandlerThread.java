@@ -1,5 +1,6 @@
 package meew0.mewtwo.irc;
 
+import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 
 /**
@@ -34,18 +35,18 @@ public abstract class GenericHandlerThread extends Thread {
     public void run() {
         String result = handle(ctx, message);
 
-        if (result.length() > 600 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+        if (result.length() > MewtwoMain.maxChars && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
             // Result is too long
-            sendMessage("Sorry, the result length exceeds the limit of 600 characters");
+            sendMessage("Sorry, the result length exceeds the limit of " + MewtwoMain.maxChars + " characters");
             return;
         }
 
         // Split result into lines
         String[] splitResult = result.split("\n");
 
-        if (splitResult.length > 4 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+        if (splitResult.length > MewtwoMain.maxLines && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
             // Result has too many lines
-            sendMessage("Sorry, the result line count exceeds the limit of four lines");
+            sendMessage("Sorry, the result line count exceeds the limit of " + MewtwoMain.maxLines + " lines");
         }
 
         for (String line : splitResult) {
