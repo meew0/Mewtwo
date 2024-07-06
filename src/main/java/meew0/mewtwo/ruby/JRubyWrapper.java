@@ -2,7 +2,6 @@ package meew0.mewtwo.ruby;
 
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
-import org.jruby.CompatVersion;
 import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.LocalVariableBehavior;
 import org.jruby.embed.ScriptingContainer;
@@ -12,6 +11,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,14 +30,13 @@ public class JRubyWrapper {
      */
     public JRubyWrapper() {
         rb = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.TRANSIENT);
-        // TODO: update JRuby to v9000 for performance and Ruby 2.2 compatibility
-        rb.setCompatVersion(CompatVersion.RUBY1_9);
         rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to working directory of application
 
         @SuppressWarnings("unchecked")
-        Map<String, String> env = new HashMap<>(rb.getEnvironment());
+        Map<String, String> env = new HashMap<String, String>(rb.getEnvironment());
 
-        env.put("GEM_PATH", Paths.get("lib/gems").toAbsolutePath().toString());
+        Path gemPath = Paths.get("lib/gems");
+        env.put("GEM_PATH", gemPath.toAbsolutePath().toString());
         MewtwoLogger.info("Setting GEM_PATH of container to " + env.get("GEM_PATH"));
 
         rb.setEnvironment(env);
@@ -45,7 +44,7 @@ public class JRubyWrapper {
         ArrayList<String> loadPaths = new ArrayList<>();
 
         // TODO: possibly find a better way to load gems
-        File gemsFile = Paths.get("lib/gems").toFile();
+        File gemsFile = gemPath.toFile();
         File[] files = gemsFile.listFiles();
 
         for (File child : files != null ? files : new File[0]) {

@@ -57,8 +57,8 @@ public class Command {
 
         String result;
         try {
-            result = wrapper.execute(ctx.getUser().getNick(),
-                    ctx.getChannel().getName(), arguments, ctx);
+            result = wrapper.execute(ctx.getUser().nick(),
+                    ctx.getChannel().name(), arguments, ctx);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

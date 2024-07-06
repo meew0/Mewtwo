@@ -19,7 +19,7 @@ public class IRCBot extends Thread {
     private final String serverHostname;
     private final int port;
 
-    private String nick, nickservPW;
+    private final String nick, nickservPW;
 
     public static final String realName = "Mewtwo";
     public static final String newLine = "\r\n";
@@ -34,7 +34,7 @@ public class IRCBot extends Thread {
 
     private static int botNumber = 0;
 
-    private HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
+    private final HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
 
     public IRCBot(String serverHostname, int port, String nick, String nickservPW) {
         super("Bot-" + (++botNumber));
@@ -126,9 +126,7 @@ public class IRCBot extends Thread {
 
                 String[] names = new String[arguments.length - 5];
                 names[0] = arguments[5].substring(1);
-                for (int i = 6; i < arguments.length; i++) {
-                    names[i - 5] = arguments[i];
-                }
+                System.arraycopy(arguments, 6, names, 1, arguments.length - 6);
 
                 ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
                 channelUserLists.put(channelName, list);
@@ -176,9 +174,7 @@ public class IRCBot extends Thread {
 
                 String[] names = new String[arguments.length - 5];
                 names[0] = arguments[5].substring(1);
-                for (int i = 6; i < arguments.length; i++) {
-                    names[i - 5] = arguments[i];
-                }
+                System.arraycopy(arguments, 6, names, 1, arguments.length - 6);
 
                 ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
                 channelUserLists.put(channelName, list);
@@ -204,13 +200,24 @@ public class IRCBot extends Thread {
 
     public String getReturnTargetForArguments(String[] arguments, String[] hostmask) {
         String command = arguments[1];
-        if (command.equals("PRIVMSG")) {
-            if (targetIsChannel(arguments[2])) return arguments[2];
-            else return hostmask[1];
+        switch (command) {
+            case "PRIVMSG" -> {
+                if (targetIsChannel(arguments[2])) {
+                    return arguments[2];
+                } else {
+                    return hostmask[1];
+                }
+            }
+            case "NICK", "AWAY" -> {
+                return hostmask[1];
+            }
+            case "JOIN" -> {
+                return arguments[2].substring(1);
+            }
+            case "PART" -> {
+                return arguments[2];
+            }
         }
-        if (command.equals("NICK") || command.equals("AWAY")) return hostmask[1];
-        if (command.equals("JOIN")) return arguments[2].substring(1);
-        if (command.equals("PART")) return arguments[2];
         return "";
     }
 

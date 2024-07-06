@@ -40,7 +40,7 @@ public class MewtwoContext {
      * @return the user nick
      */
     public String getUserNick() {
-        return getUser().getNick();
+        return getUser().nick();
     }
 
     /**
@@ -49,7 +49,7 @@ public class MewtwoContext {
      * @return the channel name
      */
     public String getChannelName() {
-        return getChannel().getName();
+        return getChannel().name();
     }
 
     /**

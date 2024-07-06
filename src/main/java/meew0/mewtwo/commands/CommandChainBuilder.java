@@ -7,12 +7,11 @@ import meew0.mewtwo.context.MewtwoContext;
  */
 public class CommandChainBuilder {
     private final MewtwoContext ctx;
-    private String bareChain;
+    private final String bareChain;
 
     public CommandChainBuilder(MewtwoContext ctx, String message) {
         this.ctx = ctx;
-
-        this.bareChain = message.substring(1, message.length());
+        this.bareChain = message.substring(1);
     }
 
     private void replaceChainArguments() {

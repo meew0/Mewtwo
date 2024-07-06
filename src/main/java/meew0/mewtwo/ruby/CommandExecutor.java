@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -18,7 +19,7 @@ public class CommandExecutor {
     private static final String commandFolder = "commands/";
     private static final JRubyWrapper rb = new JRubyWrapper();
 
-    private String name;
+    private final String name;
 
     public CommandExecutor(String name) {
         File f = new File(commandFolder + name + ".rb");
@@ -32,17 +33,19 @@ public class CommandExecutor {
     }
 
     public static String genericExecute(String path, String userNick, String channel, String args, MewtwoContext ctx) throws IOException {
-        String absolutePath = Paths.get(path).toAbsolutePath().toString();
+        Path relativePath = Paths.get(path);
+        String absolutePath = relativePath.toAbsolutePath().toString();
 
-        if (!(absolutePath.startsWith(Paths.get("commands").toAbsolutePath().toString())
+        Path commandsPath = Paths.get("commands");
+        if (!(absolutePath.startsWith(commandsPath.toAbsolutePath().toString())
                 || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString()))) {
             MewtwoLogger.info("Script path: " + absolutePath);
-            MewtwoLogger.info("Commands path: " + Paths.get("commands").toAbsolutePath().toString());
+            MewtwoLogger.info("Commands path: " + commandsPath.toAbsolutePath());
             return "Script path must be inside commands or modules path!";
         }
 
         // TODO: possibly preload scripts instead of loading them when they're executed to save time
-        String script = Joiner.on('\n').join(Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8)); // read script from file
+        String script = Joiner.on('\n').join(Files.readAllLines(relativePath, StandardCharsets.UTF_8)); // read script from file
 
         script = "# encoding: utf-8\n" + script;
 

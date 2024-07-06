@@ -10,7 +10,7 @@ import java.util.Date;
  * Represents the users in a channel
  */
 public class ChannelUserList {
-    private String[] nicks;
+    private final String[] nicks;
     private boolean isValid;
     private final Channel channel;
     private final IRCBot bot;
@@ -45,7 +45,7 @@ public class ChannelUserList {
     }
 
     public void invalidate() {
-        if (isValid) MewtwoLogger.info("Invalidating channel " + channel.getName());
+        if (isValid) MewtwoLogger.info("Invalidating channel " + channel.name());
         isValid = false;
 
         // Revalidate channel after a certain amount of time
@@ -53,7 +53,7 @@ public class ChannelUserList {
     }
 
     public void revalidate() {
-        MewtwoLogger.info("Revalidating channel " + channel.getName());
-        bot.writeRaw("NAMES", channel.getName());
+        MewtwoLogger.info("Revalidating channel " + channel.name());
+        bot.writeRaw("NAMES", channel.name());
     }
 }

@@ -8,7 +8,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -28,20 +27,19 @@ public class ModuleManager {
     private List<Module> getSingleModuleForPath(File child) {
         if (child.getName().endsWith(".rb")) {
             try {
-                @SuppressWarnings("unchecked")
-                List<String> lines = FileUtils.readLines(child);
+                List<String> lines = FileUtils.readLines(child, "UTF-8");
                 if (lines.size() > 1) {
-                    String regex = lines.get(0);
-                    regex = regex.substring(1, regex.length()).trim();
+                    String regex = lines.getFirst();
+                    regex = regex.substring(1).trim();
 
                     String filename = child.getName();
                     String name = filename.substring(0, filename.length() - 2);
                     MewtwoLogger.info("Adding module " + name + " - regex = " + regex);
 
-                    Module m = new Module(Pattern.compile(regex), filename.substring(0, filename.length() - 2),
+                    Module m = new Module(Pattern.compile(regex), name,
                             filename);
 
-                    return Arrays.asList(m);
+                    return List.of(m);
                 } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
             } catch (Throwable t) {
                 MewtwoLogger.errorThrowable(t);
@@ -49,7 +47,7 @@ public class ModuleManager {
 
         } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
 
-        return Arrays.asList();
+        return List.of();
     }
 
     private List<Module> traverseDirectoryForModules(Path directory) {
@@ -67,14 +65,14 @@ public class ModuleManager {
     }
 
     public String executeModules(String message, MewtwoContext ctx) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (Module m : modules) {
             if (m.activatesOn(message)) {
                 MewtwoLogger.info("Executing module: " + m.getName());
-                result += m.execute(message, ctx);
+                result.append(m.execute(message, ctx));
             }
         }
-        return result;
+        return result.toString();
     }
 
     public boolean doesModuleExistForMessage(String message) {

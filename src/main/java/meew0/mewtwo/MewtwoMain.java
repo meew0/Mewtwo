@@ -52,6 +52,11 @@ public class MewtwoMain {
 
         HierarchicalINIConfiguration config = getConfig("mewtwo.cfg");
 
+        if (config == null) {
+            MewtwoLogger.error("mewtwo.cfg must exist");
+            return;
+        }
+
         prefix = config.getString("prefix");
         String nick = config.getString("nick");
         String serverHostname = config.getString("server");
@@ -67,7 +72,7 @@ public class MewtwoMain {
         String password = "";
 
         try {
-            password = FileUtils.readFileToString(Paths.get("NickservPassword").toFile());
+            password = FileUtils.readFileToString(Paths.get("NickservPassword").toFile(), "US-ASCII");
             MewtwoLogger.info("Password file loaded successfully");
         } catch (IOException e) {
             MewtwoLogger.warn("Password file not found! Either you won't be able to identify or you've made your bot really insecure!");

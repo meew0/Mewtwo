@@ -30,7 +30,7 @@ public class CommandChain implements ICommandChain {
      * @return the string, trimmed
      */
     String specialTrim(String result) {
-        while (result.startsWith(" ") || result.startsWith("\n")) result = result.substring(1, result.length());
+        while (result.startsWith(" ") || result.startsWith("\n")) result = result.substring(1);
         while (result.endsWith(" ") || result.endsWith("\n")) result = result.substring(0, result.length() - 1);
 
         return result;
@@ -50,7 +50,7 @@ public class CommandChain implements ICommandChain {
         int bracketLevel = 0;
 
         // The flat chain to parse after parsing quotes and subchains
-        String resultChain = "";
+        StringBuilder resultChain = new StringBuilder();
 
         // Whether or not quoting is currently active
         boolean quoted = false;
@@ -70,7 +70,7 @@ public class CommandChain implements ICommandChain {
 
             if (c == '>' && quoted) {
                 // Use the previously defined private use character instead of an actual >, so it's not parsed later
-                resultChain += privateUseLT;
+                resultChain.append(privateUseLT);
                 continue;
             }
 
@@ -82,7 +82,7 @@ public class CommandChain implements ICommandChain {
 
             if (bracketLevel <= 0) {
                 // Add character to result chain verbatim if not in a subchain
-                resultChain += c;
+                resultChain.append(c);
             }
 
             if (c == ']' && !quoted) {
@@ -97,7 +97,7 @@ public class CommandChain implements ICommandChain {
 
                     // Execute the sub chain and add the result to the result chain
                     String r = subchain.execute(ctx);
-                    resultChain += r;
+                    resultChain.append(r);
                 }
             }
         }
@@ -105,14 +105,14 @@ public class CommandChain implements ICommandChain {
 
         // Print an error message if somebody forgot a bracket or has an extra one
         if (bracketLevel != 0) return "Your bracket level is " + bracketLevel + "! This means you " +
-                ((bracketLevel > 0) ? "forgot " + bracketLevel + " closing bracket" + ((bracketLevel > 1) ? "s" : "")
-                        : "have " + (-bracketLevel) + " extra closing bracket" + ((bracketLevel > 1) ? "s" : "")); // ternary operator gore
+                (bracketLevel > 0 ? "forgot " + bracketLevel + " closing bracket" + (bracketLevel > 1 ? "s" : "")
+                        : "have " + -bracketLevel + " extra closing bracket"); // ternary operator gore
 
         // bracket parsing done, actually execute chain now
 
 
         // Copy over result chain to chain
-        chain = resultChain;
+        chain = resultChain.toString();
 
         // Point where chain arguments end
         int colonIndex = chain.indexOf(':');
@@ -123,7 +123,7 @@ public class CommandChain implements ICommandChain {
         } else {
             // Otherwise parse arguments
             chainArgs = chain.substring(0, colonIndex).split(",");
-            chain = chain.substring(colonIndex + 1, chain.length());
+            chain = chain.substring(colonIndex + 1);
         }
 
 
@@ -131,8 +131,9 @@ public class CommandChain implements ICommandChain {
         String previousResult = "";
 
         String chainToSplit = chain;
-        if (chain.charAt(0) == '>')
-            chainToSplit = chain.substring(1, chain.length()); // don't break if a command happens to be called ">"
+        if (chain.charAt(0) == '>') {
+            chainToSplit = chain.substring(1); // don't break if a command happens to be called ">"
+        }
         boolean first = true;
 
         for (String s1 : chainToSplit.split(">")) {
@@ -151,7 +152,7 @@ public class CommandChain implements ICommandChain {
 
             // Then parse name and arguments
             String cmdName = (firstSpace > -1) ? s.substring(0, firstSpace) : s;
-            String args = (firstSpace > -1) ? s.substring(firstSpace + 1, s.length()) : "";
+            String args = (firstSpace > -1) ? s.substring(firstSpace + 1) : "";
 
             if (!args.contains("%p")) args += " %p";
 
@@ -223,7 +224,7 @@ public class CommandChain implements ICommandChain {
      * @return its argument
      */
     private String getArgumentArgument(String arg) {
-        return arg.substring(arg.indexOf(" ") + 1, arg.length());
+        return arg.substring(arg.indexOf(" ") + 1);
     }
 
     /**
@@ -236,7 +237,9 @@ public class CommandChain implements ICommandChain {
         int colonIndex = chain.indexOf(':');
 
         if (colonIndex < 0) return chain;
-        else return chain.substring(colonIndex + 1, chain.length());
+        else {
+            return chain.substring(colonIndex + 1);
+        }
     }
 
     /**
@@ -256,32 +259,32 @@ public class CommandChain implements ICommandChain {
         String oldChain = chain;
 
         String result = executeBareChain(ctx);
-        String newResult = "";
+        StringBuilder newResult = new StringBuilder();
 
         for (int i = 0; i < result.length(); i++) {
             char c = result.charAt(i);
             if (c == '%') {
                 if (i + 1 == result.length()) {
-                    newResult += c;
+                    newResult.append(c);
                     break;
                 }
                 if (result.charAt(i + 1) == '$') {
                     String varName = result.substring(i + 2).split("[^a-zA-Z0-9]")[0];
-                    newResult += variables.get(varName);
+                    newResult.append(variables.get(varName));
                     i = i + 1 + varName.length();
                 } else if (result.charAt(i + 1) == '!') {
                     String varName = result.substring(i + 2).split("[^a-zA-Z0-9]")[0];
-                    newResult += new CommandChain(":" + variables.get(varName)).execute(ctx);
+                    newResult.append(new CommandChain(":" + variables.get(varName)).execute(ctx));
                     i = i + 1 + varName.length();
                 } else {
-                    newResult += c;
+                    newResult.append(c);
                 }
             } else {
-                newResult += c;
+                newResult.append(c);
             }
         }
 
-        result = newResult;
+        result = newResult.toString();
 
         String delimiter = " ";
         String countVar = "", prevVar = "";
@@ -324,11 +327,11 @@ public class CommandChain implements ICommandChain {
                     return "You can't repeat something more than 100 times!";
                 }
 
-                newResult = "";
+                newResult = new StringBuilder();
                 for (int i = 0; i < amount; i++) {
-                    newResult += (result + ((i == amount - 1) ? "" : delimiter));
+                    newResult.append(result).append((i == amount - 1) ? "" : delimiter);
                 }
-                result = newResult;
+                result = newResult.toString();
             } else if (arg.startsWith("repeat_chain ")) {
                 String amountStr = getArgumentArgument(arg);
 
@@ -345,23 +348,23 @@ public class CommandChain implements ICommandChain {
                     return "You can't repeat a chain more than 20 times!";
                 }
 
-                newResult = "";
+                newResult = new StringBuilder();
                 String prevResult = "";
                 for (int i = 0; i < amount; i++) {
                     variables.put(countVar, "" + i);
                     variables.put(prevVar, prevResult);
                     prevResult = (new CommandChain(":" + chainToExecute).execute(ctx) + ((i == amount - 1) ? "" : delimiter));
-                    newResult += prevResult;
+                    newResult.append(prevResult);
                 }
-                result = newResult;
+                result = newResult.toString();
             } else if (arg.startsWith("override ")) {
                 result = getArgumentArgument(arg);
             } else if (arg.startsWith("bold")) {
-                result = "" + ((char) 2) + result + ((char) 2);
+                result = ((char) 2) + result + ((char) 2);
             } else if (arg.startsWith("italic")) {
-                result = "" + ((char) 29) + result + ((char) 29);
+                result = ((char) 29) + result + ((char) 29);
             } else if (arg.startsWith("underline")) {
-                result = "" + ((char) 31) + result + ((char) 31);
+                result = ((char) 31) + result + ((char) 31);
             } else if (arg.startsWith("color ") || arg.startsWith("spoiler")) {
                 String colorStr;
                 if (arg.startsWith("spoiler")) {
@@ -387,10 +390,9 @@ public class CommandChain implements ICommandChain {
                     if (!bgColor.isEmpty()) colorStr += ("," + bgColor);
                 }
 
-                result = "" + ((char) 3) + colorStr + result + ((char) 3);
+                result = ((char) 3) + colorStr + result + ((char) 3);
 
             } else if (arg.startsWith("plain")) {
-
                 result = result.replace("" + (char) 31, "");
                 result = result.replace("" + (char) 2, "");
                 result = result.replace("" + (char) 29, "");

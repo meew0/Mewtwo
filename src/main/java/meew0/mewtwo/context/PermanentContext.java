@@ -131,7 +131,7 @@ public class PermanentContext {
      * @return whether or not the user is admin
      */
     public boolean isUserAdmin(User user) {
-        return checkConfigFile(admins, user.getFullHostmask());
+        return checkConfigFile(admins, user.fullHostmask());
     }
 
     /**
@@ -234,8 +234,7 @@ public class PermanentContext {
     public Object get(String id, String key, Object defaultValue) {
         if (commandData.containsKey(id)) {
             HashMap<String, Object> subMap = commandData.get(id);
-            if (subMap.containsKey(key)) return subMap.get(key);
-            else return defaultValue;
+            return subMap.getOrDefault(key, defaultValue);
         } else return defaultValue;
     }
 
