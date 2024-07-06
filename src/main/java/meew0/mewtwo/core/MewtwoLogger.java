@@ -1,6 +1,6 @@
 package meew0.mewtwo.core;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * Created by meew0 on 01.04.15.
