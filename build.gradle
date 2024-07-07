@@ -39,7 +39,7 @@ tasks.register('copyToLib', Copy) {
 
 tasks.register('buildGems') {
     dependsOn copyToLib
-    def mewtwoGemFile = new File('MewtwoGemfile')
+    def mewtwoGemFile = project.file('MewtwoGemfile')
     //noinspection GroovyMissingReturnStatement
     mewtwoGemFile.eachLine {
         if (!(it.startsWith('#') || it.isEmpty())) {
