@@ -38,10 +38,11 @@ public class CommandExecutor {
 
         Path commandsPath = Paths.get("commands");
         if (!(absolutePath.startsWith(commandsPath.toAbsolutePath().toString())
-                || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString()))) {
+                || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString())
+                || absolutePath.startsWith(Paths.get("timers").toAbsolutePath().toString()))) {
             MewtwoLogger.info("Script path: " + absolutePath);
             MewtwoLogger.info("Commands path: " + commandsPath.toAbsolutePath());
-            return "Script path must be inside commands or modules path!";
+            return "Script path must be inside commands, modules, or timers path!";
         }
 
         // TODO: possibly preload scripts instead of loading them when they're executed to save time

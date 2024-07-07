@@ -6,6 +6,7 @@ import meew0.mewtwo.context.ContextManager;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.modules.ModuleHandlerThread;
+import meew0.mewtwo.storage.Database;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -52,7 +53,7 @@ public class IRCBot extends Thread {
         this.nick = nick;
         this.nickservPW = nickservPW;
 
-        ctxMgr = new ContextManager();
+        ctxMgr = new ContextManager(this, new Database());
     }
 
     @Override

@@ -1,11 +1,5 @@
 package meew0.mewtwo.ruby;
 
-import meew0.mewtwo.context.MewtwoContext;
-import meew0.mewtwo.core.MewtwoLogger;
-import org.jruby.embed.LocalContextScope;
-import org.jruby.embed.LocalVariableBehavior;
-import org.jruby.embed.ScriptingContainer;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.PrintWriter;
@@ -16,6 +10,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jruby.embed.LocalContextScope;
+import org.jruby.embed.LocalVariableBehavior;
+import org.jruby.embed.ScriptingContainer;
+
+import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 
 /**
  * Created by meew0 on 09.11.14.
@@ -30,7 +31,8 @@ public class JRubyWrapper {
      */
     public JRubyWrapper() {
         rb = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.TRANSIENT);
-        rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to working directory of application
+        rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to
+                                                                           // working directory of application
 
         @SuppressWarnings("unchecked")
         Map<String, String> env = new HashMap<String, String>(rb.getEnvironment());
@@ -89,7 +91,8 @@ public class JRubyWrapper {
     }
 
     /**
-     * Get the standard error of the script (i.e. all debug messages that have been written using STDERR.puts)
+     * Get the standard error of the script (i.e. all debug messages that have been
+     * written using STDERR.puts)
      *
      * @return standard error of the script
      */
@@ -107,7 +110,8 @@ public class JRubyWrapper {
     }
 
     /**
-     * Bind command line arguments to the script. ARGV[0] should be the user nick, ARGV[1] the channel name and ARGV[2 .. end] the rest.
+     * Bind command line arguments to the script. ARGV[0] should be the user nick,
+     * ARGV[1] the channel name and ARGV[2 .. end] the rest.
      *
      * @param argv ARGV to bind
      */
@@ -116,7 +120,8 @@ public class JRubyWrapper {
     }
 
     /**
-     * Set the standard input of the script, usually got using MewtwoContext.getInput
+     * Set the standard input of the script, usually got using
+     * MewtwoContext.getInput
      *
      * @param stdin standard input
      */

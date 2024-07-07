@@ -6,7 +6,11 @@ package meew0.mewtwo.irc;
 public record Channel(String name, IRCBot bot) implements IChannel {
 
     public String getUnprefixedName() {
-        return name.substring(1);
+        if (name.startsWith("#")) {
+            return name.substring(1);
+        }
+
+        return name;
     }
 
     public String[] getUserNicks() {

@@ -1,12 +1,12 @@
 package meew0.mewtwo.context;
 
+import java.util.Date;
+
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.irc.User;
 import meew0.mewtwo.modules.ModuleManager;
 import meew0.mewtwo.storage.Database;
-import org.apache.commons.configuration.HierarchicalINIConfiguration;
-
-import java.util.Date;
+import meew0.mewtwo.timers.TimerManager;
 
 //import meew0.mewtwo.irc.ChatLog;
 
@@ -15,11 +15,12 @@ import java.util.Date;
  */
 public class PermanentContext {
     // TODO: Replace ChatLog with a better way to log stuff
-    //private final ChatLog log;
+    // private final ChatLog log;
 
     private final Database database;
 
     private final ModuleManager moduleManager;
+    private final TimerManager timerManager;
 
     private boolean slowmodeEnabled = false;
     private int slowmodeTime = 0;
@@ -28,8 +29,9 @@ public class PermanentContext {
     /**
      * Make a new permanent context
      */
-    public PermanentContext() {
-        moduleManager = new ModuleManager();
+    PermanentContext(ModuleManager moduleManager, TimerManager timerManager) {
+        this.moduleManager = moduleManager;
+        this.timerManager = timerManager;
 
         database = new Database();
     }
@@ -41,6 +43,10 @@ public class PermanentContext {
      */
     public ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    public TimerManager getTimerManager() {
+        return timerManager;
     }
 
     /**
@@ -57,47 +63,47 @@ public class PermanentContext {
         return slowmodeEnabled;
     }
 
-//    /**
-//     * @return this context's chat log
-//     */
-//    public ChatLog getLog() {
-//        return log;
-//    }
-//
-//    /**
-//     * Adds a message to the chat log
-//     * @param msg the message
-//     * @param nick the nick of the user who wrote the message
-//     */
-//    public void logMessage(String msg, String nick) {
-//        log.add(msg, nick);
-//    }
-//
-//    /**
-//     *
-//     * @return A linked list of the last (ChatLog.limit) messages, newest first
-//     */
-//    public LinkedList<ChatLog.Message> getLastLogged() {
-//        return log.messages;
-//    }
-//
-//    /**
-//     * Gets the last message written by a specific user
-//     * @param userNick the user's nick
-//     * @return the user's last message
-//     */
-//    public ChatLog.Message getLastOfUser(String userNick) {
-//        return log.getLatestFromUser(userNick);
-//    }
-//
-//    /**
-//     * Gets the last message that matches a specific regex
-//     * @param regex the regex
-//     * @return the last message that matches
-//     */
-//    public ChatLog.Message getLastMatch(String regex) {
-//        return log.getLatestThatMatches(regex);
-//    }
+    // /**
+    // * @return this context's chat log
+    // */
+    // public ChatLog getLog() {
+    // return log;
+    // }
+    //
+    // /**
+    // * Adds a message to the chat log
+    // * @param msg the message
+    // * @param nick the nick of the user who wrote the message
+    // */
+    // public void logMessage(String msg, String nick) {
+    // log.add(msg, nick);
+    // }
+    //
+    // /**
+    // *
+    // * @return A linked list of the last (ChatLog.limit) messages, newest first
+    // */
+    // public LinkedList<ChatLog.Message> getLastLogged() {
+    // return log.messages;
+    // }
+    //
+    // /**
+    // * Gets the last message written by a specific user
+    // * @param userNick the user's nick
+    // * @return the user's last message
+    // */
+    // public ChatLog.Message getLastOfUser(String userNick) {
+    // return log.getLatestFromUser(userNick);
+    // }
+    //
+    // /**
+    // * Gets the last message that matches a specific regex
+    // * @param regex the regex
+    // * @return the last message that matches
+    // */
+    // public ChatLog.Message getLastMatch(String regex) {
+    // return log.getLatestThatMatches(regex);
+    // }
 
     /**
      * Enables slowmode with a specific duration
@@ -116,13 +122,6 @@ public class PermanentContext {
         slowmodeTime = 0;
         slowmodeEnabled = false;
         slowmodeTS = 0;
-    }
-
-    private boolean checkConfigFile(HierarchicalINIConfiguration config, String thing) {
-        // Apache Configuration makes us do this. It automatically replaces all periods in keys with double
-        // periods. This will not work otherwise. I'm sorry for this.
-        thing = thing.replace(".", "..");
-        return config.containsKey(thing) && config.getBoolean(thing);
     }
 
     /**
@@ -158,7 +157,8 @@ public class PermanentContext {
      */
     public String getCommandFromAlias(String commandName) {
         String trueCommand = database.getAliasedCommand(commandName);
-        if (trueCommand == null) return commandName;
+        if (trueCommand == null)
+            return commandName;
         return trueCommand;
     }
 
@@ -170,12 +170,14 @@ public class PermanentContext {
     }
 
     /**
-     * Returns whether slowmode is currently active and, if it is active, whether the time has run out yet
+     * Returns whether slowmode is currently active and, if it is active, whether
+     * the time has run out yet
      *
      * @return is slowmode active?
      */
     public boolean isSlowmodeActive() {
-        if (!slowmodeEnabled) return false;
+        if (!slowmodeEnabled)
+            return false;
 
         long d = new Date().getTime();
         if (slowmodeEnabled && ((d - slowmodeTime) > slowmodeTS)) {
@@ -212,12 +214,14 @@ public class PermanentContext {
      *
      * @param id           The id of the executing command/module/something else
      * @param key          The key under which the value is stored
-     * @param defaultValue The default value that should be returned if nothing is found
+     * @param defaultValue The default value that should be returned if nothing is
+     *                     found
      * @return The value that is stored
      */
     public Object get(String id, String key, Object defaultValue) {
         Object result = get(id, key);
-        if (result == null) return defaultValue;
+        if (result == null)
+            return defaultValue;
         return result;
     }
 
