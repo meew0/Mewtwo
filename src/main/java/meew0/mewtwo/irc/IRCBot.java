@@ -162,23 +162,7 @@ public class IRCBot extends Thread {
                 }
             }
 
-            // NAMES list
-            if (command.equals("353")) {
-                String channelName = arguments[4];
-
-                String[] names = new String[arguments.length - 5];
-                names[0] = arguments[5].substring(1);
-                System.arraycopy(arguments, 6, names, 1, arguments.length - 6);
-
-                ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
-                channelUserLists.put(channelName, list);
-            }
-
-            // MOTD finished
-            if (command.equals("376")) {
-                // Identify to NickServ
-                writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
-            }
+            handleCommonCommands(arguments, command);
 
             // Invalidate channel lists when a user joins or leaves a channel or changes their nick
             if (command.equals("JOIN")) {
@@ -198,45 +182,46 @@ public class IRCBot extends Thread {
                 }
             }
 
-            // Handle modules
-            if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
-                MewtwoLogger.info("Module found");
-                ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
-                mht.start();
-            }
+            handleModules(message, ctx, target);
         } else if (arguments[0].matches(":[^ ]+")) {
             String hostmask = arguments[0].substring(1);
 
             // Get the actual command
             String command = arguments[1];
-
-            // NAMES list
-            if (command.equals("353")) {
-                String channelName = arguments[4];
-
-                String[] names = new String[arguments.length - 5];
-                names[0] = arguments[5].substring(1);
-                System.arraycopy(arguments, 6, names, 1, arguments.length - 6);
-
-                ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
-                channelUserLists.put(channelName, list);
-            }
-
-            // MOTD finished
-            if (command.equals("376")) {
-                // Identify to NickServ
-                writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
-            }
+            handleCommonCommands(arguments, command);
 
             MewtwoContext ctx = ctxMgr.makeContext(this, new Channel("", this), new User("", hostmask, hostmask, this));
 
-            // Handle modules
-            if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
-                MewtwoLogger.info("Module found");
-                ModuleHandlerThread mht = new ModuleHandlerThread(ctx, "", message);
-                mht.start();
-            }
+            handleModules(message, ctx, "");
+        }
+    }
 
+    private void handleModules(String message, MewtwoContext ctx, String target) {
+        // Handle modules
+        if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
+            MewtwoLogger.info("Module found");
+            ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
+            mht.start();
+        }
+    }
+
+    private void handleCommonCommands(String[] arguments, String command) {
+        // NAMES list
+        if (command.equals("353")) {
+            String channelName = arguments[4];
+
+            String[] names = new String[arguments.length - 5];
+            names[0] = arguments[5].substring(1);
+            System.arraycopy(arguments, 6, names, 1, arguments.length - 6);
+
+            ChannelUserList list = new ChannelUserList(this, new Channel(channelName, this), names);
+            channelUserLists.put(channelName, list);
+        }
+
+        // MOTD finished
+        if (command.equals("376")) {
+            // Identify to NickServ
+            writeRaw("NICKSERV", "IDENTIFY " + nickservPW);
         }
     }
 
