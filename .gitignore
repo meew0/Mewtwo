@@ -61,6 +61,3 @@
 /*.py
 /.git/
 /profile.txt
-
-# Allow local changes to mewtwoctl without affecting repo
-/mewtwoctl
