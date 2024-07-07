@@ -7,8 +7,14 @@ import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.modules.ModuleHandlerThread;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.*;
 import java.net.Socket;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -18,6 +24,7 @@ import java.util.HashMap;
 public class IRCBot extends Thread {
     private final String serverHostname;
     private final int port;
+    private final boolean tls, ignoreInvalidCerts;
 
     private final String nick, nickservPW;
 
@@ -36,10 +43,12 @@ public class IRCBot extends Thread {
 
     private final HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
 
-    public IRCBot(String serverHostname, int port, String nick, String nickservPW) {
+    public IRCBot(String serverHostname, int port, boolean tls, boolean ignoreInvalidCerts, String nick, String nickservPW) {
         super("Bot-" + (++botNumber));
         this.serverHostname = serverHostname;
         this.port = port;
+        this.tls = tls;
+        this.ignoreInvalidCerts = ignoreInvalidCerts;
         this.nick = nick;
         this.nickservPW = nickservPW;
 
@@ -50,10 +59,14 @@ public class IRCBot extends Thread {
     public void run() {
         // Connect
         try {
-            socket = new Socket(serverHostname, port);
+            if (tls) {
+                socket = connectTls();
+            } else {
+                socket = new Socket(serverHostname, port);
+            }
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e) {
+        } catch (Exception e) {
             MewtwoLogger.errorThrowable(e);
             MewtwoLogger.error("Fatal error occurred while connecting to IRC server, exiting now");
             return;
@@ -89,6 +102,35 @@ public class IRCBot extends Thread {
 
         MewtwoLogger.info("IRCBot shutting down");
         writeRaw("QUIT", ":JVM terminated");
+    }
+
+    private Socket connectTls() throws Exception {
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        TrustManager[] trustManagers;
+
+        if (ignoreInvalidCerts) {
+            MewtwoLogger.warn("Connecting via TLS, but ignoring invalid certificates. This should only be done in a development/testing environment.");
+            trustManagers = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+        } else {
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init((KeyStore) null);
+            trustManagers = trustManagerFactory.getTrustManagers();
+        }
+
+        sslContext.init(null, trustManagers, null);
+        return sslContext.getSocketFactory().createSocket(serverHostname, port);
     }
 
     public void parseCommand(String[] arguments, String message) {

@@ -61,6 +61,8 @@ public class MewtwoMain {
         String nick = config.getString("nick");
         String serverHostname = config.getString("server");
         int port = config.getInt("port");
+        boolean tls = config.getBoolean("tls");
+        boolean ignoreInvalidCerts = config.getBoolean("ignoreInvalidCerts");
         maxChainLength = config.getInt("maxChainLength");
         maxChars = config.getInt("maxChars");
         maxLines = config.getInt("maxLines");
@@ -80,7 +82,7 @@ public class MewtwoMain {
 
         // Start initial bot
 
-        IRCBot bot = new IRCBot(serverHostname, port, nick, password);
+        IRCBot bot = new IRCBot(serverHostname, port, tls, ignoreInvalidCerts, nick, password);
         bot.start();
     }
 }
