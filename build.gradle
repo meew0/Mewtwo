@@ -17,6 +17,7 @@ dependencies {
     implementation "commons-io:commons-io:2.16.1"
     implementation "com.google.guava:guava:33.2.1-jre"
     implementation "org.jruby:jruby-complete:9.4.8.0"
+    implementation "org.xerial:sqlite-jdbc:3.46.0.0"
 }
 
 tasks.register('fatJar', Jar) {

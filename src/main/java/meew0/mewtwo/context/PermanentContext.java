@@ -1,14 +1,12 @@
 package meew0.mewtwo.context;
 
 import meew0.mewtwo.MewtwoMain;
-import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.irc.User;
 import meew0.mewtwo.modules.ModuleManager;
-import org.apache.commons.configuration.ConfigurationException;
+import meew0.mewtwo.storage.Database;
 import org.apache.commons.configuration.HierarchicalINIConfiguration;
 
 import java.util.Date;
-import java.util.HashMap;
 
 //import meew0.mewtwo.irc.ChatLog;
 
@@ -19,11 +17,9 @@ public class PermanentContext {
     // TODO: Replace ChatLog with a better way to log stuff
     //private final ChatLog log;
 
-    private final HierarchicalINIConfiguration aliases, admins, disable, ignore;
+    private final Database database;
 
     private final ModuleManager moduleManager;
-
-    private final HashMap<String, HashMap<String, Object>> commandData;
 
     private boolean slowmodeEnabled = false;
     private int slowmodeTime = 0;
@@ -34,12 +30,8 @@ public class PermanentContext {
      */
     public PermanentContext() {
         moduleManager = new ModuleManager();
-        //log = new ChatLog();
-        aliases = MewtwoMain.getConfig("aliases.cfg");
-        admins = MewtwoMain.getConfig("admins.cfg");
-        disable = MewtwoMain.getConfig("disable.cfg");
-        ignore = MewtwoMain.getConfig("ignore.cfg");
-        commandData = new HashMap<>();
+
+        database = new Database();
     }
 
     /**
@@ -49,6 +41,13 @@ public class PermanentContext {
      */
     public ModuleManager getModuleManager() {
         return moduleManager;
+    }
+
+    /**
+     * @return the database underlying this context
+     */
+    public Database getDb() {
+        return database;
     }
 
     /**
@@ -128,38 +127,39 @@ public class PermanentContext {
 
     /**
      * @param user the user
-     * @return whether or not the user is admin
+     * @return whether the user is an admin
      */
-    public boolean isUserAdmin(User user) {
-        return checkConfigFile(admins, user.fullHostmask());
+    public boolean userIsAdmin(User user) {
+        return database.userIsAdmin(user.hostmask());
     }
 
     /**
      * @param userNick the user's nick
-     * @return whether or not the user should be ignored
+     * @return whether the user should be ignored
      */
     public boolean shouldIgnoreUser(String userNick) {
-        return checkConfigFile(ignore, userNick);
+        return database.userIsIgnored(userNick);
     }
 
     /**
      * @param commandName the command's name
-     * @return whether or not the command is enabled
+     * @return whether the command is enabled
      */
-    public boolean isCommandEnabled(String commandName) {
-        return checkConfigFile(disable, commandName);
+    public boolean commandIsDisabled(String commandName) {
+        return database.commandIsDisabled(commandName);
     }
 
     /**
      * Get the command from an alias, as defined by aliases.cfg
-     * If no alias is defined, the original alias is returned
+     * If no alias is defined, the original command is returned
      *
      * @param commandName the alias
      * @return the actual command
      */
-    public String getAliasForCommand(String commandName) {
-        if (!aliases.containsKey(commandName)) return commandName;
-        else return aliases.getString(commandName);
+    public String getCommandFromAlias(String commandName) {
+        String trueCommand = database.getAliasedCommand(commandName);
+        if (trueCommand == null) return commandName;
+        return trueCommand;
     }
 
     /**
@@ -170,7 +170,7 @@ public class PermanentContext {
     }
 
     /**
-     * Returns whether or not slowmode is currently active and, if it is active, whether or not the time has run out yet
+     * Returns whether slowmode is currently active and, if it is active, whether the time has run out yet
      *
      * @return is slowmode active?
      */
@@ -185,17 +185,6 @@ public class PermanentContext {
         return false;
     }
 
-    private void reloadConfig(HierarchicalINIConfiguration config) {
-        config.clear();
-        try {
-            config.load();
-        } catch (ConfigurationException e) {
-            MewtwoLogger.errorThrowable(e);
-        }
-    }
-
-    // TODO also use a better key-value store (perhaps a database?)
-
     /**
      * Add something to the command data
      *
@@ -204,12 +193,7 @@ public class PermanentContext {
      * @param value The value that should be stored
      */
     public void put(String id, String key, Object value) {
-        if (commandData.containsKey(id)) commandData.get(id).put(key, value);
-        else {
-            HashMap<String, Object> mapToInsert = new HashMap<>();
-            mapToInsert.put(key, value);
-            commandData.put(id, mapToInsert);
-        }
+        database.setCommandData(id, key, value, true);
     }
 
     /**
@@ -220,7 +204,7 @@ public class PermanentContext {
      * @return The value that is stored
      */
     public Object get(String id, String key) {
-        return get(id, key, null);
+        return database.getCommandData(id, key);
     }
 
     /**
@@ -232,10 +216,9 @@ public class PermanentContext {
      * @return The value that is stored
      */
     public Object get(String id, String key, Object defaultValue) {
-        if (commandData.containsKey(id)) {
-            HashMap<String, Object> subMap = commandData.get(id);
-            return subMap.getOrDefault(key, defaultValue);
-        } else return defaultValue;
+        Object result = get(id, key);
+        if (result == null) return defaultValue;
+        return result;
     }
 
     /**
@@ -243,20 +226,9 @@ public class PermanentContext {
      *
      * @param id  The id of the executing command/module/something else
      * @param key The key under which the value might be stored
-     * @return Whether or not a value exists with the given ID and key
+     * @return Whether a value exists with the given ID and key
      */
     public boolean has(String id, String key) {
-        return commandData.containsKey(id) && commandData.get(id).containsKey(key);
-    }
-
-    /**
-     * Reload all config files
-     */
-    public void reloadConfigs() {
-        reloadConfig(admins);
-        reloadConfig(disable);
-        reloadConfig(aliases);
-        reloadConfig(ignore);
-        moduleManager.reloadConfigs();
+        return get(id, key) != null;
     }
 }

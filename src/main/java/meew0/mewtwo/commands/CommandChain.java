@@ -323,7 +323,7 @@ public class CommandChain implements ICommandChain {
                     return "'" + amountStr + "' is not an integer!";
                 }
 
-                if (amount > 100 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+                if (amount > 100 && !ctx.getPCtx().userIsAdmin(ctx.getUser())) {
                     return "You can't repeat something more than 100 times!";
                 }
 
@@ -344,7 +344,7 @@ public class CommandChain implements ICommandChain {
                     return "'" + amountStr + "' is not an integer!";
                 }
 
-                if (amount > 20 && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+                if (amount > 20 && !ctx.getPCtx().userIsAdmin(ctx.getUser())) {
                     return "You can't repeat a chain more than 20 times!";
                 }
 

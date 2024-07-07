@@ -35,7 +35,7 @@ public abstract class GenericHandlerThread extends Thread {
     public void run() {
         String result = handle(ctx, message);
 
-        if (result.length() > MewtwoMain.maxChars && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+        if (result.length() > MewtwoMain.maxChars && !ctx.getPCtx().userIsAdmin(ctx.getUser())) {
             // Result is too long
             sendMessage("Sorry, the result length exceeds the limit of " + MewtwoMain.maxChars + " characters");
             return;
@@ -44,7 +44,7 @@ public abstract class GenericHandlerThread extends Thread {
         // Split result into lines
         String[] splitResult = result.split("\n");
 
-        if (splitResult.length > MewtwoMain.maxLines && !ctx.getPCtx().isUserAdmin(ctx.getUser())) {
+        if (splitResult.length > MewtwoMain.maxLines && !ctx.getPCtx().userIsAdmin(ctx.getUser())) {
             // Result has too many lines
             sendMessage("Sorry, the result line count exceeds the limit of " + MewtwoMain.maxLines + " lines");
         }

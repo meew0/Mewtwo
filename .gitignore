@@ -24,6 +24,7 @@
 
 /*~
 
+/mewtwo.db
 /NickservPassword
 
 /include/*
@@ -46,10 +47,6 @@
 /modules/*
 !/modules/talk.rb
 !/modules/regex.rb
-
-/*.cfg
-!/mewtwo.cfg
-!/admins.cfg
 
 !/README.md
 !/LICENSE

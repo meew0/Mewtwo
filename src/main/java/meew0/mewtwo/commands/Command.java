@@ -17,7 +17,7 @@ public class Command {
         this.commandName = commandName;
         this.ctx = ctx;
 
-        this.commandName = ctx.getPCtx().getAliasForCommand(commandName);
+        this.commandName = ctx.getPCtx().getCommandFromAlias(commandName);
         this.arguments = arguments;
     }
 
@@ -41,7 +41,7 @@ public class Command {
     }
 
     public boolean isDisabled() {
-        return ctx.getPCtx().isCommandEnabled(commandName);
+        return ctx.getPCtx().commandIsDisabled(commandName);
     }
 
     public boolean isOutsideScope() {

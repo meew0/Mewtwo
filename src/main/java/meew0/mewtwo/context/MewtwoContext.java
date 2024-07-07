@@ -3,6 +3,7 @@ package meew0.mewtwo.context;
 import meew0.mewtwo.irc.IChannel;
 import meew0.mewtwo.irc.IRCBot;
 import meew0.mewtwo.irc.User;
+import meew0.mewtwo.storage.Database;
 
 /**
  * Created by meew0 on 08.11.14.
@@ -112,6 +113,13 @@ public class MewtwoContext {
      */
     public PermanentContext getPCtx() {
         return permanent;
+    }
+
+    /**
+     * @return the database underlying the permanent context
+     */
+    public Database getDb() {
+        return permanent.getDb();
     }
 
     /**

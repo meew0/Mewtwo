@@ -23,7 +23,7 @@ public class CommandChainBuilder {
         if (ctx.getPCtx().isSlowmodeActive())
             return new StaticChain("");                    // ignore if slowmode is active
         // TODO: Check commands individually and not the chain as a whole
-        if (bareChain.contains("admin/") && !ctx.getPCtx().isUserAdmin(ctx.getUser()))
+        if (bareChain.contains("admin/") && !ctx.getPCtx().userIsAdmin(ctx.getUser()))
             return new StaticChain("I'm sorry. I can't let you do that.");                  // enforce security
 
         replaceChainArguments();
