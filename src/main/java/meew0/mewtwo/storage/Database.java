@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -131,6 +133,22 @@ public class Database implements AutoCloseable {
                 return resultSet.getObject("value");
             }
             return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Map<String, Object> listCommandData(String command) {
+        Map<String, Object> result = new HashMap<>();
+
+        try (PreparedStatement statement = connection
+                .prepareStatement("SELECT key, value FROM commandData WHERE command = ?")) {
+            statement.setString(1, command);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                result.put(resultSet.getString("key"), resultSet.getObject("value"));
+            }
+            return result;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

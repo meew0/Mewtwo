@@ -1,6 +1,7 @@
 package meew0.mewtwo.context;
 
 import java.util.Date;
+import java.util.Map;
 
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.irc.User;
@@ -223,6 +224,10 @@ public class PermanentContext {
         if (result == null)
             return defaultValue;
         return result;
+    }
+
+    public Map<String, Object> list(String id) {
+        return database.listCommandData(id);
     }
 
     /**

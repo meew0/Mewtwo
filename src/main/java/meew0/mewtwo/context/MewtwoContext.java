@@ -1,6 +1,7 @@
 package meew0.mewtwo.context;
 
 import java.time.Instant;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -164,6 +165,10 @@ public class MewtwoContext {
      */
     public boolean has(String key) {
         return permanent.has(getCurrentId(), key);
+    }
+
+    public Map<String, Object> list() {
+        return permanent.list(getCurrentId());
     }
 
     /**
