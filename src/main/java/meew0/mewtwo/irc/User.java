@@ -10,11 +10,16 @@ public record User(String nick, String fullHostmask, String hostmask, IRCBot bot
 
     @Override
     public String[] getUserNicks() {
-        return new String[]{nick};
+        return new String[] { nick };
     }
 
     @Override
     public String name() {
         return nick;
+    }
+
+    @Override
+    public boolean isPrivate() {
+        return true;
     }
 }

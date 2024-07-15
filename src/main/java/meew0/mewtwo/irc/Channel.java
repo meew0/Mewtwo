@@ -21,4 +21,9 @@ public record Channel(String name, IRCBot bot) implements IChannel {
     public void sendMessage(String message) {
         bot.writePrivmsg(name, message);
     }
+
+    @Override
+    public boolean isPrivate() {
+        return false;
+    }
 }

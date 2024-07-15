@@ -9,4 +9,6 @@ public interface IChannel {
     String[] getUserNicks();
 
     String name();
+
+    boolean isPrivate();
 }
