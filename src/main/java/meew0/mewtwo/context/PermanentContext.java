@@ -230,6 +230,10 @@ public class PermanentContext {
         return database.listCommandData(id);
     }
 
+    public void delete(String id, String key) {
+        database.deleteCommandData(id, key);
+    }
+
     /**
      * Check if something is present in the command data
      *
@@ -239,5 +243,9 @@ public class PermanentContext {
      */
     public boolean has(String id, String key) {
         return get(id, key) != null;
+    }
+
+    public void reloadConfigs() {
+        moduleManager.reloadConfigs();
     }
 }

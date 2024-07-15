@@ -171,6 +171,10 @@ public class MewtwoContext {
         return permanent.list(getCurrentId());
     }
 
+    public void delete(String key) {
+        permanent.delete(getCurrentId(), key);
+    }
+
     /**
      * Method to write something to the channel for scripts that take long to
      * execute
