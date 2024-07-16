@@ -1,5 +1,21 @@
 package meew0.mewtwo.irc;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.HashMap;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.commands.CommandChainHandlerThread;
 import meew0.mewtwo.context.ContextManager;
@@ -7,17 +23,6 @@ import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.modules.ModuleHandlerThread;
 import meew0.mewtwo.storage.Database;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-import java.io.*;
-import java.net.Socket;
-import java.security.KeyStore;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * Created by meew0 on 01.04.15.
@@ -44,7 +49,8 @@ public class IRCBot extends Thread {
 
     private final HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
 
-    public IRCBot(String serverHostname, int port, boolean tls, boolean ignoreInvalidCerts, String nick, String nickservPW) {
+    public IRCBot(String serverHostname, int port, boolean tls, boolean ignoreInvalidCerts, String nick,
+            String nickservPW) {
         super("Bot-" + (++botNumber));
         this.serverHostname = serverHostname;
         this.port = port;
@@ -83,7 +89,8 @@ public class IRCBot extends Thread {
                 String message = reader.readLine();
 
                 // We don't want to parse our own commands
-                if (message.startsWith(":" + nick + "!")) continue;
+                if (message.startsWith(":" + nick + "!"))
+                    continue;
 
                 MewtwoLogger.incoming(message);
 
@@ -110,8 +117,9 @@ public class IRCBot extends Thread {
         TrustManager[] trustManagers;
 
         if (ignoreInvalidCerts) {
-            MewtwoLogger.warn("Connecting via TLS, but ignoring invalid certificates. This should only be done in a development/testing environment.");
-            trustManagers = new TrustManager[]{
+            MewtwoLogger.warn(
+                    "Connecting via TLS, but ignoring invalid certificates. This should only be done in a development/testing environment.");
+            trustManagers = new TrustManager[] {
                     new X509TrustManager() {
                         public X509Certificate[] getAcceptedIssuers() {
                             return null;
@@ -125,7 +133,8 @@ public class IRCBot extends Thread {
                     }
             };
         } else {
-            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory
+                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
             trustManagerFactory.init((KeyStore) null);
             trustManagers = trustManagerFactory.getTrustManagers();
         }
@@ -150,31 +159,34 @@ public class IRCBot extends Thread {
 
             MewtwoContext ctx = ctxMgr.makeContext(this, channel, user);
 
+            Thread ccht = null;
             if (command.equals("PRIVMSG")) {
                 String data = String.join(" ", Arrays.copyOfRange(arguments, 3, arguments.length)).substring(1);
 
                 if (data.startsWith(MewtwoMain.prefix)) {
                     // We have a command chain!
 
-                    CommandChainHandlerThread ccht = new CommandChainHandlerThread(ctx, getReturnTarget(target, nick),
+                    ccht = new CommandChainHandlerThread(ctx, getReturnTarget(target, nick),
                             data);
-
                     ccht.start();
                 }
             }
 
             handleCommonCommands(arguments, command);
 
-            // Invalidate channel lists when a user joins or leaves a channel or changes their nick
+            // Invalidate channel lists when a user joins or leaves a channel or changes
+            // their nick
             if (command.equals("JOIN")) {
                 String channelName = arguments[2].substring(1);
                 ChannelUserList list = channelUserLists.get(channelName);
-                if (list != null) list.invalidate();
+                if (list != null)
+                    list.invalidate();
             }
             if (command.equals("PART")) {
                 String channelName = arguments[2];
                 ChannelUserList list = channelUserLists.get(channelName);
-                if (list != null) list.invalidate();
+                if (list != null)
+                    list.invalidate();
             }
             if (command.equals("NICK")) {
                 // Invalidate all channels
@@ -183,7 +195,7 @@ public class IRCBot extends Thread {
                 }
             }
 
-            handleModules(message, ctx, target);
+            handleModules(message, ctx, target, ccht);
         } else if (arguments[0].matches(":[^ ]+")) {
             String hostmask = arguments[0].substring(1);
 
@@ -193,15 +205,15 @@ public class IRCBot extends Thread {
 
             MewtwoContext ctx = ctxMgr.makeContext(this, new Channel("", this), new User("", hostmask, hostmask, this));
 
-            handleModules(message, ctx, "");
+            handleModules(message, ctx, "", null);
         }
     }
 
-    private void handleModules(String message, MewtwoContext ctx, String target) {
+    private void handleModules(String message, MewtwoContext ctx, String target, Thread ccht) {
         // Handle modules
         if (ctxMgr.getPermanent().getModuleManager().doesModuleExistForMessage(message)) {
             MewtwoLogger.info("Module found");
-            ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message);
+            ModuleHandlerThread mht = new ModuleHandlerThread(ctx, target, message, ccht);
             mht.start();
         }
     }

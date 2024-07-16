@@ -2,6 +2,7 @@ package meew0.mewtwo.irc;
 
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
 
 /**
  * Created by meew0 on 03.04.15.
@@ -13,14 +14,16 @@ public abstract class GenericHandlerThread extends Thread {
 
     private final MewtwoContext ctx;
     private final String target, message;
+    private final Thread executeAfter;
 
     private static final int maxLineChars = 430;
 
-    public GenericHandlerThread(MewtwoContext ctx, String target, String message) {
+    public GenericHandlerThread(MewtwoContext ctx, String target, String message, Thread executeAfter) {
         super("HT-" + (++threadNumber));
         this.ctx = ctx;
         this.target = target;
         this.message = message;
+        this.executeAfter = executeAfter;
     }
 
     private void sendMessage(String message) {
@@ -33,6 +36,14 @@ public abstract class GenericHandlerThread extends Thread {
 
     @Override
     public void run() {
+        if (executeAfter != null) {
+            try {
+                executeAfter.join();
+            } catch (InterruptedException e) {
+                MewtwoLogger.errorThrowable(e);
+            }
+        }
+
         String result = handle(ctx, message);
 
         if (result.length() > MewtwoMain.maxChars && !ctx.getPCtx().userIsAdmin(ctx.getUser())) {

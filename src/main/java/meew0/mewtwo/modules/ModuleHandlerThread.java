@@ -7,8 +7,8 @@ import meew0.mewtwo.irc.GenericHandlerThread;
  * Created by meew0 on 03.04.15.
  */
 public class ModuleHandlerThread extends GenericHandlerThread {
-    public ModuleHandlerThread(MewtwoContext ctx, String target, String message) {
-        super(ctx, target, message);
+    public ModuleHandlerThread(MewtwoContext ctx, String target, String message, Thread executeAfter) {
+        super(ctx, target, message, executeAfter);
     }
 
     @Override

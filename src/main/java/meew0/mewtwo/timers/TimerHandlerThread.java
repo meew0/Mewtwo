@@ -9,7 +9,7 @@ public class TimerHandlerThread extends GenericHandlerThread {
     private final TimerEvent event;
 
     public TimerHandlerThread(MewtwoContext ctx, String target, TimerEvent event) {
-        super(ctx, target, "");
+        super(ctx, target, "", null);
         this.event = event;
     }
 

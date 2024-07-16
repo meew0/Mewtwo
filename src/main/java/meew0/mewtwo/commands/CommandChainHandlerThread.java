@@ -10,7 +10,7 @@ import meew0.mewtwo.irc.GenericHandlerThread;
  */
 public class CommandChainHandlerThread extends GenericHandlerThread {
     public CommandChainHandlerThread(MewtwoContext ctx, String target, String message) {
-        super(ctx, target, message);
+        super(ctx, target, message, null);
     }
 
     @Override
