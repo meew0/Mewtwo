@@ -26,8 +26,9 @@ tasks.register('fatJar', Jar) {
                 'Implementation-Version': version,
                 'Main-Class': mainClassName
     }
-    archiveBaseName = project.name + '-all-dev.jar'
-    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveBaseName = project.name + '-all'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
