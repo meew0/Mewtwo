@@ -3,6 +3,7 @@ package meew0.mewtwo.irc;
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
+import meew0.mewtwo.ruby.CommandExecutor;
 
 /**
  * Created by meew0 on 03.04.15.
@@ -45,6 +46,7 @@ public abstract class GenericHandlerThread extends Thread {
         }
 
         String result = handle(ctx, message);
+        CommandExecutor.threadCleanup();
 
         if (result.length() > MewtwoMain.maxChars && !ctx.getPCtx().userIsAdmin(ctx.getUser())) {
             // Result is too long

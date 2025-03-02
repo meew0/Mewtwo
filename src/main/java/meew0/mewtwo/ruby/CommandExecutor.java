@@ -83,4 +83,8 @@ public class CommandExecutor {
 
         return true;
     }
+
+    public static void threadCleanup() {
+        rb.tearDown();
+    }
 }

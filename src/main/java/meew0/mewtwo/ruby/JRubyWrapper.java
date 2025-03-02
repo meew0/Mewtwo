@@ -3,20 +3,27 @@ package meew0.mewtwo.ruby;
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
+import org.jruby.Ruby;
 import org.jruby.embed.LocalContextScope;
 import org.jruby.embed.LocalVariableBehavior;
 import org.jruby.embed.ScriptingContainer;
+import org.jruby.embed.internal.LocalContext;
+import org.jruby.embed.internal.ThreadSafeLocalContextProvider;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by meew0 on 09.11.14.
@@ -136,5 +143,39 @@ public class JRubyWrapper {
      */
     public void run(String script) {
         rb.runScriptlet(script);
+    }
+
+    /**
+     * Tear down JIT compiler. This should be done once the wrapper is no longer needed, to free up resources.
+     */
+    public void tearDown() {
+        if (!(rb.getProvider() instanceof ThreadSafeLocalContextProvider)) {
+            MewtwoLogger.warn("JRuby local context provider is not thread safe");
+            return;
+        }
+
+        try {
+            Field contextHolderField = ThreadSafeLocalContextProvider.class.getDeclaredField("contextHolder");
+            contextHolderField.setAccessible(true);
+
+            Field contextRefsField = ThreadSafeLocalContextProvider.class.getDeclaredField("contextRefs");
+            contextRefsField.setAccessible(true);
+
+            Method getRuntimeMethod = LocalContext.class.getDeclaredMethod("getRuntime");
+            getRuntimeMethod.setAccessible(true);
+
+            ThreadLocal<AtomicReference<LocalContext>> contextHolder =
+                    (ThreadLocal<AtomicReference<LocalContext>>) contextHolderField.get(rb.getProvider());
+            ConcurrentLinkedQueue<AtomicReference<LocalContext>> contextRefs =
+                    (ConcurrentLinkedQueue<AtomicReference<LocalContext>>) contextRefsField.get(rb.getProvider());
+
+            AtomicReference<LocalContext> ref = contextHolder.get();
+            ((Ruby) getRuntimeMethod.invoke(ref.get())).tearDown(false);
+            contextRefs.remove(ref);
+            contextHolder.remove();
+        } catch (Exception e) {
+            MewtwoLogger.error("Error while trying to tear down thread-local JRuby runtime:");
+            MewtwoLogger.errorThrowable(e);
+        }
     }
 }
