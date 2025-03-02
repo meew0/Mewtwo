@@ -1,6 +1,7 @@
 package meew0.mewtwo.ruby;
 
 import com.google.common.base.Joiner;
+import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import org.apache.commons.lang.ArrayUtils;
@@ -33,15 +34,9 @@ public class CommandExecutor {
     }
 
     public static String genericExecute(String path, String userNick, String channel, String args, MewtwoContext ctx) throws IOException {
-        Path relativePath = Paths.get(path);
-        String absolutePath = relativePath.toAbsolutePath().toString();
+        Path relativePath = Paths.get(MewtwoMain.getInstanceDirectory(), path);
 
-        Path commandsPath = Paths.get("commands");
-        if (!(absolutePath.startsWith(commandsPath.toAbsolutePath().toString())
-                || absolutePath.startsWith(Paths.get("modules").toAbsolutePath().toString())
-                || absolutePath.startsWith(Paths.get("timers").toAbsolutePath().toString()))) {
-            MewtwoLogger.info("Script path: " + absolutePath);
-            MewtwoLogger.info("Commands path: " + commandsPath.toAbsolutePath());
+        if (!verifyScriptPath(relativePath)) {
             return "Script path must be inside commands, modules, or timers path!";
         }
 
@@ -65,5 +60,27 @@ public class CommandExecutor {
 
         System.err.print(rb.getError()); // print stderr result to stderr,
         return rb.getResult(); // and return stdout result
+    }
+
+    private static String commandsPath, modulesPath, timersPath;
+
+    private static boolean verifyScriptPath(Path scriptPath) {
+        String absolutePath = scriptPath.toAbsolutePath().toString();
+
+        if (commandsPath == null) {
+            commandsPath = Paths.get(MewtwoMain.getInstanceDirectory(), "commands").toAbsolutePath().toString();
+            modulesPath = Paths.get(MewtwoMain.getInstanceDirectory(), "modules").toAbsolutePath().toString();
+            timersPath = Paths.get(MewtwoMain.getInstanceDirectory(), "timers").toAbsolutePath().toString();
+        }
+
+        if (!(absolutePath.startsWith(commandsPath)
+                || absolutePath.startsWith(modulesPath)
+                || absolutePath.startsWith(timersPath))) {
+            MewtwoLogger.info("Script path: " + absolutePath);
+            MewtwoLogger.info("Commands path: " + commandsPath);
+            return false;
+        }
+
+        return true;
     }
 }

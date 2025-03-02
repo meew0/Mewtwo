@@ -1,5 +1,12 @@
 package meew0.mewtwo.ruby;
 
+import meew0.mewtwo.MewtwoMain;
+import meew0.mewtwo.context.MewtwoContext;
+import meew0.mewtwo.core.MewtwoLogger;
+import org.jruby.embed.LocalContextScope;
+import org.jruby.embed.LocalVariableBehavior;
+import org.jruby.embed.ScriptingContainer;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.PrintWriter;
@@ -10,13 +17,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.jruby.embed.LocalContextScope;
-import org.jruby.embed.LocalVariableBehavior;
-import org.jruby.embed.ScriptingContainer;
-
-import meew0.mewtwo.context.MewtwoContext;
-import meew0.mewtwo.core.MewtwoLogger;
 
 /**
  * Created by meew0 on 09.11.14.
@@ -31,13 +31,13 @@ public class JRubyWrapper {
      */
     public JRubyWrapper() {
         rb = new ScriptingContainer(LocalContextScope.THREADSAFE, LocalVariableBehavior.TRANSIENT);
-        rb.setCurrentDirectory(Paths.get("").toAbsolutePath().toString()); // set working directory of scripts to
-                                                                           // working directory of application
+        rb.setCurrentDirectory(Paths.get(MewtwoMain.getInstanceDirectory()).toAbsolutePath().toString()); // set working directory of scripts to
+        // working directory of application
 
         @SuppressWarnings("unchecked")
         Map<String, String> env = new HashMap<String, String>(rb.getEnvironment());
 
-        Path gemPath = Paths.get("lib/gems");
+        Path gemPath = Paths.get(MewtwoMain.getInstanceDirectory(), "lib/gems");
         env.put("GEM_PATH", gemPath.toAbsolutePath().toString());
         MewtwoLogger.info("Setting GEM_PATH of container to " + env.get("GEM_PATH"));
 

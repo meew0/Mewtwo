@@ -17,6 +17,12 @@ public class MewtwoMain {
     public static String prefix = "%";
     public static int maxChainLength = 1000, maxChars = 600, maxLines = 4;
 
+    private static String instanceDirectory = ".";
+
+    public static String getInstanceDirectory() {
+        return instanceDirectory;
+    }
+
     // TODO find a better way to do configuration
 
     /**
@@ -27,10 +33,11 @@ public class MewtwoMain {
      */
     public static HierarchicalINIConfiguration getConfig(String configName) {
         try {
-            File cfgFile = new File(configName);
-            if (!cfgFile.exists() && !cfgFile.createNewFile())
-                MewtwoLogger.error("Could not create config file " + configName);
-            return new HierarchicalINIConfiguration(configName);
+            File cfgFile = new File(instanceDirectory, configName);
+            if (!cfgFile.exists() && !cfgFile.createNewFile()) {
+                MewtwoLogger.error("Could not create config file " + cfgFile.getAbsolutePath());
+            }
+            return new HierarchicalINIConfiguration(cfgFile);
         } catch (Throwable t) {
             MewtwoLogger.errorThrowable(t);
         }
@@ -41,12 +48,26 @@ public class MewtwoMain {
     /**
      * Main method, shouldn't be called
      *
-     * @param args The command line arguments, unused
+     * @param args The command line arguments
      */
     public static void main(String[] args) {
         // Register shutdown hook
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+
+        // Find instance directory
+
+        if (args.length > 0) {
+            File instanceDirFile = new File(args[0]);
+            if (!instanceDirFile.exists() || !instanceDirFile.isDirectory()) {
+                MewtwoLogger.error("Could not find instance directory " + instanceDirFile.getAbsolutePath());
+                System.exit(1);
+            }
+            instanceDirectory = instanceDirFile.getAbsolutePath();
+            MewtwoLogger.info("Instance directory: " + instanceDirectory);
+        } else {
+            MewtwoLogger.info("No instance directory specified. Running in current working directory");
+        }
 
         // Load config
 
@@ -74,7 +95,7 @@ public class MewtwoMain {
         String password = "";
 
         try {
-            password = FileUtils.readFileToString(Paths.get("NickservPassword").toFile(), "US-ASCII");
+            password = FileUtils.readFileToString(Paths.get(instanceDirectory, "NickservPassword").toFile(), "US-ASCII");
             MewtwoLogger.info("Password file loaded successfully");
         } catch (IOException e) {
             MewtwoLogger.warn("Password file not found! Either you won't be able to identify or you've made your bot really insecure!");

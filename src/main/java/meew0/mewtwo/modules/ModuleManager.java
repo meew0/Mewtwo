@@ -1,5 +1,6 @@
 package meew0.mewtwo.modules;
 
+import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import org.apache.commons.io.FileUtils;
@@ -40,12 +41,16 @@ public class ModuleManager {
                             filename);
 
                     return List.of(m);
-                } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
+                } else {
+                    MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - shorter than two lines!");
+                }
             } catch (Throwable t) {
                 MewtwoLogger.errorThrowable(t);
             }
 
-        } else MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
+        } else {
+            MewtwoLogger.info("Skipping file " + child.getAbsolutePath() + " - not a ruby file!");
+        }
 
         return List.of();
     }
@@ -54,14 +59,21 @@ public class ModuleManager {
         List<Module> modulesList = new ArrayList<>();
         File[] files = directory.toFile().listFiles();
         for (File child : files != null ? files : new File[0]) {
-            if (child.isDirectory()) modulesList.addAll(traverseDirectoryForModules(child.toPath()));
-            else modulesList.addAll(getSingleModuleForPath(child));
+            if (child.isDirectory()) {
+                modulesList.addAll(traverseDirectoryForModules(child.toPath()));
+            } else {
+                modulesList.addAll(getSingleModuleForPath(child));
+            }
         }
         return modulesList;
     }
 
     public void reloadConfigs() {
-        modules = traverseDirectoryForModules(Paths.get(ModuleManager.modulesFolder));
+        modules = traverseDirectoryForModules(getModulesPath());
+    }
+
+    public static Path getModulesPath() {
+        return Paths.get(MewtwoMain.getInstanceDirectory(), modulesFolder);
     }
 
     public String executeModules(String message, MewtwoContext ctx) {
