@@ -1,21 +1,5 @@
 package meew0.mewtwo.irc;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.Socket;
-import java.security.KeyStore;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.commands.CommandChainHandlerThread;
 import meew0.mewtwo.context.ContextManager;
@@ -23,6 +7,17 @@ import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
 import meew0.mewtwo.modules.ModuleHandlerThread;
 import meew0.mewtwo.storage.Database;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import java.io.*;
+import java.net.Socket;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by meew0 on 01.04.15.
@@ -50,7 +45,7 @@ public class IRCBot extends Thread {
     private final HashMap<String, ChannelUserList> channelUserLists = new HashMap<>();
 
     public IRCBot(String serverHostname, int port, boolean tls, boolean ignoreInvalidCerts, String nick,
-            String nickservPW) {
+                  String nickservPW) {
         super("Bot-" + (++botNumber));
         this.serverHostname = serverHostname;
         this.port = port;
@@ -88,9 +83,15 @@ public class IRCBot extends Thread {
             try {
                 String message = reader.readLine();
 
+                if (message == null) {
+                    MewtwoLogger.error("EOF reached when trying to read IRC message");
+                    break;
+                }
+
                 // We don't want to parse our own commands
-                if (message.startsWith(":" + nick + "!"))
+                if (message.startsWith(":" + nick + "!")) {
                     continue;
+                }
 
                 MewtwoLogger.incoming(message);
 
@@ -101,7 +102,6 @@ public class IRCBot extends Thread {
                 }
 
                 // Handle other commands
-
                 parseCommand(message.split(" "), message);
             } catch (IOException e) {
                 MewtwoLogger.errorThrowable(e);
@@ -109,6 +109,7 @@ public class IRCBot extends Thread {
         }
 
         MewtwoLogger.info("IRCBot shutting down");
+        ctxMgr.getPermanent().signalShutdown();
         writeRaw("QUIT", ":JVM terminated");
     }
 
@@ -179,14 +180,16 @@ public class IRCBot extends Thread {
             if (command.equals("JOIN")) {
                 String channelName = arguments[2].substring(1);
                 ChannelUserList list = channelUserLists.get(channelName);
-                if (list != null)
+                if (list != null) {
                     list.invalidate();
+                }
             }
             if (command.equals("PART")) {
                 String channelName = arguments[2];
                 ChannelUserList list = channelUserLists.get(channelName);
-                if (list != null)
+                if (list != null) {
                     list.invalidate();
+                }
             }
             if (command.equals("NICK")) {
                 // Invalidate all channels

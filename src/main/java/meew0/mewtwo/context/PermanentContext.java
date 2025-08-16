@@ -1,13 +1,13 @@
 package meew0.mewtwo.context;
 
-import java.util.Date;
-import java.util.Map;
-
 import meew0.mewtwo.MewtwoMain;
 import meew0.mewtwo.irc.User;
 import meew0.mewtwo.modules.ModuleManager;
 import meew0.mewtwo.storage.Database;
 import meew0.mewtwo.timers.TimerManager;
+
+import java.util.Date;
+import java.util.Map;
 
 //import meew0.mewtwo.irc.ChatLog;
 
@@ -158,8 +158,9 @@ public class PermanentContext {
      */
     public String getCommandFromAlias(String commandName) {
         String trueCommand = database.getAliasedCommand(commandName);
-        if (trueCommand == null)
+        if (trueCommand == null) {
             return commandName;
+        }
         return trueCommand;
     }
 
@@ -177,8 +178,9 @@ public class PermanentContext {
      * @return is slowmode active?
      */
     public boolean isSlowmodeActive() {
-        if (!slowmodeEnabled)
+        if (!slowmodeEnabled) {
             return false;
+        }
 
         long d = new Date().getTime();
         if (slowmodeEnabled && ((d - slowmodeTime) > slowmodeTS)) {
@@ -221,8 +223,9 @@ public class PermanentContext {
      */
     public Object get(String id, String key, Object defaultValue) {
         Object result = get(id, key);
-        if (result == null)
+        if (result == null) {
             return defaultValue;
+        }
         return result;
     }
 
@@ -247,5 +250,9 @@ public class PermanentContext {
 
     public void reloadConfigs() {
         moduleManager.reloadConfigs();
+    }
+
+    public void signalShutdown() {
+        timerManager.signalShutdown();
     }
 }

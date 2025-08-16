@@ -1,10 +1,5 @@
 package meew0.mewtwo.timers;
 
-import java.time.Instant;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import meew0.mewtwo.context.ContextManager;
 import meew0.mewtwo.context.MewtwoContext;
 import meew0.mewtwo.core.MewtwoLogger;
@@ -12,6 +7,10 @@ import meew0.mewtwo.irc.IChannel;
 import meew0.mewtwo.irc.IRCBot;
 import meew0.mewtwo.irc.User;
 import meew0.mewtwo.storage.Database;
+
+import javax.annotation.Nonnull;
+import java.time.Instant;
+import java.util.List;
 
 public class TimerManager {
     public static final String timersFolder = "timers/";
@@ -22,6 +21,8 @@ public class TimerManager {
     private final ContextManager contextManager;
 
     private final Thread timerThread;
+
+    private boolean shutdown = false;
 
     public TimerManager(IRCBot ircBot, Database database, ContextManager contextManager) {
         this.bot = ircBot;
@@ -47,7 +48,7 @@ public class TimerManager {
     }
 
     private void runTimers() {
-        while (true) {
+        while (!shutdown) {
             try {
                 Instant later = Instant.now().plusSeconds(checkSeconds);
 
@@ -63,8 +64,7 @@ public class TimerManager {
                             Thread.sleep(millisDelay);
                         } catch (InterruptedException e) {
                             // Break the inner loop, such that the list of pending events is recalculated
-                            // and the
-                            // inner loop is restarted.
+                            // and the inner loop is restarted.
                             interrupted = true;
                             break;
                         }
@@ -101,5 +101,10 @@ public class TimerManager {
         MewtwoContext ctx = contextManager.makeContext(bot, event.getChannel(bot), event.getUser(bot));
         TimerHandlerThread tht = new TimerHandlerThread(ctx, ctx.getChannelName(), event);
         tht.start();
+    }
+
+    public void signalShutdown() {
+        shutdown = true;
+        timerThread.interrupt();
     }
 }
